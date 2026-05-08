@@ -120,38 +120,38 @@ bool Check4Keystroke(void)
   return false;
 }
 
-#define IDX_CHECKSUM 9
-#define DATA_LENGTH 10
+// #define IDX_CHECKSUM 9
+// #define DATA_LENGTH 10
 
-uint8_t CalculateChecksum(uint8_t *);
+// uint8_t CalculateChecksum(uint8_t *);
 
-extern uint8_t data[DATA_LENGTH];
-extern bool sendData;
+// extern uint8_t data[DATA_LENGTH];
+// extern bool sendData;
 
-uint8_t TxByteCounter = 0; 
+// uint8_t TxByteCounter = 0; 
 
-bool CheckTxBuffer(void) 
-{
+// bool CheckTxBuffer(void) 
+// {
     
-    if (sendData == true) {
-        //DB_printf("TxByteCounter = %d\r\n",TxByteCounter);
-        data[IDX_CHECKSUM] = CalculateChecksum(data);
-        if (U2STAbits.UTXBF == 0) {
-            U2TXREG = data[TxByteCounter];
-            TxByteCounter++;
-        } else if (TxByteCounter == sizeof(data)) {
-            TxByteCounter = 0; 
-            sendData = false;
-            return true; 
-        }
-    }
-    return false;
-}
+//     if (sendData == true) {
+//         //DB_printf("TxByteCounter = %d\r\n",TxByteCounter);
+//         data[IDX_CHECKSUM] = CalculateChecksum(data);
+//         if (U2STAbits.UTXBF == 0) {
+//             U2TXREG = data[TxByteCounter];
+//             TxByteCounter++;
+//         } else if (TxByteCounter == sizeof(data)) {
+//             TxByteCounter = 0; 
+//             sendData = false;
+//             return true; 
+//         }
+//     }
+//     return false;
+// }
 
-uint8_t CalculateChecksum(uint8_t *tempData) {
-    uint8_t sum = 0;
-    for (int i = 3; i <= 8; i++) {
-        sum += tempData[i];
-    }
-    return 0xFF - sum;
-}
+// uint8_t CalculateChecksum(uint8_t *tempData) {
+//     uint8_t sum = 0;
+//     for (int i = 3; i <= 8; i++) {
+//         sum += tempData[i];
+//     }
+//     return 0xFF - sum;
+// }
