@@ -5,7 +5,7 @@
 	(uuid "bd24c4db-4e36-4117-bd4f-5228ef241da9")
 	(paper "B")
 	(title_block
-		(title "Boat System Electronics")
+		(title "PIC32 Boat Electronics")
 		(rev "0.1")
 		(company "Ege Turan")
 		(comment 2 "Stanford, CA 94305")
@@ -26,7 +26,7 @@
 			(type solid)
 		)
 		(fill
-			(color 199 229 255 1.0000)
+			(color 0 0 0 0.0000)
 		)
 		(uuid "dae846a3-5621-40b2-bbb5-71c56d87180c")
 		(property "Sheetname" "Boat"
@@ -68,7 +68,7 @@
 			(type solid)
 		)
 		(fill
-			(color 204 255 220 1.0000)
+			(color 0 0 0 0.0000)
 		)
 		(uuid "ebf9c9fd-19f1-445b-9c7b-2cb236965a45")
 		(property "Sheetname" "Controller"
