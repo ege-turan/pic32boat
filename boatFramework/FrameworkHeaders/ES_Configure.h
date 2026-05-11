@@ -34,7 +34,7 @@
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 1
+#define NUM_SERVICES 2
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service.
@@ -58,11 +58,11 @@
 // These are the definitions for Service 1
 #if NUM_SERVICES > 1
 // the header file with the public function prototypes
-#define SERV_1_HEADER "TestHarnessService1.h"
+#define SERV_1_HEADER "CommunicationService.h"
 // the name of the Init function
-#define SERV_1_INIT InitTestHarnessService1
+#define SERV_1_INIT InitCommunicationService
 // the name of the run function
-#define SERV_1_RUN RunTestHarnessService1
+#define SERV_1_RUN RunCommunicationService
 // How big should this services Queue be?
 #define SERV_1_QUEUE_SIZE 3
 #endif
@@ -262,7 +262,10 @@ typedef enum
   /* User-defined events start here */
   // ES_LOCK,
   // ES_UNLOCK,
-  ES_NEW_KEY                /* signals a new key received from terminal */
+  ES_NEW_KEY,               /* signals a new key received from terminal */
+  ES_RX_BYTE,               /* signals a new byte received from UART */
+  ES_CHARGING,              /* signals a change in charging status */
+  ES_DRIVE                  /* param contains throttle and direction information */
 }ES_EventType_t;
 
 /****************************************************************************/
@@ -319,8 +322,8 @@ typedef enum
 #define TIMER10_RESP_FUNC TIMER_UNUSED
 #define TIMER11_RESP_FUNC TIMER_UNUSED
 #define TIMER12_RESP_FUNC TIMER_UNUSED
-#define TIMER13_RESP_FUNC TIMER_UNUSED
-#define TIMER14_RESP_FUNC TIMER_UNUSED
+#define TIMER13_RESP_FUNC PostCommunicationService
+#define TIMER14_RESP_FUNC PostCommunicationService
 #define TIMER15_RESP_FUNC PostDrivingService
 
 /****************************************************************************/
@@ -331,6 +334,7 @@ typedef enum
 // These symbolic names should be changed to be relevant to your application
 
 #define DRIVING_TIMER 15
-
+#define SEND_MSG_TIMER 14
+#define UNPAIRING_TIMER 13
 
 #endif /* ES_CONFIGURE_H */

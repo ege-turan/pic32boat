@@ -84,13 +84,13 @@ static float ClampFloat(float value, float min, float max);
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
 
-static uint16_t CurrentThrottle = 0; // value from 0 to 1023 (10 bits, 0 to 511 negative for reverse, 512 to 1023 positive for forward) maybe implement deadband
-static uint16_t CurrentDirection = 0; // value from 0 to 1023
+static uint16_t CurrentThrottle = 0; // value from 0 to 255 (8 bits, 0 to 127 negative for reverse, 128 to 255 positive for forward) maybe implement deadband
+static uint16_t CurrentDirection = 0; // value from 0 to 255
 static uint16_t CurrentDutyCyclePercent1 = 0;
 static uint16_t CurrentDutyCyclePercent2 = 0;
 
-static uint16_t ThrottleResolution = 1023; // max value, 10 bits
-static uint16_t DirectionResolution = 1023; // max value, 10 bits
+static uint16_t ThrottleResolution = 256; // max value, 8 bits
+static uint16_t DirectionResolution = 256; // max value, 8 bits
 static uint16_t ThrottleMidPoint;
 static uint16_t DirectionMidPoint;
 
@@ -207,6 +207,32 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
       }
       break;
 
+      case ES_CHARGING:
+      {
+        DB_printf("\rES_CHARGING event received in DrivingService, param: %d\r\n", ThisEvent.EventParam);
+        // Shut off all driving
+        CurrentThrottle = ThrottleMidPoint;
+        CurrentDirection = DirectionMidPoint;
+        _SetDutyCycleFromThrottleAndDirection(CurrentThrottle, CurrentDirection);
+        _DriveMotor(Motor1ChannelOC, CurrentDutyCyclePercent1);
+        _DriveMotor(Motor2ChannelOC, CurrentDutyCyclePercent2);
+      }
+      break;
+
+      case ES_DRIVE:
+      {
+        DB_printf("\rES_DRIVE event received in DrivingService, param: %d\r\n", ThisEvent.EventParam);
+        // Extract throttle and direction from event parameter
+        uint8_t Throttle = ThisEvent.EventParam & 0xFF; // lower byte
+        uint8_t Direction = (ThisEvent.EventParam >> 8) & 0xFF; // upper byte
+        CurrentThrottle = Throttle;
+        CurrentDirection = Direction;
+        _SetDutyCycleFromThrottleAndDirection(CurrentThrottle, CurrentDirection);
+        _DriveMotor(Motor1ChannelOC, CurrentDutyCyclePercent1);
+        _DriveMotor(Motor2ChannelOC, CurrentDutyCyclePercent2);
+      }
+      break;
+
       case ES_TIMEOUT:
       {
         if (ThisEvent.EventParam == DRIVING_TIMER)
@@ -270,7 +296,7 @@ void _InitMotorPWM()
 
 void _SetDutyCycleFromThrottleAndDirection(uint32_t Throttle, uint32_t Direction)
 {
-  // Map the throttle value (0 to 1023) to a duty cycle percentage (0 to 100)
+  // Map the throttle value (0 to max value) to a duty cycle percentage (50 to 100)
   if (Throttle > ThrottleResolution) {
     Throttle = ThrottleResolution; // Cap throttle at max value
   }
