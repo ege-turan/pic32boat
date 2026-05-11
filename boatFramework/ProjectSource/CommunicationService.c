@@ -67,7 +67,7 @@
 #define FRAME_ID_BYTE         0x00 // Byte 5
 #define DEST_ADD_RX_MSB_BYTE  0x20 // Byte 6  (Mallard Module to Quackraft)
 #define DEST_ADD_TX_MSB_BYTE  0x21 // Byte 6  (Quackraft to Mallard Module)
-#define DEST_ADD_LSB_BYTE          // Byte 7  (VARIABLE: Depends on pairing (0x81-0x85))
+#define MY_DEST_ADD_LSB_BYTE  0x82 // Byte 7  (CHECK THIS!!)
 #define OPT_BYTE              0x01 // Byte 8
 #define STATUS_DRIVING_BYTE   0x00 // Byte 9
 #define STATUS_CHARGING_BYTE  0x01 // Byte 9
@@ -353,17 +353,10 @@ static bool ValidReceivedMessage(void) {
       (rxBuf[2] == LENGTH_RX_LSB_BYTE)   &&
       (rxBuf[3] == API_ID_BYTE)          &&
       (rxBuf[4] == FRAME_ID_BYTE)        &&
-      (rxBuf[5] == LENGTH_MSB_BYTE)      &&
-      (rxBuf[6] == DEST_ADD_RX_MSB_BYTE) &&
+      (rxBuf[5] == DEST_ADD_RX_MSB_BYTE) &&
+      (rxBuf[6] == MY_DEST_ADD_LSB_BYTE) && //  message for me
       (rxBuf[7] == OPT_BYTE)) {
-    if ((pairedStatus == false) &&
-        (rxBuf[8] == STATUS_PAIRING_BYTE) &&
-        (rxBuf[9] == DEST_ADD_TX_MSB_BYTE)) { // Not Paired, establish pairing
-      ValidMessage = true;
-    } else if ((pairedStatus == true) &&
-               (rxBuf[6] == pairedAddressLSB)) {
-        ValidMessage = true; // Paired and address matches, valid message
-    }    
+    ValidMessage = true; // Paired and address matches, valid message   
   }
   return ValidMessage;
  }
@@ -374,8 +367,7 @@ static void InterpretMessage(void) {
       (rxBuf[9] == DEST_ADD_TX_MSB_BYTE)) {
     pairedAddressLSB = rxBuf[10]; // Store paired address LSB
     pairedStatus = true;
-  } else if ((pairedStatus == true) &&
-            (rxBuf[6] == pairedAddressLSB)) {
+  } else if (pairedStatus == true) {
     ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
     if (rxBuf[8] == STATUS_CHARGING_BYTE) {
       ES_Event_t NewEvent;
@@ -407,7 +399,7 @@ static void SendMsgToMallardModule(uint8_t charge) {
   txBuf[5] = DEST_ADD_TX_MSB_BYTE;
   txBuf[6] = pairedAddressLSB;
   txBuf[7] = OPT_BYTE;
-  txBuf[8] = charge; // Example data byte (could be charging status or other info)
+  txBuf[8] = charge; 
   ComputeCheckSum(DATA_FRAME_TX_LENGTH);
   txBuf[CHECKSUM_TX_INDEX] = CheckSumVal;
 

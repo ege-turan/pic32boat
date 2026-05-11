@@ -89,8 +89,8 @@ static uint16_t CurrentDirection = 0; // value from 0 to 255
 static uint16_t CurrentDutyCyclePercent1 = 0;
 static uint16_t CurrentDutyCyclePercent2 = 0;
 
-static uint16_t ThrottleResolution = 256; // max value, 8 bits
-static uint16_t DirectionResolution = 256; // max value, 8 bits
+static uint16_t ThrottleResolution = 255; // max value, 8 bits
+static uint16_t DirectionResolution = 255; // max value, 8 bits
 static uint16_t ThrottleMidPoint;
 static uint16_t DirectionMidPoint;
 

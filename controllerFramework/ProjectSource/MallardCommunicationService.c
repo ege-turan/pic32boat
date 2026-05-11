@@ -66,11 +66,12 @@
 #define FRAME_ID_BYTE         0x00 // Byte 5
 #define DEST_ADD_RX_MSB_BYTE  0x21 // Byte 6  (Quackraft to Mallard Module)
 #define DEST_ADD_TX_MSB_BYTE  0x20 // Byte 6  (Mallard Module to Quackraft)
-#define DEST_ADD_LSB_BYTE          // Byte 7  (VARIABLE: Depends on pairing (0x81-0x85))
+#define MY_DEST_ADD_LSB_BYTE  0x82 // Byte 7  (CHECK THIS!!)
 #define OPT_BYTE              0x01 // Byte 8
 #define STATUS_DRIVING_BYTE   0x00 // Byte 9
 #define STATUS_CHARGING_BYTE  0x01 // Byte 9
 #define STATUS_PAIRING_BYTE   0x02 // Byte 9
+
            
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
@@ -94,9 +95,12 @@ static volatile uint8_t receivedByte; // Variable to hold the most recent byte r
 static volatile uint8_t rxBuf[FRAME_SIZE_RX] = {0}; // Buffer to hold the most recent received bytes
 static uint8_t txBuf[FRAME_SIZE_TX] = {0}; // Buffer to hold the bytes to be transmitted
 
-static uint8_t pairedAddressLSB;
+static uint8_t desiredAddressLSB;
 static uint8_t Addresses[] = {0x00, 0x81, 0x82, 0x83, 0x84, 0x85};
 static uint8_t ChargeVal = 0xFF; // Default initial value per comms protocol
+static uint16_t JoyResolution = 255; // max value, 8 bits
+static uint16_t JoyMidPoint;
+static uint8_t StatusVal, Joy1Val, Joy2Val, DigiVal; // Variables to hold data to be sent to Quackraft
 static volatile uint8_t CheckSumVal = 0;
 
 /*------------------------------ Module Code ------------------------------*/
@@ -197,20 +201,43 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
         DB_printf("\rES_INIT received in MallardCommunicationService, priority: %d\r\n", MyPriority);
         // Initialize hardware for communication here
         InitUART();
+        // Initialize vairables
+        desiredAddressLSB = 0x82; // Default or Quackraft
+        StatusVal = STATUS_PAIRING_BYTE; // Start in pairing status
+        JoyMidPoint = JoyResolution / 2;
+        Joy1Val = JoyMidPoint;
+        Joy2Val = JoyMidPoint;
+        DigiVal = 0x00;
         DB_printf("\rMallardCommunicationService initialization complete\r\n");
       }
       break;
 
       case ES_TIMEOUT:
       {
-        if (ThisEvent.EventParam == UNPAIRING_TIMER) {
-          DB_printf("\rUNPAIRING_TIMER expired in MallardCommunicationService\r\n");
-          // Example: Send periodic status update to Quackraft
-          pairedStatus = false; // Simulate unpairing for testing
+        if (ThisEvent.EventParam == SEND_MSG_TIMER) {
+          DB_printf("\rSEND_MSG_TIMER expired in MallardCommunicationService\r\n");
+          // Send MSG to Quackraft
+          SendMsgToQuackraft(StatusVal, Joy1Val, Joy2Val, DigiVal);
+          // Restart timer
+          ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
         }
       }
       break;
 
+      case ES_START_PAIRING: // triggered by event checker
+      {
+        StatusVal = STATUS_PAIRING_BYTE;
+        ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
+      }
+      break;
+
+      case ES_CHANGE_ADDR: // triggered by event checker
+      {
+        desiredAddressLSB = Addresses[ThisEvent.EventParam] & 0xFF; // Get new address from event parameter
+        DB_printf("\rCHANGE_ADDR event received in MallardCommunicationService, new desired address LSB: 0x%02X\r\n", desiredAddressLSB);
+      }
+      break;
+      
       case ES_RX_BYTE:
       {
         switch (ThisEvent.EventParam) {
@@ -238,8 +265,6 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 if (ValidReceivedMessage()) {
                 newMessageComplete = true;
                 InterpretMessage(); // Post to necessary services based on message content
-                // Reply with acknowledgment message
-                SendMsgToQuackraft(ChargeVal);
                 newMessageStarted = false; // Reset for next message
                 }
               }
@@ -338,7 +363,6 @@ static void ComputeCheckSum(uint8_t dataFrameLength) {
     CheckSumVal = sum;
   }
 }
-
 static bool ValidReceivedMessage(void) {
   static bool ValidMessage = false;
   // Check Sum first
@@ -352,51 +376,23 @@ static bool ValidReceivedMessage(void) {
       (rxBuf[2] == LENGTH_RX_LSB_BYTE)   &&
       (rxBuf[3] == API_ID_BYTE)          &&
       (rxBuf[4] == FRAME_ID_BYTE)        &&
-      (rxBuf[5] == LENGTH_MSB_BYTE)      &&
-      (rxBuf[6] == DEST_ADD_RX_MSB_BYTE) &&
+      (rxBuf[5] == DEST_ADD_RX_MSB_BYTE) &&
+      (rxBuf[6] == MY_DEST_ADD_LSB_BYTE) && //  message for me
       (rxBuf[7] == OPT_BYTE)) {
-    if ((pairedStatus == false) &&
-        (rxBuf[8] == STATUS_PAIRING_BYTE) &&
-        (rxBuf[9] == DEST_ADD_TX_MSB_BYTE)) { // Not Paired, establish pairing
-      ValidMessage = true;
-    } else if ((pairedStatus == true) &&
-               (rxBuf[6] == pairedAddressLSB)) {
-        ValidMessage = true; // Paired and address matches, valid message
-    }    
+    ValidMessage = true; // Paired and address matches, valid message   
   }
   return ValidMessage;
  }
 
 static void InterpretMessage(void) {
-  if ((pairedStatus == false) &&
-      (rxBuf[8] == STATUS_PAIRING_BYTE) &&
-      (rxBuf[9] == DEST_ADD_TX_MSB_BYTE)) {
-    pairedAddressLSB = rxBuf[10]; // Store paired address LSB
-    pairedStatus = true;
-  } else if ((pairedStatus == true) &&
-            (rxBuf[6] == pairedAddressLSB)) {
-    ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
-    if (rxBuf[8] == STATUS_CHARGING_BYTE) {
-      ES_Event_t NewEvent;
-      NewEvent.EventType  = ES_CHARGING;
-      NewEvent.EventParam = receivedByte;
-      ES_PostAll(NewEvent);
-    } else
-    if (rxBuf[8] == STATUS_DRIVING_BYTE) {
-      // Extract throttle and direction from message and post to DrivingService
-      uint8_t Throttle = rxBuf[9]; // Assuming throttle is in byte 9
-      uint8_t Direction = rxBuf[10]; // Assuming direction is in byte 10
-      uint16_t DriveParam = (Direction << 8) | Throttle; // Combine into single parameter
-      ES_Event_t NewEvent;
-      NewEvent.EventType  = ES_DRIVE;
-      NewEvent.EventParam = DriveParam;
-      PostMallardCommunicationService(NewEvent);
-      // TODO: Check if rxBuf[11] has info to actuate something else
-    }
+  if (rxBuf[8] == STATUS_PAIRING_BYTE) {
+    
+  } else {
+    
   }    
  }
 
-static void SendMsgToQuackraft(uint8_t charge) {
+static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8_t digi){
   // Construct message frame
   txBuf[0] = START_BYTE;
   txBuf[1] = LENGTH_MSB_BYTE;
@@ -404,9 +400,12 @@ static void SendMsgToQuackraft(uint8_t charge) {
   txBuf[3] = API_ID_BYTE;
   txBuf[4] = FRAME_ID_BYTE;
   txBuf[5] = DEST_ADD_TX_MSB_BYTE;
-  txBuf[6] = pairedAddressLSB;
+  txBuf[6] = desiredAddressLSB;
   txBuf[7] = OPT_BYTE;
-  txBuf[8] = charge; // Example data byte (could be charging status or other info)
+  txBuf[8] = status;
+  txBuf[9] = joy1;
+  txBuf[10] = joy2;
+  txBuf[11] = digi;
   ComputeCheckSum(DATA_FRAME_TX_LENGTH);
   txBuf[CHECKSUM_TX_INDEX] = CheckSumVal;
 
