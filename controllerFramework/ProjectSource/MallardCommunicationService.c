@@ -30,6 +30,8 @@
 
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
+// #define SHOW_SENT_BYTES
+// #define SHOW_RECEIVED_BYTES
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 500  // in milliseconds
@@ -78,7 +80,8 @@
 #define LENGTH_MSB_BYTE       0x00 // Byte 2
 #define LENGTH_RX_LSB_BYTE    0x06 // Byte 3 (Received by Mallard Module)
 #define LENGTH_TX_LSB_BYTE    0x09 // Byte 3 (Transmitted by Mallard Module)
-#define API_ID_BYTE           0x01 // Byte 4
+#define API_ID_TX_BYTE        0x01 // Byte 4
+#define API_ID_RX_BYTE        0x81 // Byte 4
 #define FRAME_ID_BYTE         0x00 // Byte 5
 #define DEST_ADD_RX_MSB_BYTE  0x21 // Byte 6  (Quackraft to Mallard Module)
 #define DEST_ADD_TX_MSB_BYTE  0x20 // Byte 6  (Mallard Module to Quackraft)
@@ -150,6 +153,7 @@ bool InitMallardCommunicationService(uint8_t Priority)
    in here you write your initialization code
    *******************************************/
   // Announce initialisation of MallardCommunicationService
+  clrScrn();
   DB_printf("\rStarting MallardCommunicationService: ");
   DB_printf("compiled at %s on %s", __TIME__, __DATE__);
   DB_printf("\n\r");
@@ -240,13 +244,12 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
       case ES_TIMEOUT:
       {
         if (ThisEvent.EventParam == SEND_MSG_TIMER) {
-          DB_printf("\rSEND_MSG_TIMER expired in MallardCommunicationService\r\n");
+          // DB_printf("\rSEND_MSG_TIMER expired in MallardCommunicationService\r\n");
           // Read ADC values for joysticks
           ReadADCValues();
           // DB_printf("\rADC Readings - Joy1: %d, Joy2: %d\r\n", Joy1Val, Joy2Val);
           // Send MSG to Quackraft
           SendMsgToQuackraft(StatusVal, Joy1Val, Joy2Val, DigiVal);
-          DB_printf("/r checksum: 0x%x\r\n", CheckSumVal);
           // Restart timer
           ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
         }
@@ -399,32 +402,42 @@ static bool ValidReceivedMessage(void) {
   if (rxBuf[CHECKSUM_RX_INDEX] != CheckSumVal) {
     return ValidMessage; // Invalid message due to checksum failure
   }
+  #ifdef SHOW_RECEIVED_BYTES
+  DB_printf("\r Received Message bytes: \r\n");
+  for (uint8_t i = 0; i < FRAME_SIZE_RX; i++) {
+    DB_printf("0x%x ", rxBuf[i]);
+  }
+  DB_printf("\r\n");
+  #endif
+
   // Validate: start byte, length, API ID, checksum, and matching address
   if ((rxBuf[0] == START_BYTE)           &&
       (rxBuf[1] == LENGTH_MSB_BYTE)      && 
       (rxBuf[2] == LENGTH_RX_LSB_BYTE)   &&
-      (rxBuf[3] == API_ID_BYTE)          &&
-      (rxBuf[4] == FRAME_ID_BYTE)        &&
-      (rxBuf[5] == DEST_ADD_RX_MSB_BYTE) &&
-      (rxBuf[6] == MY_DEST_ADD_LSB_BYTE) && //  message for me
-      (rxBuf[7] == OPT_BYTE)) {
+      (rxBuf[3] == API_ID_RX_BYTE)       &&
+      (rxBuf[4] == DEST_ADD_TX_MSB_BYTE))
+      // (rxBuf[5] == pairedAddressLSB)      && // possible to not know it yet
+      // (rxBuf[6] == RSSI_BYTE) && Rx signal strength in
+      // (rxBuf[7] == OPT_BYTE)) 
+      {
     ValidMessage = true; // Paired and address matches, valid message   
-    
-    if (pairedStatus == false) {
-      pairedStatus = true; // Update paired status on valid message receipt
-      ES_Event_t NewEvent;
-      NewEvent.EventType  = ES_PAIRED;
-      ES_PostAll(NewEvent);
-      DB_printf("\rValid message received in MallardCommunicationService, PAIRED!\r\n");
-    }
   }
   return ValidMessage;
  }
 
 static void InterpretMessage(void) {
-  if (rxBuf[8] == STATUS_PAIRING_BYTE) {
-    
-  } else {
+  if ((pairedStatus == false) &&
+      (rxBuf[4] == DEST_ADD_TX_MSB_BYTE) &&
+      (rxBuf[5] == desiredAddressLSB))
+    {
+    pairedStatus = true; // Update paired status on valid message receipt
+    StatusVal = STATUS_DRIVING_BYTE;
+    ES_Event_t NewEvent;
+    NewEvent.EventType  = ES_PAIRED;
+    ES_PostAll(NewEvent);
+    DB_printf("\rValid message received in MallardCommunicationService, PAIRED!\r\n");
+  }
+  else {
     
   }    
  }
@@ -434,7 +447,7 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
   txBuf[0] = START_BYTE;
   txBuf[1] = LENGTH_MSB_BYTE;
   txBuf[2] = LENGTH_TX_LSB_BYTE;
-  txBuf[3] = API_ID_BYTE;
+  txBuf[3] = API_ID_TX_BYTE;
   txBuf[4] = FRAME_ID_BYTE;
   txBuf[5] = DEST_ADD_TX_MSB_BYTE;
   txBuf[6] = desiredAddressLSB;
@@ -466,6 +479,14 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
     }
     U2TXREG = txBuf[i]; // Write byte to transmit register
   }
+
+  #ifdef SHOW_SENT_BYTES
+  DB_printf("\r Sent Message bytes: \r\n");
+  for (uint8_t i = 0; i < FRAME_SIZE_TX; i++) {
+    DB_printf("0x%x ", txBuf[i]);
+  }
+  DB_printf("\r\n");
+  #endif
 }
 
 static void ReadADCValues(void) {

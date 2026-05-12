@@ -30,6 +30,8 @@
 
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
+// #define SHOW_SENT_BYTES
+// #define SHOW_RECEIVED_BYTES
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
@@ -63,7 +65,8 @@
 #define LENGTH_MSB_BYTE       0x00 // Byte 2
 #define LENGTH_RX_LSB_BYTE    0x09 // Byte 3 (Received by Quackraft)
 #define LENGTH_TX_LSB_BYTE    0x06 // Byte 3 (Transmitted by Quackraft)
-#define API_ID_BYTE           0x01 // Byte 4
+#define API_ID_TX_BYTE        0x01 // Byte 4
+#define API_ID_RX_BYTE        0x81 // Byte 4
 #define FRAME_ID_BYTE         0x00 // Byte 5
 #define DEST_ADD_RX_MSB_BYTE  0x20 // Byte 6  (Mallard Module to Quackraft)
 #define DEST_ADD_TX_MSB_BYTE  0x21 // Byte 6  (Quackraft to Mallard Module)
@@ -239,7 +242,7 @@ ES_Event_t RunCommunicationService(ES_Event_t ThisEvent)
                 if (ValidReceivedMessage()) {
                   newMessageComplete = true;
                   InterpretMessage(); // Post to necessary services based on message content
-                  DB_printf("\rValid message received in CommunicationService\r\n");
+                  // DB_printf("\rValid message received in CommunicationService\r\n");
                   // Reply with acknowledgment message
                   SendMsgToMallardModule(ChargeVal);
                   newMessageStarted = false; // Reset for next message
@@ -349,16 +352,24 @@ static bool ValidReceivedMessage(void) {
   if (rxBuf[CHECKSUM_RX_INDEX] != CheckSumVal) {
     return ValidMessage; // Invalid message due to checksum failure
   }
-  DB_printf("\rChecksum valid in ValidReceivedMessage. CHECKSUM_RX_INDEX: 0x%x\r\n", rxBuf[CHECKSUM_RX_INDEX]);
+  #ifdef SHOW_RECEIVED_BYTES
+  DB_printf("\r Received Message bytes: \r\n");
+  for (uint8_t i = 0; i < FRAME_SIZE_RX; i++) {
+    DB_printf("0x%x ", rxBuf[i]);
+  }
+  DB_printf("\r\n");
+  #endif
+
   // Validate: start byte, length, API ID, checksum, and matching address
   if ((rxBuf[0] == START_BYTE)           &&
       (rxBuf[1] == LENGTH_MSB_BYTE)      && 
       (rxBuf[2] == LENGTH_RX_LSB_BYTE)   &&
-      (rxBuf[3] == API_ID_BYTE)          &&
-      (rxBuf[4] == FRAME_ID_BYTE)        &&
-      (rxBuf[5] == DEST_ADD_RX_MSB_BYTE) &&
-      (rxBuf[6] == MY_DEST_ADD_LSB_BYTE) && //  message for me
-      (rxBuf[7] == OPT_BYTE)) {
+      (rxBuf[3] == API_ID_RX_BYTE)       &&
+      (rxBuf[4] == DEST_ADD_TX_MSB_BYTE))
+      // (rxBuf[5] == pairedAddressLSB)      && // possible to not know it yet
+      // (rxBuf[6] == RSSI_BYTE) && Rx signal strength in
+      // (rxBuf[7] == OPT_BYTE)) 
+      {
     ValidMessage = true; // Paired and address matches, valid message   
   }
   return ValidMessage;
@@ -368,9 +379,12 @@ static void InterpretMessage(void) {
   if ((pairedStatus == false) &&
       (rxBuf[8] == STATUS_PAIRING_BYTE) &&
       (rxBuf[9] == DEST_ADD_TX_MSB_BYTE)) {
-    pairedAddressLSB = rxBuf[10]; // Store paired address LSB
+    pairedAddressLSB = rxBuf[10]; // Source address LSB of requesting pairing Note: rxBuf[5] and rxBuf[10] should be the same
     pairedStatus = true;
-  } else if (pairedStatus == true) {
+    DB_printf("\rValid message received in CommunicationService, PAIRED! Address: 0x%x\r\n", pairedAddressLSB);
+  } else if ((pairedStatus == true) &&
+             (rxBuf[4] == DEST_ADD_TX_MSB_BYTE) &&
+             (rxBuf[5] == pairedAddressLSB)) {
     ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
     if (rxBuf[8] == STATUS_CHARGING_BYTE) {
       ES_Event_t NewEvent;
@@ -397,7 +411,7 @@ static void SendMsgToMallardModule(uint8_t charge) {
   txBuf[0] = START_BYTE;
   txBuf[1] = LENGTH_MSB_BYTE;
   txBuf[2] = LENGTH_TX_LSB_BYTE;
-  txBuf[3] = API_ID_BYTE;
+  txBuf[3] = API_ID_TX_BYTE;
   txBuf[4] = FRAME_ID_BYTE;
   txBuf[5] = DEST_ADD_TX_MSB_BYTE;
   txBuf[6] = pairedAddressLSB;
@@ -413,6 +427,14 @@ static void SendMsgToMallardModule(uint8_t charge) {
     }
     U2TXREG = txBuf[i]; // Write byte to transmit register
   }
+
+  #ifdef SHOW_SENT_BYTES
+  DB_printf("\r Sent Message bytes: \r\n");
+  for (uint8_t i = 0; i < FRAME_SIZE_TX; i++) {
+    DB_printf("0x%x ", txBuf[i]);
+  }
+  DB_printf("\r\n");
+  #endif
 }
 
  /*------------------------------- Footnotes -------------------------------*/

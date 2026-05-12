@@ -122,6 +122,7 @@ bool InitDrivingService(uint8_t Priority)
    in here you write your initialization code
    *******************************************/
   // Announce initialisation of DrivingService
+  clrScrn();
   DB_printf("\rStarting DrivingService: ");
   DB_printf("compiled at %s on %s", __TIME__, __DATE__);
   DB_printf("\n\r");
