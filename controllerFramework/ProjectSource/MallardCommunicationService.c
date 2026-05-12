@@ -34,7 +34,7 @@
 // #define SHOW_RECEIVED_BYTES
 
 #define FOUR_SECONDS 4000 // in milliseconds
-#define SEND_UART_MS 500  // in milliseconds
+#define SEND_UART_MS 200  // in milliseconds
 
 // Joystick Info
 #define JOY1_ADC_MASK BIT0HI // AN0 (RA0)
@@ -238,6 +238,8 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
         Joy2Val = JoyMidPoint;
         DigiVal = 0x00;
         DB_printf("\rMallardCommunicationService initialization complete\r\n");
+
+        ES_Timer_InitTimer(SEND_MSG_TIMER, 5000); // five seconds to start autopairing
       }
       break;
 

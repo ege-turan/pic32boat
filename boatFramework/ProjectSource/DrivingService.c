@@ -204,7 +204,7 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
         _SetDutyCycleFromThrottleAndDirection(CurrentThrottle, CurrentDirection);
         _DriveMotor(Motor1ChannelOC, CurrentDutyCyclePercent1);
         _DriveMotor(Motor2ChannelOC, CurrentDutyCyclePercent2);
-        ES_Timer_InitTimer(DRIVING_TIMER, 6000);
+        // ES_Timer_InitTimer(DRIVING_TIMER, 6000);
       }
       break;
 
@@ -222,13 +222,14 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
 
       case ES_DRIVE:
       {
-        DB_printf("\rES_DRIVE event received in DrivingService, param: %d\r\n", ThisEvent.EventParam);
         // Extract throttle and direction from event parameter
         uint8_t Throttle = ThisEvent.EventParam & 0xFF; // lower byte
         uint8_t Direction = (ThisEvent.EventParam >> 8) & 0xFF; // upper byte
+        DB_printf("\rES_DRIVE event received in DrivingService, Throttle: %d, Direction: %d\r\n", Throttle, Direction);
         CurrentThrottle = Throttle;
         CurrentDirection = Direction;
         _SetDutyCycleFromThrottleAndDirection(CurrentThrottle, CurrentDirection);
+        DB_printf("\rDuty cycle 1: %d, Duty cycle 2: %d\r\n", CurrentDutyCyclePercent1, CurrentDutyCyclePercent2);
         _DriveMotor(Motor1ChannelOC, CurrentDutyCyclePercent1);
         _DriveMotor(Motor2ChannelOC, CurrentDutyCyclePercent2);
       }
