@@ -21,11 +21,11 @@
 /* include header files for this state machine as well as any machines at the
    next lower level in the hierarchy that are sub-machines to this machine
 */
-#include "MallardCommunicationService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
-#include "PIC32_AD_Lib.h"
+#include "MallardCommunicationService.h"
 #include "dbprintf.h"
+#include "PIC32_AD_Lib.h"
 #include <sys/attribs.h> // for interrupts
 
 /*----------------------------- Module Defines ----------------------------*/
@@ -35,6 +35,7 @@
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
+#define AUTOPAIRING_MS 2000// in milliseconds
 
 // Joystick Info
 #define JOY1_ADC_MASK BIT0HI          // AN0 (RA0)
@@ -71,8 +72,8 @@
 #define DATA_FRAME_TX_LENGTH (FRAME_SIZE_TX - DATA_FRAME_START - 1)
 #define CHECKSUM_TX_INDEX (FRAME_SIZE_TX - 1)
 
-#define MY_BOAT_ADDRESS_LSB 0x85
-#define ALEX_BOAT_ADDRESS_LSB 0x81
+#define MY_BOAT_ADDRESS_LSB 0x81
+#define ALEX_BOAT_ADDRESS_LSB 0x85
 
 // Message bytes
 #define START_BYTE 0x7E           // Byte 1
@@ -84,7 +85,7 @@
 #define FRAME_ID_BYTE 0x00        // Byte 5
 #define DEST_ADD_RX_MSB_BYTE 0x21 // Byte 6  (Quackraft to Mallard Module)
 #define DEST_ADD_TX_MSB_BYTE 0x20 // Byte 6  (Mallard Module to Quackraft)
-#define MY_DEST_ADD_LSB_BYTE 0x85 // Byte 7  (CHECK THIS!!)
+#define MY_DEST_ADD_LSB_BYTE 0x81 // Byte 7  (CHECK THIS!!)
 #define OPT_BYTE 0x01             // Byte 8
 #define STATUS_DRIVING_BYTE 0x00  // Byte 9
 #define STATUS_CHARGING_BYTE 0x01 // Byte 9
@@ -239,7 +240,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             DigiVal           = 0x00;
             DB_printf("\rMallardCommunicationService initialization complete\r\n");
 
-            ES_Timer_InitTimer(SEND_MSG_TIMER, 5000); // five seconds to start autopairing
+            ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); //start autopairing
         }
         break;
 

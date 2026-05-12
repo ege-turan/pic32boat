@@ -71,7 +71,7 @@
 #define FRAME_ID_BYTE 0x00        // Byte 5
 #define DEST_ADD_RX_MSB_BYTE 0x20 // Byte 6  (Mallard Module to Quackraft)
 #define DEST_ADD_TX_MSB_BYTE 0x21 // Byte 6  (Quackraft to Mallard Module)
-#define MY_DEST_ADD_LSB_BYTE 0x85 // Byte 7  (CHECK THIS!!)
+#define MY_DEST_ADD_LSB_BYTE 0x81 // Byte 7  (CHECK THIS!!)
 #define OPT_BYTE 0x01             // Byte 8
 #define STATUS_DRIVING_BYTE 0x00  // Byte 9
 #define STATUS_CHARGING_BYTE 0x01 // Byte 9

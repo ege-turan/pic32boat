@@ -21,9 +21,9 @@
 /* include header files for this state machine as well as any machines at the
    next lower level in the hierarchy that are sub-machines to this machine
 */
-#include "DrivingService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
+#include "DrivingService.h"
 
 #include "PIC32_PWM_Lib.h"
 #include "dbprintf.h"
@@ -44,6 +44,8 @@
 // Define pine names for PWM_Setup_MapChannelToOutputPin
 #define Motor1PWMPinName PWM_RPA0
 #define Motor2PWMPinName PWM_RPA1
+
+#define MaxStepDutyCyclePercent 2 // max change in duty cycle per update for ramping
 
 // TIMERS:
 // This is the period of the PWM in timer ticks - for Timer2
@@ -80,6 +82,8 @@ void _SetDutyCycleFromThrottleAndDirection(
     uint32_t Direction); // Duty Cycle note: 50 is reverse, 75 is stopped, 100 is forward
 void _DriveMotor(MotorChannel_t MotorChannel, uint32_t DutyCyclePercent);
 static float ClampFloat(float value, float min, float max);
+static uint16_t RampDutyCycle(float received_duty_cycle, uint16_t current_duty_cycle, uint16_t max_step);
+
 
 /*---------------------------- Module Variables ---------------------------*/
 // with the introduction of Gen2, we need a module level Priority variable
@@ -337,11 +341,11 @@ void _SetDutyCycleFromThrottleAndDirection(uint32_t Throttle, uint32_t Direction
     float motor2 = BASE_DUTY + throttleOffset + directionOffset;
 
     // Clamp outputs
-    motor1 = ClampFloat(motor1, 50.0f, 100.0f);
-    motor2 = ClampFloat(motor2, 50.0f, 100.0f);
+    motor1 = ClampFloat(motor1, 50.0f, 99.0f);
+    motor2 = ClampFloat(motor2, 50.0f, 99.0f);
 
-    CurrentDutyCyclePercent1 = (uint16_t)motor1;
-    CurrentDutyCyclePercent2 = (uint16_t)motor2;
+    CurrentDutyCyclePercent1 = RampDutyCycle(motor1, CurrentDutyCyclePercent1, MaxStepDutyCyclePercent);
+    CurrentDutyCyclePercent2 = RampDutyCycle(motor2, CurrentDutyCyclePercent2, MaxStepDutyCyclePercent);
 }
 
 static float ClampFloat(float value, float min, float max)
@@ -351,6 +355,21 @@ static float ClampFloat(float value, float min, float max)
     if (value > max)
         return max;
     return value;
+}
+
+static uint16_t RampDutyCycle(float received_duty_cycle, uint16_t current_duty_cycle, uint16_t max_step)
+{
+    if (received_duty_cycle > current_duty_cycle + max_step)
+    {
+        return current_duty_cycle + max_step;
+    }
+
+    if (received_duty_cycle < current_duty_cycle - max_step)
+    {
+        return current_duty_cycle - max_step;
+    }
+
+    return (uint16_t)received_duty_cycle;
 }
 
 void _DriveMotor(MotorChannel_t MotorChannel, uint32_t DutyCyclePercent)

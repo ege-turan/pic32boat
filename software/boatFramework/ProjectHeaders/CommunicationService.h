@@ -9,7 +9,7 @@
 #define ServComms_H
 
 #include "ES_Types.h"
-
+#include "ES_Events.h"
 // Public Function Prototypes
 
 bool InitCommunicationService(uint8_t Priority);
