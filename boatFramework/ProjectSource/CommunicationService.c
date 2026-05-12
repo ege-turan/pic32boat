@@ -237,11 +237,12 @@ ES_Event_t RunCommunicationService(ES_Event_t ThisEvent)
               // Check if we have received a complete message
               if (START_BYTE == rxBuf[0]) {
                 if (ValidReceivedMessage()) {
-                newMessageComplete = true;
-                InterpretMessage(); // Post to necessary services based on message content
-                // Reply with acknowledgment message
-                SendMsgToMallardModule(ChargeVal);
-                newMessageStarted = false; // Reset for next message
+                  newMessageComplete = true;
+                  InterpretMessage(); // Post to necessary services based on message content
+                  DB_printf("\rValid message received in CommunicationService\r\n");
+                  // Reply with acknowledgment message
+                  SendMsgToMallardModule(ChargeVal);
+                  newMessageStarted = false; // Reset for next message
                 }
               }
               
@@ -311,6 +312,7 @@ static void InitUART(void)
 
 void __ISR(_UART_2_VECTOR, IPL7SOFT) U2RX_ISR(void) {
   if (IFS1bits.U2RXIF) {
+
     while (U2STAbits.URXDA) {
       receivedByte = U2RXREG;
       ES_Event_t NewEvent;
@@ -347,6 +349,7 @@ static bool ValidReceivedMessage(void) {
   if (rxBuf[CHECKSUM_RX_INDEX] != CheckSumVal) {
     return ValidMessage; // Invalid message due to checksum failure
   }
+  DB_printf("\rChecksum valid in ValidReceivedMessage. CHECKSUM_RX_INDEX: 0x%x\r\n", rxBuf[CHECKSUM_RX_INDEX]);
   // Validate: start byte, length, API ID, checksum, and matching address
   if ((rxBuf[0] == START_BYTE)           &&
       (rxBuf[1] == LENGTH_MSB_BYTE)      && 

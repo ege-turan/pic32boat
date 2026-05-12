@@ -237,7 +237,7 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
       {
         if (ThisEvent.EventParam == DRIVING_TIMER)
         {
-          DB_printf("\rDRIVING_TIMER expired in DrivingService\r\n");
+          // DB_printf("\rDRIVING_TIMER expired in DrivingService\r\n");
           static uint8_t toggle = 0;
           if (!toggle){
           CurrentThrottle += 50;
