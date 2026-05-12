@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/debug/controllerFramework.debug.elf">                 
+  <executable name="dist/default/production/controllerFramework.production.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>263312</length>                 
-      <used>36187</used>                     
-      <free>227125</free>                     
+      <used>36491</used>                     
+      <free>226821</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
-      <length>66048</length>                 
-      <used>2549</used>                     
-      <free>63499</free>                     
+      <length>65536</length>                 
+      <used>1565</used>                     
+      <free>63971</free>                     
     </memory>                              
   </executable>                            
 </project>                                 

@@ -1,4 +1,4 @@
-build/default/debug/ProjectSource/MallardCommunicationService.o: \
+build/default/production/ProjectSource/MallardCommunicationService.o: \
  ProjectSource/MallardCommunicationService.c \
  FrameworkHeaders/ES_Configure.h FrameworkHeaders/ES_Framework.h \
  FrameworkHeaders/ES_Types.h FrameworkHeaders/ES_Port.h \

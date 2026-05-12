@@ -48,7 +48,7 @@
 // the name of the run function
 #define SERV_0_RUN RunMallardCommunicationService
 // How big should this services Queue be?
-#define SERV_0_QUEUE_SIZE 5
+#define SERV_0_QUEUE_SIZE 10
 
 /****************************************************************************/
 // The following sections are used to define the parameters for each of the
@@ -265,7 +265,9 @@ typedef enum
   ES_NEW_KEY,               /* signals a new key received from terminal */
   ES_RX_BYTE,              /* signals a new byte received from UART */
   ES_START_PAIRING,        /* signals to start pairing process */
-  ES_CHANGE_ADDR
+  ES_CHANGE_ADDR,
+  ES_PAIRED,               /* signals successful pairing */
+  ES_UNPAIRED             /* signals unpairing */
 }ES_EventType_t;
 
 /****************************************************************************/
@@ -334,6 +336,7 @@ typedef enum
 // These symbolic names should be changed to be relevant to your application
 
 #define SEND_MSG_TIMER 15
+#define UNPAIRING_TIMER 14
 
 
 #endif /* ES_CONFIGURE_H */

@@ -46,6 +46,7 @@
       <itemPath>ProjectHeaders/TestHarnessService0.h</itemPath>
       <itemPath>ProjectHeaders/MallardCommunicationService.h</itemPath>
       <itemPath>ProjectHeaders/KeyboardService.h</itemPath>
+      <itemPath>ProjectHeaders/PIC32_AD_Lib.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -64,6 +65,7 @@
       <itemPath>ProjectSource/main.c</itemPath>
       <itemPath>ProjectSource/MallardCommunicationService.c</itemPath>
       <itemPath>ProjectSource/KeyboardService.c</itemPath>
+      <itemPath>ProjectSource/PIC32_AD_Lib.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -80,7 +82,7 @@
         <targetDevice>PIC32MX170F256B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>snap</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>5.00</languageToolchainVersion>
         <platform>3</platform>

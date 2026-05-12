@@ -67,7 +67,7 @@
 #define FRAME_ID_BYTE         0x00 // Byte 5
 #define DEST_ADD_RX_MSB_BYTE  0x20 // Byte 6  (Mallard Module to Quackraft)
 #define DEST_ADD_TX_MSB_BYTE  0x21 // Byte 6  (Quackraft to Mallard Module)
-#define MY_DEST_ADD_LSB_BYTE  0x82 // Byte 7  (CHECK THIS!!)
+#define MY_DEST_ADD_LSB_BYTE  0x85 // Byte 7  (CHECK THIS!!)
 #define OPT_BYTE              0x01 // Byte 8
 #define STATUS_DRIVING_BYTE   0x00 // Byte 9
 #define STATUS_CHARGING_BYTE  0x01 // Byte 9
@@ -313,11 +313,11 @@ void __ISR(_UART_2_VECTOR, IPL7SOFT) U2RX_ISR(void) {
   if (IFS1bits.U2RXIF) {
     while (U2STAbits.URXDA) {
       receivedByte = U2RXREG;
+      ES_Event_t NewEvent;
+      NewEvent.EventType  = ES_RX_BYTE;
+      NewEvent.EventParam = receivedByte;
+      PostCommunicationService(NewEvent);
     }
-    ES_Event_t NewEvent;
-    NewEvent.EventType  = ES_RX_BYTE;
-    NewEvent.EventParam = receivedByte;
-    PostCommunicationService(NewEvent);
     IFS1CLR = _IFS1_U2RXIF_MASK;  // Clear interrupt flag
   }
 }
@@ -335,13 +335,13 @@ static void ComputeCheckSum(uint8_t dataFrameLength) {
     } else {
     sum += rxBuf[i];
     }
-    sum = 0xFF - sum;
-    CheckSumVal = sum;
   }
+  sum = 0xFF - sum;
+  CheckSumVal = sum;
 }
 
 static bool ValidReceivedMessage(void) {
-  static bool ValidMessage = false;
+  bool ValidMessage = false;
   // Check Sum first
   ComputeCheckSum(DATA_FRAME_RX_LENGTH);
   if (rxBuf[CHECKSUM_RX_INDEX] != CheckSumVal) {

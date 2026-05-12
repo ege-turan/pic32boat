@@ -25,6 +25,7 @@
 #include "ES_Framework.h"
 #include "MallardCommunicationService.h"
 #include "dbprintf.h"
+#include "PIC32_AD_Lib.h"
 #include <sys/attribs.h> // for interrupts
 
 /*----------------------------- Module Defines ----------------------------*/
@@ -32,6 +33,18 @@
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
+
+// Joystick Info
+#define JOY1_ADC_MASK BIT0HI // AN0 (RA0)
+#define JOY1_ANSEL (ANSELAbits.ANSA0) // AN0
+#define JOY1_TRIS (TRISAbits.TRISA0) // AN0
+
+#define JOY2_ADC_MASK BIT1HI // AN1 (RA1)
+#define JOY2_ANSEL (ANSELAbits.ANSA1) // AN1
+#define JOY2_TRIS (TRISAbits.TRISA1) // AN1
+
+#define NUM_ANALOG_INPUTS 2
+
 
 // // UART2 Pins: Rx is RB8, Tx is RB9 
 //#define U2RX_ANSEL (ANSELBbits.ANSB8) // NO ANSEL
@@ -66,7 +79,7 @@
 #define FRAME_ID_BYTE         0x00 // Byte 5
 #define DEST_ADD_RX_MSB_BYTE  0x21 // Byte 6  (Quackraft to Mallard Module)
 #define DEST_ADD_TX_MSB_BYTE  0x20 // Byte 6  (Mallard Module to Quackraft)
-#define MY_DEST_ADD_LSB_BYTE  0x82 // Byte 7  (CHECK THIS!!)
+#define MY_DEST_ADD_LSB_BYTE  0x85 // Byte 7  (CHECK THIS!!)
 #define OPT_BYTE              0x01 // Byte 8
 #define STATUS_DRIVING_BYTE   0x00 // Byte 9
 #define STATUS_CHARGING_BYTE  0x01 // Byte 9
@@ -82,6 +95,7 @@ static void ComputeCheckSum(uint8_t);
 static bool ValidReceivedMessage(void);
 static void InterpretMessage(void);
 static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8_t digi);
+static void ReadADCValues(void);
 
 /*---------------------------- Module Variables ---------------------------*/
 // with the introduction of Gen2, we need a module level Priority variable
@@ -100,6 +114,8 @@ static uint8_t Addresses[] = {0x00, 0x81, 0x82, 0x83, 0x84, 0x85};
 static uint8_t ChargeVal = 0xFF; // Default initial value per comms protocol
 static uint16_t JoyResolution = 255; // max value, 8 bits
 static uint16_t JoyMidPoint;
+// ADC results array
+static uint32_t ADCResults[NUM_ANALOG_INPUTS]; // Joy1, Joy2, more?
 static uint8_t StatusVal, Joy1Val, Joy2Val, DigiVal; // Variables to hold data to be sent to Quackraft
 static volatile uint8_t CheckSumVal = 0;
 
@@ -201,8 +217,14 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
         DB_printf("\rES_INIT received in MallardCommunicationService, priority: %d\r\n", MyPriority);
         // Initialize hardware for communication here
         InitUART();
+        // Initialize ADC
+        JOY1_ANSEL = 1;    // Set as analog
+        JOY1_TRIS = 1;    // Set as input
+        JOY2_ANSEL = 1;    // Set as analog
+        JOY2_TRIS = 1;    // Set as input
+        ADC_ConfigAutoScan(JOY1_ADC_MASK | JOY2_ADC_MASK); // Configure AN0 and AN1 for auto scan
         // Initialize vairables
-        desiredAddressLSB = 0x82; // Default or Quackraft
+        desiredAddressLSB = 0x85; // Default or Quackraft
         StatusVal = STATUS_PAIRING_BYTE; // Start in pairing status
         JoyMidPoint = JoyResolution / 2;
         Joy1Val = JoyMidPoint;
@@ -216,8 +238,12 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
       {
         if (ThisEvent.EventParam == SEND_MSG_TIMER) {
           DB_printf("\rSEND_MSG_TIMER expired in MallardCommunicationService\r\n");
+          // Read ADC values for joysticks
+          ReadADCValues();
+          // DB_printf("\rADC Readings - Joy1: %d, Joy2: %d\r\n", Joy1Val, Joy2Val);
           // Send MSG to Quackraft
           SendMsgToQuackraft(StatusVal, Joy1Val, Joy2Val, DigiVal);
+          DB_printf("/r checksum: 0x%x\r\n", CheckSumVal);
           // Restart timer
           ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
         }
@@ -237,7 +263,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
         DB_printf("\rCHANGE_ADDR event received in MallardCommunicationService, new desired address LSB: 0x%02X\r\n", desiredAddressLSB);
       }
       break;
-      
+
       case ES_RX_BYTE:
       {
         switch (ThisEvent.EventParam) {
@@ -337,11 +363,11 @@ void __ISR(_UART_2_VECTOR, IPL7SOFT) U2RX_ISR(void) {
   if (IFS1bits.U2RXIF) {
     while (U2STAbits.URXDA) {
       receivedByte = U2RXREG;
+      ES_Event_t NewEvent;
+      NewEvent.EventType  = ES_RX_BYTE;
+      NewEvent.EventParam = receivedByte;
+      PostMallardCommunicationService(NewEvent);
     }
-    ES_Event_t NewEvent;
-    NewEvent.EventType  = ES_RX_BYTE;
-    NewEvent.EventParam = receivedByte;
-    PostMallardCommunicationService(NewEvent);
     IFS1CLR = _IFS1_U2RXIF_MASK;  // Clear interrupt flag
   }
 }
@@ -359,12 +385,12 @@ static void ComputeCheckSum(uint8_t dataFrameLength) {
     } else {
     sum += rxBuf[i];
     }
-    sum = 0xFF - sum;
-    CheckSumVal = sum;
   }
+  sum = 0xFF - sum;
+  CheckSumVal = sum;
 }
 static bool ValidReceivedMessage(void) {
-  static bool ValidMessage = false;
+  bool ValidMessage = false;
   // Check Sum first
   ComputeCheckSum(DATA_FRAME_RX_LENGTH);
   if (rxBuf[CHECKSUM_RX_INDEX] != CheckSumVal) {
@@ -380,6 +406,14 @@ static bool ValidReceivedMessage(void) {
       (rxBuf[6] == MY_DEST_ADD_LSB_BYTE) && //  message for me
       (rxBuf[7] == OPT_BYTE)) {
     ValidMessage = true; // Paired and address matches, valid message   
+    
+    if (pairedStatus == false) {
+      pairedStatus = true; // Update paired status on valid message receipt
+      ES_Event_t NewEvent;
+      NewEvent.EventType  = ES_PAIRED;
+      ES_PostAll(NewEvent);
+      DB_printf("\rValid message received in MallardCommunicationService, PAIRED!\r\n");
+    }
   }
   return ValidMessage;
  }
@@ -403,9 +437,21 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
   txBuf[6] = desiredAddressLSB;
   txBuf[7] = OPT_BYTE;
   txBuf[8] = status;
-  txBuf[9] = joy1;
-  txBuf[10] = joy2;
-  txBuf[11] = digi;
+  if (status == STATUS_PAIRING_BYTE)
+  {
+    txBuf[9] = DEST_ADD_RX_MSB_BYTE; 
+    txBuf[10] = MY_DEST_ADD_LSB_BYTE;
+  } else if (status == STATUS_CHARGING_BYTE) {
+    // Per communications protocol
+    txBuf[9] =  0x00;
+    txBuf[10] = 0x00;
+    txBuf[11] = 0x00;
+  } else 
+  {
+    txBuf[9] = joy1;
+    txBuf[10] = joy2;
+    txBuf[11] = digi;
+  }
   ComputeCheckSum(DATA_FRAME_TX_LENGTH);
   txBuf[CHECKSUM_TX_INDEX] = CheckSumVal;
 
@@ -416,6 +462,12 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
     }
     U2TXREG = txBuf[i]; // Write byte to transmit register
   }
+}
+
+static void ReadADCValues(void) {
+  ADC_MultiRead(ADCResults);
+  Joy1Val = (uint8_t)(ADCResults[0] >> 2); // fit the 10 bits to 8
+  Joy2Val = (uint8_t)(ADCResults[1] >> 2); // fit the 10 bits to 8
 }
 
  /*------------------------------- Footnotes -------------------------------*/
