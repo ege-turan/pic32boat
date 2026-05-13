@@ -73,7 +73,10 @@
 #define CHECKSUM_TX_INDEX (FRAME_SIZE_TX - 1)
 
 #define MY_BOAT_ADDRESS_LSB 0x81
-#define ALEX_BOAT_ADDRESS_LSB 0x85
+#define BOAT2_ADDRESS_LSB   0x82
+#define BOAT3_ADDRESS_LSB   0x82
+#define BOAT4_ADDRESS_LSB   0x82
+#define BOAT5_ADDRESS_LSB   0x82
 
 // Message bytes
 #define START_BYTE 0x7E           // Byte 1
@@ -85,7 +88,7 @@
 #define FRAME_ID_BYTE 0x00        // Byte 5
 #define DEST_ADD_RX_MSB_BYTE 0x21 // Byte 6  (Quackraft to Mallard Module)
 #define DEST_ADD_TX_MSB_BYTE 0x20 // Byte 6  (Mallard Module to Quackraft)
-#define MY_DEST_ADD_LSB_BYTE 0x81 // Byte 7  (CHECK THIS!!)
+#define MY_CONTROLLER_ADD_LSB_BYTE 0x81 // Byte 7  (Team 1 controller address)
 #define OPT_BYTE 0x01             // Byte 8
 #define STATUS_DRIVING_BYTE 0x00  // Byte 9
 #define STATUS_CHARGING_BYTE 0x01 // Byte 9
@@ -231,7 +234,6 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             // Configure AN0 and AN1 for auto scan
             ADC_ConfigAutoScan(JOY1_ADC_MASK | JOY2_ADC_MASK);
 
-            // Initialize vairables, // ALEX_BOAT_ADDRESS_LSB; // Default or Quackraft?
             desiredAddressLSB = MY_BOAT_ADDRESS_LSB;
             StatusVal         = STATUS_PAIRING_BYTE; // Start in pairing status
             JoyMidPoint       = JoyResolution / 2;
@@ -483,7 +485,7 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
     if (status == STATUS_PAIRING_BYTE)
     {
         txBuf[9]  = DEST_ADD_RX_MSB_BYTE;
-        txBuf[10] = MY_DEST_ADD_LSB_BYTE;
+        txBuf[10] = MY_CONTROLLER_ADD_LSB_BYTE;
         txBuf[11] = 0x00; // No joystick or digi info in pairing message
     }
     else if (status == STATUS_CHARGING_BYTE)
