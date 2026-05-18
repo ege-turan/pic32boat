@@ -37,6 +37,15 @@
 #define SEND_UART_MS 200  // in milliseconds
 #define AUTOPAIRING_MS 2000// in milliseconds
 
+// Potentiometer Info
+#define BOAT_ADC_MASK BIT4HI          // AN4 (RB2)
+#define BOAT_ADC_ANSEL (ANSELBbits.ANSB2) // AN4
+#define BOAT_ADC_TRIS (TRISBbits.TRISB2)  // AN4
+
+// Pair Button (RB15, active LOW)
+#define PAIR_BTN_TRIS  (TRISBbits.TRISB15)
+#define PAIR_BTN_PORT  (PORTBbits.RB15)
+
 // Joystick Info
 #define JOY1_ADC_MASK BIT0HI          // AN0 (RA0)
 #define JOY1_ANSEL (ANSELAbits.ANSA0) // AN0
@@ -46,7 +55,7 @@
 #define JOY2_ANSEL (ANSELAbits.ANSA1) // AN1
 #define JOY2_TRIS (TRISAbits.TRISA1)  // AN1
 
-#define NUM_ANALOG_INPUTS 2
+#define NUM_ANALOG_INPUTS 3
 
 // // UART2 Pins: Rx is RB8, Tx is RB9
 //#define U2RX_ANSEL (ANSELBbits.ANSB8) // NO ANSEL
@@ -122,6 +131,8 @@ static uint8_t Addresses[]    = {0x00, 0x81, 0x82, 0x83, 0x84, 0x85};
 static uint8_t ChargeVal      = 0xFF; // Default initial value per comms protocol
 static uint16_t JoyResolution = 255;  // max value, 8 bits
 static uint16_t JoyMidPoint;
+
+static uint8_t BoatPotVal = 0;  // raw 8-bit pot reading, updated each ADC scan
 
 static uint32_t ADCResults[NUM_ANALOG_INPUTS];       // ADC results array (Joy1, Joy2, more?)
 static uint8_t StatusVal, Joy1Val, Joy2Val, DigiVal; // Variables for data to be sent to boat
@@ -230,9 +241,12 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             JOY1_TRIS  = 1; // Set as input
             JOY2_ANSEL = 1; // Set as analog
             JOY2_TRIS  = 1; // Set as input
+            BOAT_ADC_ANSEL = 1; // RB2: analog input (AN4, boat selector pot)
+            BOAT_ADC_TRIS = 1;  // RB2: input
+            PAIR_BTN_TRIS = 1; // pair button: digital input with pull-up
 
-            // Configure AN0 and AN1 for auto scan
-            ADC_ConfigAutoScan(JOY1_ADC_MASK | JOY2_ADC_MASK);
+            // Configure AN0 and AN1 (joystick) and AN44 (boat selector)for auto scan
+            ADC_ConfigAutoScan(JOY1_ADC_MASK | JOY2_ADC_MASK | BOAT_ADC_MASK);
 
             desiredAddressLSB = MY_BOAT_ADDRESS_LSB;
             StatusVal         = STATUS_PAIRING_BYTE; // Start in pairing status
@@ -242,7 +256,8 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             DigiVal           = 0x00;
             DB_printf("\rMallardCommunicationService initialization complete\r\n");
 
-            ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); //start autopairing
+            // Uncomment the following for autopairing instead of manually
+            // ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); // start autopairing
         }
         break;
 
@@ -259,11 +274,30 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 // Restart timer
                 ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
             }
+            if (ThisEvent.EventParam == UNPAIRING_TIMER)
+            {
+                pairedStatus  = false;
+                StatusVal     = STATUS_PAIRING_BYTE;
+                DB_printf("\rUnpairing timeout — back to pairing\r\n");
+            }
         }
         break;
 
-        case ES_START_PAIRING: // triggered by event checker
+        case ES_START_PAIRING:
         {
+            // Read pot right now to get the freshest value, then map to address index.
+            // 8-bit range 0-255 split into 5 equal bands of 51 counts each.
+            uint8_t addrIndex;
+            if      (BoatPotVal < 51)  addrIndex = 1;
+            else if (BoatPotVal < 102) addrIndex = 2;
+            else if (BoatPotVal < 153) addrIndex = 3;
+            else if (BoatPotVal < 204) addrIndex = 4;
+            else                       addrIndex = 5;
+
+            desiredAddressLSB = Addresses[addrIndex];
+            DB_printf("\rES_START_PAIRING: pot=%u → boat index %u → addr 0x%02X\r\n",
+                    BoatPotVal, addrIndex, desiredAddressLSB);
+
             StatusVal = STATUS_PAIRING_BYTE;
             ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
         }
@@ -320,6 +354,8 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 break;
             }
         }
+        break;
+
         default:
             break;
     }
@@ -463,6 +499,10 @@ static void InterpretMessage(void)
         NewEvent.EventType = ES_PAIRED;
         ES_PostAll(NewEvent);
         DB_printf("\rValid message received in MallardCommunicationService, PAIRED!\r\n");
+        
+        ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
+        // Reset the timer on every valid received message
+        if (pairedStatus) ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
     }
     else
     {
@@ -530,6 +570,7 @@ static void ReadADCValues(void)
     ADC_MultiRead(ADCResults);
     Joy1Val = (uint8_t)(ADCResults[0] >> 2); // fit the 10 bits to 8
     Joy2Val = (uint8_t)(ADCResults[1] >> 2); // fit the 10 bits to 8
+    BoatPotVal = (uint8_t)(ADCResults[2] >> 2); // 8-bit, stored for pairing
 }
 
 /*------------------------------- Footnotes -------------------------------*/

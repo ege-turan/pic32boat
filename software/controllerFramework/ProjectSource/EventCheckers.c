@@ -286,3 +286,30 @@ static uint8_t ReadBoatIndex(void)
     else if (potVal < BOAT_THRESH_4) return 4;
     else                             return 5;
 }
+
+/****************************************************************************
+ Function   Check4PairButton
+ Description
+    Starts pairing
+****************************************************************************/
+bool Check4PairButton(void)
+{
+    static bool lastState = true; // HIGH = unpressed (active LOW)
+
+    bool currentState = (bool)PAIR_BTN_PORT;
+
+    if ((currentState == false) && (lastState == true)) // falling edge
+    {
+        lastState = currentState;
+        DB_printf("[PairBtn] Falling edge detected on RB15\r\n");
+
+        ES_Event_t evt;
+        evt.EventType  = ES_START_PAIRING;
+        evt.EventParam = 0;
+        PostMallardCommunicationService(evt);
+        return true;
+    }
+
+    lastState = currentState;
+    return false;
+}
