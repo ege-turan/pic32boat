@@ -30,7 +30,7 @@
 
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
-// #define SHOW_SENT_BYTES
+#define SHOW_SENT_BYTES
 // #define SHOW_RECEIVED_BYTES
 
 #define FOUR_SECONDS 4000 // in milliseconds
@@ -257,7 +257,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             DB_printf("\rMallardCommunicationService initialization complete\r\n");
 
             // Uncomment the following for autopairing instead of manually
-            // ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); // start autopairing
+            ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); // start autopairing
         }
         break;
 
