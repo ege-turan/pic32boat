@@ -330,6 +330,14 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
         }
         break;
 
+        case ES_REFUEL_INPUT:
+        {
+            DEBUG_LED_LAT = 1; // Turn on Status LED 3
+            // TODO: Implement refuel input handling
+
+        }
+        break;
+
         case ES_CHANGE_ADDR: // triggered by event checker
         {
             // Get new address from event parameter

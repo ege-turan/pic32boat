@@ -179,3 +179,42 @@ bool Check4PairButton(void)
     lastButtonState = currentButtonState;
     return false;
 }
+
+
+// RA3 or RB12 not sure which for refuel input
+/* ---- Refuel Input (RA3, active LOW) ---------------------------------- */
+// #define REFUEL_IN_ANSEL   (ANSELAbits.ANSA3)
+#define REFUEL_IN_TRIS    (TRISAbits.TRISA3)
+#define REFUEL_IN_PORT    (PORTAbits.RA3)
+
+bool Check4RefuelInput(void)
+{
+    static bool initializedRefuelIn = false;
+    static bool lastInputState = true; // HIGH = unpressed (active LOW)
+    /* One-time hardware setup (called on first event-checker invocation)  */
+    if (!initializedRefuelIn)
+    {
+        // Initialize refuel input hardware
+        // REFUEL_IN_ANSEL = 0; // RA3: digital input
+        REFUEL_IN_TRIS  = 1; // RA3: input
+        initializedRefuelIn = true;
+    }
+ 
+    bool currentInputState = (bool)REFUEL_IN_PORT;   /* 1=high, 0=low    */
+ 
+    /* Detect falling edge: was HIGH last tick, is LOW this tick           */
+    if ((currentInputState == false) && (lastInputState == true))
+    {
+        lastInputState = currentInputState;
+ 
+        ES_Event_t refuelEvent;
+        refuelEvent.EventType  = ES_REFUEL_INPUT;
+        refuelEvent.EventParam = 0;
+        ES_PostAll(refuelEvent);
+ 
+        return true;
+    }
+ 
+    lastInputState = currentInputState;
+    return false;
+}

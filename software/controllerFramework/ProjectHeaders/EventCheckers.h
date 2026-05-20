@@ -24,5 +24,6 @@
 
 bool Check4Keystroke(void);
 bool Check4PairButton(void);
+bool Check4RefuelInput(void);
 
 #endif /* EventCheckers_H */
