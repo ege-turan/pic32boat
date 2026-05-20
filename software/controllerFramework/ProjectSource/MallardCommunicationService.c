@@ -30,7 +30,7 @@
 
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
-// #define SHOW_SENT_BYTES
+#define SHOW_SENT_BYTES
 // #define SHOW_RECEIVED_BYTES
 
 #define FOUR_SECONDS 4000 // in milliseconds
@@ -45,6 +45,20 @@
 // Pair Button (RB15, active LOW)
 #define PAIR_BTN_TRIS  (TRISBbits.TRISB15)
 #define PAIR_BTN_PORT  (PORTBbits.RB15)
+
+// Status LEDs
+// #define PWR_ON_LED_ANSEL (ANSELBbits.ANSB4) // Status LED 1 (RB4)
+#define PWR_ON_LED_TRIS  (TRISBbits.TRISB4) // Status LED 1 (RB4)
+#define PWR_ON_LED_LAT   (LATBbits.LATB4)   // write to LAT
+
+// #define PAIRED_LED_ANSEL (ANSELAbits.ANSA4) // Paired LED 2 (RA4)
+#define PAIRED_LED_TRIS  (TRISAbits.TRISA4) // Paired LED 2 (RA4)
+#define PAIRED_LED_LAT   (LATAbits.LATA4)   // write to LAT
+
+// #define DEBUG_LED_ANSEL (ANSELBbits.ANSB5) // Debug LED 3 (RB5)
+#define DEBUG_LED_TRIS  (TRISBbits.TRISB5) // Debug LED 3 (RB5)
+#define DEBUG_LED_LAT   (LATBbits.LATB5)   // write to LAT
+
 
 // Joystick Info
 #define JOY1_ADC_MASK BIT0HI          // AN0 (RA0)
@@ -243,11 +257,23 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             JOY2_TRIS  = 1; // Set as input
             BOAT_ADC_ANSEL = 1; // RB2: analog input (AN4, boat selector pot)
             BOAT_ADC_TRIS = 1;  // RB2: input
-            PAIR_BTN_TRIS = 1; // pair button: digital input with pull-up
 
             // Configure AN0 and AN1 (joystick) and AN44 (boat selector)for auto scan
             ADC_ConfigAutoScan(JOY1_ADC_MASK | JOY2_ADC_MASK | BOAT_ADC_MASK);
 
+            // Initialize other hardware pins
+            PAIR_BTN_TRIS = 1;    // pair button: digital input with pull-up
+            // PWR_ON_LED_ANSEL = 0; // status LED 1: digital
+            PWR_ON_LED_TRIS  = 0; // status LED 1: output
+            PWR_ON_LED_LAT   = 1; // start with LED ON
+            // PAIRED_LED_ANSEL = 0; // paired LED 2: digital
+            PAIRED_LED_TRIS  = 0; // paired LED 2: output
+            PAIRED_LED_LAT   = 0; // start with LED off
+            // DEBUG_LED_ANSEL = 0;  // debug LED 3: digital
+            DEBUG_LED_TRIS  = 0;  // debug LED 3: output
+            DEBUG_LED_LAT   = 0;  // start with LED off
+
+            // Initialize variables
             desiredAddressLSB = MY_BOAT_ADDRESS_LSB;
             StatusVal         = STATUS_PAIRING_BYTE; // Start in pairing status
             JoyMidPoint       = JoyResolution / 2;
@@ -257,7 +283,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             DB_printf("\rMallardCommunicationService initialization complete\r\n");
 
             // Uncomment the following for autopairing instead of manually
-            // ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); // start autopairing
+            ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); // start autopairing
         }
         break;
 
@@ -277,6 +303,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             if (ThisEvent.EventParam == UNPAIRING_TIMER)
             {
                 pairedStatus  = false;
+                PAIRED_LED_LAT = 0; // Turn off paired LED
                 StatusVal     = STATUS_PAIRING_BYTE;
                 DB_printf("\rUnpairing timeout — back to pairing\r\n");
             }
@@ -494,6 +521,7 @@ static void InterpretMessage(void)
         (rxBuf[5] == desiredAddressLSB))
     {
         pairedStatus = true; // Update paired status on valid message receipt
+        PAIRED_LED_LAT = 1; // Turn on paired LED
         StatusVal    = STATUS_DRIVING_BYTE;
         ES_Event_t NewEvent;
         NewEvent.EventType = ES_PAIRED;
