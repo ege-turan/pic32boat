@@ -28,7 +28,7 @@
 #include "dbprintf.h"
 
 /*----------------------------- Module Defines ----------------------------*/
-#define SHOW_SERVO_POS
+// #define SHOW_FUEL_RECEIVED
 
 #define SERVO_MIN_PW   2500   // 1.0 ms / 0.4 µs = 2500 ticks
 #define SERVO_MAX_PW   5000   // 2.0 ms / 0.4 µs = 5000 ticks
@@ -36,6 +36,9 @@
 #define SERVO_CHANNEL  4      // Using PWM channel 4 (RPA2)
 #define PWM_TIMER    _Timer2_
 #define SERVO_UPDATE   10     // ms update timer of servos
+
+#define MIN_FUEL_VAL 0
+#define MAX_FUEL_VAL 200
 
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
@@ -46,6 +49,7 @@
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
 static uint16_t ServoPosition;
+static uint16_t CurrentFuelVal;
 
 /*------------------------------ Module Code ------------------------------*/
 /****************************************************************************
@@ -154,12 +158,22 @@ ES_Event_t RunFuelServoService(ES_Event_t ThisEvent)
             // Start servo centered
             ServoPosition = (SERVO_MIN_PW + SERVO_MAX_PW) / 2;
             PWMOperate_SetPulseWidthOnChannel(ServoPosition, SERVO_CHANNEL);
+
+            // Initialize variables
+            CurrentFuelVal = MAX_FUEL_VAL;
         }
         break;
 
-        case ES_REFUEL_INPUT:
+        case ES_FUEL_VAL_RECEIVED:
         {
+            CurrentFuelVal = ThisEvent.EventParam;
+            // Map fuel value (0-100) to pulse width range
+            uint16_t newPW = SERVO_MIN_PW + ((CurrentFuelVal * (SERVO_MAX_PW - SERVO_MIN_PW)) / (MAX_FUEL_VAL - MIN_FUEL_VAL));
+            PWMOperate_SetPulseWidthOnChannel(newPW, SERVO_CHANNEL);  
             
+            #ifdef SHOW_FUEL_RECEIVED
+            DB_printf("\rFuel value received: %u, mapped pulse width: %u (min: %u, max: %u)\r\n", CurrentFuelVal, newPW, SERVO_MIN_PW, SERVO_MAX_PW);
+            #endif
         }
         break;
 
