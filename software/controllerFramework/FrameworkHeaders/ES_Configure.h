@@ -268,7 +268,8 @@ typedef enum
   ES_CHANGE_ADDR,
   ES_PAIRED,               /* signals successful pairing */
   ES_UNPAIRED,             /* signals unpairing */
-  ES_REFUEL_INPUT
+  ES_REFUEL_INPUT,
+  ES_FUEL_VAL_RECEIVED
 }ES_EventType_t;
 
 /****************************************************************************/

@@ -531,19 +531,23 @@ static void InterpretMessage(void)
         (rxBuf[5] == desiredAddressLSB))
     {
         pairedStatus = true; // Update paired status on valid message receipt
+        // Reset the timer on paired message
+        ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
+                                
         PAIRED_LED_LAT = 1; // Turn on paired LED
         StatusVal    = STATUS_DRIVING_BYTE;
         ES_Event_t NewEvent;
         NewEvent.EventType = ES_PAIRED;
         ES_PostAll(NewEvent);
-        DB_printf("\rValid message received in MallardCommunicationService, PAIRED!\r\n");
-        
-        ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
-        // Reset the timer on every valid received message
-        if (pairedStatus) ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
+        DB_printf("\rValid message received in MallardCommunicationService, PAIRED!\r\n");        
     }
-    else
+    else if ((pairedStatus == true) && (rxBuf[4] == DEST_ADD_TX_MSB_BYTE) &&
+             (rxBuf[5] == desiredAddressLSB))
     {
+        // Reset the timer on paired message
+        ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
+        ChargeVal = rxBuf[8]; // Update charge value from message
+        ES_Event_t NewEvent;
     }
 }
 
