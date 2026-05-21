@@ -1,4 +1,4 @@
-build/default/debug/ProjectSource/EventCheckers.o: \
+build/default/production/ProjectSource/EventCheckers.o: \
  ProjectSource/EventCheckers.c FrameworkHeaders/ES_Configure.h \
  FrameworkHeaders/ES_Framework.h FrameworkHeaders/ES_Types.h \
  FrameworkHeaders/ES_Port.h FrameworkHeaders/bitdefs.h \

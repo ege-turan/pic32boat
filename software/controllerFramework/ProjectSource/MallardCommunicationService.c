@@ -30,8 +30,9 @@
 
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
-#define SHOW_SENT_BYTES
+// #define SHOW_SENT_BYTES
 // #define SHOW_RECEIVED_BYTES
+#define SHOW_ANALOG_VALS
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
@@ -282,8 +283,8 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             DigiVal           = 0x00;
             DB_printf("\rMallardCommunicationService initialization complete\r\n");
 
-            // Uncomment the following for autopairing instead of manually
-            ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); // start autopairing
+            // // Uncomment the following for autopairing instead of manually
+            // ES_Timer_InitTimer(SEND_MSG_TIMER, AUTOPAIRING_MS); // start autopairing
         }
         break;
 
@@ -312,6 +313,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
 
         case ES_START_PAIRING:
         {
+            ReadADCValues();
             // Read pot right now to get the freshest value, then map to address index.
             // 8-bit range 0-255 split into 5 equal bands of 51 counts each.
             uint8_t addrIndex;
@@ -322,7 +324,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             else                       addrIndex = 5;
 
             desiredAddressLSB = Addresses[addrIndex];
-            DB_printf("\rES_START_PAIRING: pot=%u → boat index %u → addr 0x%02X\r\n",
+            DB_printf("\rES_START_PAIRING: pot=%u -> boat index %u -> addr 0x%x\r\n",
                     BoatPotVal, addrIndex, desiredAddressLSB);
 
             StatusVal = STATUS_PAIRING_BYTE;
@@ -592,7 +594,7 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
     }
 
 #ifdef SHOW_SENT_BYTES
-    DB_printf("\r Sent Message bytes: \r\n");
+    DB_printf("\r Sent Message bytes: (to address 0x%x)\r\n", desiredAddressLSB);
     for (uint8_t i = 0; i < FRAME_SIZE_TX; i++)
     {
         DB_printf("0x%x ", txBuf[i]);
@@ -607,6 +609,9 @@ static void ReadADCValues(void)
     Joy1Val = (uint8_t)(ADCResults[0] >> 2); // fit the 10 bits to 8
     Joy2Val = (uint8_t)(ADCResults[1] >> 2); // fit the 10 bits to 8
     BoatPotVal = (uint8_t)(ADCResults[2] >> 2); // 8-bit, stored for pairing
+    #ifdef SHOW_ANALOG_VALS
+    DB_printf("\rADC Readings - Joy1: %d, Joy2: %d, BoatPot: %d\r\n", Joy1Val, Joy2Val, BoatPotVal);
+    #endif
 }
 
 /*------------------------------- Footnotes -------------------------------*/
