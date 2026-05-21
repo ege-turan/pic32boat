@@ -40,6 +40,7 @@
 // include our own prototypes to insure consistency between header &
 // actual functionsdefinition
 #include "EventCheckers.h"
+#include "dbprintf.h"
 
 // This is the event checking function sample. It is not intended to be
 // included in the module. It is only here as a sample to guide you in writing
@@ -123,6 +124,7 @@ bool Check4Keystroke(void)
 /* ------------------------ CONTROLLER / MALLARD ------------------------ */
 
 /* ---- Pair button (RB15, active LOW) ---------------------------------- */
+#define PAIR_BTN_ANSEL   (ANSELBbits.ANSB15) // RB15: digital input
 #define PAIR_BTN_TRIS    (TRISBbits.TRISB15)
 #define PAIR_BTN_PORT    (PORTBbits.RB15)
 #define PAIR_BTN_CNPU    (CNPUBbits.CNPUB15)  /* Internal pull-up        */
@@ -156,8 +158,9 @@ bool Check4PairButton(void)
     /* One-time hardware setup (called on first event-checker invocation)  */
     if (!initializedPairBtn)
     {
+        PAIR_BTN_ANSEL = 0; // RB15: digital input
         PAIR_BTN_TRIS = 1;    /* RB15: digital input                      */
-        // PAIR_BTN_CNPU = 1;    /* Enable internal pull-up on RB15          */
+        PAIR_BTN_CNPU = 1;    /* Enable internal pull-up on RB15          */
         initializedPairBtn = true;
     }
  
@@ -166,6 +169,7 @@ bool Check4PairButton(void)
     /* Detect falling edge: was HIGH last tick, is LOW this tick           */
     if ((currentButtonState == false) && (lastButtonState == true))
     {
+        DB_printf("\rPair button pressed! Current state is: %d\r\n", currentButtonState);
         lastButtonState = currentButtonState;
  
         ES_Event_t pairEvent;
@@ -177,5 +181,44 @@ bool Check4PairButton(void)
     }
  
     lastButtonState = currentButtonState;
+    return false;
+}
+
+
+// RA3 or RB12 not sure which for refuel input
+/* ---- Refuel Input (RA3, active LOW) ---------------------------------- */
+// #define REFUEL_IN_ANSEL   (ANSELAbits.ANSA3)
+#define REFUEL_IN_TRIS    (TRISAbits.TRISA3)
+#define REFUEL_IN_PORT    (PORTAbits.RA3)
+
+bool Check4RefuelInput(void)
+{
+    static bool initializedRefuelIn = false;
+    static bool lastInputState = true; // HIGH = unpressed (active LOW)
+    /* One-time hardware setup (called on first event-checker invocation)  */
+    if (!initializedRefuelIn)
+    {
+        // Initialize refuel input hardware
+        // REFUEL_IN_ANSEL = 0; // RA3: digital input
+        REFUEL_IN_TRIS  = 1; // RA3: input
+        initializedRefuelIn = true;
+    }
+ 
+    bool currentInputState = (bool)REFUEL_IN_PORT;   /* 1=high, 0=low    */
+ 
+    /* Detect falling edge: was HIGH last tick, is LOW this tick           */
+    if ((currentInputState == false) && (lastInputState == true))
+    {
+        lastInputState = currentInputState;
+ 
+        ES_Event_t refuelEvent;
+        refuelEvent.EventType  = ES_REFUEL_INPUT;
+        refuelEvent.EventParam = 0;
+        ES_PostAll(refuelEvent);
+ 
+        return true;
+    }
+ 
+    lastInputState = currentInputState;
     return false;
 }
