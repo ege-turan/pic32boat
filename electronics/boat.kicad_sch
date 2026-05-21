@@ -4056,6 +4056,16 @@
 		)
 		(uuid 4d5eec94-7f95-4966-9c23-35028dff2a03)
 	)
+	(text "DOUT"
+		(exclude_from_sim no)
+		(at 104.394 77.724 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "06bfbab1-b38e-4324-b444-4b9577cf6b1e")
+	)
 	(text "for programming"
 		(exclude_from_sim no)
 		(at 155.448 36.068 0)
@@ -4065,6 +4075,36 @@
 			)
 		)
 		(uuid "52965f91-51fd-4d6c-a4c4-31cf75077e5d")
+	)
+	(text "DIN"
+		(exclude_from_sim no)
+		(at 181.356 50.038 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "5849e17f-bd7f-412a-8275-56815a157be9")
+	)
+	(text "DIN"
+		(exclude_from_sim no)
+		(at 104.394 80.518 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "b2e8f877-15b5-47bb-a301-4fbb03c8863d")
+	)
+	(text "DOUT"
+		(exclude_from_sim no)
+		(at 181.356 47.244 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "d2c2d03d-05ff-434c-b5a6-870141885e35")
 	)
 	(junction
 		(at 50.8 55.88)
