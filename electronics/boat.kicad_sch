@@ -2301,6 +2301,179 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Motor:Motor_DC_ALT"
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "M"
+				(at 2.54 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "Motor_DC_ALT"
+				(at 2.54 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left top)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 -2.286 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 -2.286 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "DC Motor, alternative symbol"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "DC Motor"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "PinHeader*P2.54mm* TerminalBlock*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Motor_DC_ALT_0_0"
+				(polyline
+					(pts
+						(xy -1.27 1.27) (xy -1.27 2.032) (xy 1.27 2.032) (xy 1.27 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -3.302) (xy -1.27 0.508) (xy 0 -2.032) (xy 1.27 0.508) (xy 1.27 -3.302)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -4.318) (xy -1.27 -5.08) (xy 1.27 -5.08) (xy 1.27 -4.318)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 -1.524)
+					(radius 2.9718)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Motor_DC_ALT_0_1"
+				(polyline
+					(pts
+						(xy 0 2.032) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "Motor_DC_ALT_1_1"
+				(pin passive line
+					(at 0 5.08 270)
+					(length 2.54)
+					(name "+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -7.62 90)
+					(length 2.54)
+					(name "-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "RF_ZigBee:XBee_SMT"
 			(pin_names
 				(offset 1.016)
@@ -3060,6 +3233,340 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "TLE5206-2S:TLE5206-2S"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at -10.16 10.668 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left bottom)
+				)
+			)
+			(property "Value" "TLE5206-2S"
+				(at -10.16 -15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left bottom)
+				)
+			)
+			(property "Footprint" "TLE5206-2S:TO127P1000X440X1730-7"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "MF" "Infineon Technologies"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "SNAPEDA_PACKAGE_ID" "60766"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "MAXIMUM_PACKAGE_HEIGHT" "4.4 mm"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "Price" "None"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "Package" "None"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "Check_prices" "https://www.snapeda.com/parts/TLE52062S/Infineon/view-part/?ref=eda"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "STANDARD" "Manufacturer Recommendations"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "PARTREV" "1.1"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "SnapEDA_Link" "https://www.snapeda.com/parts/TLE52062S/Infineon/view-part/?ref=snap"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "MP" "TLE52062S"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "Description_1" "IC MOTOR DRIVER 5.3V-40V TO220-7"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "SNAPEDA_PN" "TLE5206-2S"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "Availability" "In Stock"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(property "MANUFACTURER" "Infineon Technologies"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify bottom)
+					(hide yes)
+				)
+			)
+			(symbol "TLE5206-2S_0_0"
+				(rectangle
+					(start -10.16 -12.7)
+					(end 10.16 10.16)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(pin input line
+					(at -15.24 2.54 0)
+					(length 5.08)
+					(name "IN1"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -15.24 0 0)
+					(length 5.08)
+					(name "IN2"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 15.24 7.62 180)
+					(length 5.08)
+					(name "VS"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 15.24 2.54 180)
+					(length 5.08)
+					(name "OUT1"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 15.24 0 180)
+					(length 5.08)
+					(name "OUT2"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 15.24 -5.08 180)
+					(length 5.08)
+					(name "EF"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 15.24 -10.16 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "power:+12V"
 			(power)
 			(pin_numbers
@@ -3310,6 +3817,131 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "power:+5V"
+			(power)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "+5V"
+				(at 0 3.556 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"+5V\""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "+5V_0_1"
+				(polyline
+					(pts
+						(xy -0.762 1.27) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 2.54) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "+5V_1_1"
+				(pin power_in line
+					(at 0 0 90)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "power:GND"
 			(power)
 			(pin_numbers
@@ -3424,6 +4056,16 @@
 		)
 		(uuid 4d5eec94-7f95-4966-9c23-35028dff2a03)
 	)
+	(text "DOUT"
+		(exclude_from_sim no)
+		(at 104.394 77.724 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "06bfbab1-b38e-4324-b444-4b9577cf6b1e")
+	)
 	(text "for programming"
 		(exclude_from_sim no)
 		(at 155.448 36.068 0)
@@ -3433,6 +4075,36 @@
 			)
 		)
 		(uuid "52965f91-51fd-4d6c-a4c4-31cf75077e5d")
+	)
+	(text "DIN"
+		(exclude_from_sim no)
+		(at 181.356 50.038 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "5849e17f-bd7f-412a-8275-56815a157be9")
+	)
+	(text "DIN"
+		(exclude_from_sim no)
+		(at 104.394 80.518 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "b2e8f877-15b5-47bb-a301-4fbb03c8863d")
+	)
+	(text "DOUT"
+		(exclude_from_sim no)
+		(at 181.356 47.244 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "d2c2d03d-05ff-434c-b5a6-870141885e35")
 	)
 	(junction
 		(at 50.8 55.88)
@@ -3445,6 +4117,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "153f7ef0-25cb-469d-812e-9e28496fa604")
+	)
+	(junction
+		(at 202.946 116.078)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "4eb41718-290b-49b1-b0be-b4b5c54e1933")
 	)
 	(junction
 		(at 90.17 40.894)
@@ -3463,6 +4141,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "86e5718c-50cc-4351-a90b-0a041222d9e2")
+	)
+	(junction
+		(at 202.946 125.984)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8810b9a6-9717-481b-b5dc-d1410e31f8d2")
 	)
 	(junction
 		(at 50.8 138.43)
@@ -3569,10 +4253,6 @@
 		(uuid "885abced-0f46-4db5-8b55-f9a92249d827")
 	)
 	(no_connect
-		(at 50.8 76.2)
-		(uuid "9557fa97-0def-4213-8532-06e809de6ed9")
-	)
-	(no_connect
 		(at 198.12 64.77)
 		(uuid "9fd8faab-fc6c-4662-aee3-36d1ade0d170")
 	)
@@ -3591,6 +4271,10 @@
 	(no_connect
 		(at 198.12 80.01)
 		(uuid "acb18076-8e50-4f6d-89f9-a46c50330240")
+	)
+	(no_connect
+		(at 201.676 143.51)
+		(uuid "aece1a0d-9aa2-4cc3-b479-afe88379f4f3")
 	)
 	(no_connect
 		(at 254 46.99)
@@ -3634,6 +4318,16 @@
 	)
 	(wire
 		(pts
+			(xy 204.978 138.43) (xy 204.978 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "03eb398f-d0a4-4671-be1e-9eb6012e9485")
+	)
+	(wire
+		(pts
 			(xy 97.79 40.894) (xy 106.68 40.894)
 		)
 		(stroke
@@ -3671,6 +4365,16 @@
 			(type default)
 		)
 		(uuid "0b6c420d-5c6f-4d28-a206-0797c8979cdc")
+	)
+	(wire
+		(pts
+			(xy 202.946 116.078) (xy 202.946 110.998)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "115796d8-1e31-498a-a3df-3ed29e7f14f4")
 	)
 	(wire
 		(pts
@@ -3754,6 +4458,16 @@
 	)
 	(wire
 		(pts
+			(xy 201.676 138.43) (xy 204.978 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2fb64de9-3775-4764-b174-9288e8d37d38")
+	)
+	(wire
+		(pts
 			(xy 50.8 135.89) (xy 50.8 138.43)
 		)
 		(stroke
@@ -3774,6 +4488,16 @@
 	)
 	(wire
 		(pts
+			(xy 204.978 143.51) (xy 209.042 143.51)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3a675cc3-b3fb-4de4-a706-6875e1e4774e")
+	)
+	(wire
+		(pts
 			(xy 228.6 95.25) (xy 228.6 96.52)
 		)
 		(stroke
@@ -3781,6 +4505,16 @@
 			(type default)
 		)
 		(uuid "3d21be37-dbd6-4322-b38c-c9dfe07d0362")
+	)
+	(wire
+		(pts
+			(xy 168.91 138.43) (xy 168.91 141.224)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "42444f9d-d81e-4f1b-bb00-14e7d83bf4f2")
 	)
 	(wire
 		(pts
@@ -3821,6 +4555,16 @@
 			(type default)
 		)
 		(uuid "64a1b994-740a-490d-8383-38fe39ccb118")
+	)
+	(wire
+		(pts
+			(xy 48.26 76.2) (xy 50.8 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "652ef116-a007-4937-98dc-f733798f1416")
 	)
 	(wire
 		(pts
@@ -3871,6 +4615,16 @@
 			(type default)
 		)
 		(uuid "7e4200d3-0353-466f-97d4-a9fd7fd37211")
+	)
+	(wire
+		(pts
+			(xy 203.2 148.59) (xy 201.676 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "80d4cbf7-f303-453f-aa54-6fe6256aceb4")
 	)
 	(wire
 		(pts
@@ -3944,6 +4698,26 @@
 	)
 	(wire
 		(pts
+			(xy 204.978 130.81) (xy 209.042 130.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a44eb371-3bfa-4a65-b41f-0d749a7b6f89")
+	)
+	(wire
+		(pts
+			(xy 201.676 130.81) (xy 202.946 130.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a4fce205-71d0-44e8-b161-099341c8b2a6")
+	)
+	(wire
+		(pts
 			(xy 90.17 57.15) (xy 130.81 57.15)
 		)
 		(stroke
@@ -3994,6 +4768,16 @@
 	)
 	(wire
 		(pts
+			(xy 202.946 116.078) (xy 202.946 125.984)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6077a60-313d-416f-b7c3-ae31c2e84f9c")
+	)
+	(wire
+		(pts
 			(xy 256.54 67.31) (xy 254 67.31)
 		)
 		(stroke
@@ -4014,6 +4798,16 @@
 	)
 	(wire
 		(pts
+			(xy 204.978 135.89) (xy 204.978 130.81)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c9f9a542-4552-47e9-a43b-ef8965877a1b")
+	)
+	(wire
+		(pts
 			(xy 226.06 96.52) (xy 226.06 97.79)
 		)
 		(stroke
@@ -4031,6 +4825,16 @@
 			(type default)
 		)
 		(uuid "ca91fbf4-521b-47a4-bc38-12cbd9bca0a3")
+	)
+	(wire
+		(pts
+			(xy 202.946 130.81) (xy 202.946 125.984)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d02549d6-bebb-40e2-afb0-d3682ba93fff")
 	)
 	(wire
 		(pts
@@ -4094,6 +4898,16 @@
 	)
 	(wire
 		(pts
+			(xy 171.196 138.43) (xy 168.91 138.43)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f5381537-c410-4bba-a4db-83d4c1602a24")
+	)
+	(wire
+		(pts
 			(xy 74.93 158.75) (xy 74.93 160.02)
 		)
 		(stroke
@@ -4104,6 +4918,16 @@
 	)
 	(wire
 		(pts
+			(xy 203.2 150.114) (xy 203.2 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fb47331b-5b28-4029-90f7-25c86825c5eb")
+	)
+	(wire
+		(pts
 			(xy 50.8 158.75) (xy 50.8 161.29)
 		)
 		(stroke
@@ -4111,6 +4935,16 @@
 			(type default)
 		)
 		(uuid "fd4d86f4-ed2f-455b-bb0d-585573c47fa9")
+	)
+	(wire
+		(pts
+			(xy 201.676 135.89) (xy 204.978 135.89)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fdbf872b-d00c-4c4a-8d2e-6e7252519b07")
 	)
 	(global_label "ThrusterLeftPWM1"
 		(shape output)
@@ -4196,6 +5030,28 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "WaterPump"
+		(shape input)
+		(at 48.26 76.2 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "5c4864c5-9e6d-454c-8828-51e1ca1f5b65")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 34.8126 76.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 				(hide yes)
 			)
 		)
@@ -4420,6 +5276,28 @@
 			)
 		)
 	)
+	(global_label "WaterPump"
+		(shape output)
+		(at 171.196 135.89 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "ce2c29ae-dc74-4e68-b81b-99009dfd2404")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 157.7486 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "GatePWM3"
 		(shape input)
 		(at 48.26 73.66 180)
@@ -4528,6 +5406,76 @@
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
 					(reference "C5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Motor:Motor_DC_ALT")
+		(at 209.042 135.89 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "108504fb-62a5-4af5-9101-5ce966aa22da")
+		(property "Reference" "M9"
+			(at 213.36 135.8899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "WaterPump_DC_DelavanAgPumpsDiaphragmPump2200-201-SB"
+			(at 213.36 138.4299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 209.042 138.176 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 209.042 138.176 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "DC Motor, alternative symbol"
+			(at 209.042 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "311f5e90-c52b-467e-b5be-04f655e0f311")
+		)
+		(pin "2"
+			(uuid "545fa7c2-0757-4ddd-b6f3-fcdbc5ce9ca9")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "M9")
 					(unit 1)
 				)
 			)
@@ -5044,6 +5992,74 @@
 		)
 	)
 	(symbol
+		(lib_id "ME218_BaseLib:Cap")
+		(at 206.756 125.984 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3e494488-6017-489b-af5b-14b28feb6219")
+		(property "Reference" "C25"
+			(at 207.264 119.888 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0.1uF"
+			(at 207.01 122.174 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 202.946 125.0188 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 206.756 125.984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 206.756 125.984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "9982ce82-04b0-433b-b0cf-7d6a080608ce")
+		)
+		(pin "1"
+			(uuid "a328f370-8b9b-4066-96f2-1a4e8e3a9a21")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "C25")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:+3V3")
 		(at 50.8 85.09 0)
 		(unit 1)
@@ -5172,6 +6188,72 @@
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
 					(reference "R4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+5V")
+		(at 202.946 110.998 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "45087f2e-60f0-4c79-990b-5f5cecb6ece5")
+		(property "Reference" "#PWR045"
+			(at 202.946 114.808 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+14V"
+			(at 202.946 105.664 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 202.946 110.998 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 202.946 110.998 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+5V\""
+			(at 202.946 110.998 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "30551b1d-1fbf-42ac-bba0-7e52e0023291")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "#PWR045")
 					(unit 1)
 				)
 			)
@@ -5758,6 +6840,74 @@
 	)
 	(symbol
 		(lib_id "ME218_BaseLib:Cap")
+		(at 206.756 116.078 270)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "717f7be8-7c38-48c0-8338-b4ccd9109714")
+		(property "Reference" "C24"
+			(at 207.264 109.982 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "470uF"
+			(at 207.01 112.268 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 202.946 115.1128 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 206.756 116.078 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 206.756 116.078 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "3a0da0f3-92ab-4d12-972f-c90c9d1e9bd4")
+		)
+		(pin "1"
+			(uuid "e855adbb-f436-4f41-b41a-48862930a8ac")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "C24")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ME218_BaseLib:Cap")
 		(at 50.8 88.9 180)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5971,6 +7121,230 @@
 		)
 	)
 	(symbol
+		(lib_id "TLE5206-2S:TLE5206-2S")
+		(at 186.436 138.43 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "802f4579-dd14-4b01-852e-fdbb911dd6be")
+		(property "Reference" "U11"
+			(at 186.436 122.682 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "TLE5206-2S"
+			(at 186.436 125.222 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "TLE5206-2S:TO127P1000X440X1730-7"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MF" "Infineon Technologies"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "SNAPEDA_PACKAGE_ID" "60766"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "MAXIMUM_PACKAGE_HEIGHT" "4.4 mm"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "Price" "None"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "Package" "None"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "Check_prices" "https://www.snapeda.com/parts/TLE52062S/Infineon/view-part/?ref=eda"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "STANDARD" "Manufacturer Recommendations"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "PARTREV" "1.1"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "SnapEDA_Link" "https://www.snapeda.com/parts/TLE52062S/Infineon/view-part/?ref=snap"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "MP" "TLE52062S"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "Description_1" "IC MOTOR DRIVER 5.3V-40V TO220-7"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "SNAPEDA_PN" "TLE5206-2S"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "Availability" "In Stock"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" "Infineon Technologies"
+			(at 186.436 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+				(hide yes)
+			)
+		)
+		(pin "4"
+			(uuid "4d6dc1b3-f10b-47d1-ab2e-9e8b4de055fd")
+		)
+		(pin "5"
+			(uuid "31331af3-233a-47b5-ab3c-18173da1bbb2")
+		)
+		(pin "3"
+			(uuid "dccf86e4-d45a-46d1-bfe1-c2a1d910252a")
+		)
+		(pin "6"
+			(uuid "b7731f9d-8855-4284-b9ce-74b88a10b1ab")
+		)
+		(pin "1"
+			(uuid "09124f26-8a54-4b8f-bd68-f862b1e300cc")
+		)
+		(pin "2"
+			(uuid "4bcd12d2-fcc7-42e6-a559-81add7615f81")
+		)
+		(pin "7"
+			(uuid "5b697e84-198a-477d-aafa-77730bbfb7d2")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "U11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 127 64.77 0)
 		(mirror y)
@@ -6098,6 +7472,74 @@
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
 					(reference "#PWR02")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 210.566 116.078 90)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "8c488e17-3fa2-40bc-bf61-35a4f03fd6e4")
+		(property "Reference" "#PWR047"
+			(at 216.916 116.078 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 213.868 116.0779 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 210.566 116.078 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 210.566 116.078 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 210.566 116.078 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b91567d5-cd46-4835-a8f2-28ed654d6d12")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "#PWR047")
 					(unit 1)
 				)
 			)
@@ -6441,6 +7883,74 @@
 	)
 	(symbol
 		(lib_id "power:GND")
+		(at 210.566 125.984 90)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ad3cef9e-1553-40dc-93be-d3834bcb4795")
+		(property "Reference" "#PWR069"
+			(at 216.916 125.984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 214.122 125.9839 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 210.566 125.984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 210.566 125.984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 210.566 125.984 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e5b48f6b-93bd-417e-ae5e-64ae40cde74d")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "#PWR069")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
 		(at 64.77 102.87 0)
 		(mirror y)
 		(unit 1)
@@ -6569,6 +8079,140 @@
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
 					(reference "R7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 168.91 141.224 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d08c47f8-ee74-4efa-8daf-c3dbde6df4fa")
+		(property "Reference" "#PWR070"
+			(at 168.91 147.574 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 168.91 146.304 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 168.91 141.224 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 168.91 141.224 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 168.91 141.224 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "dccd6ae8-4518-4d85-9329-bb7e709dbaca")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "#PWR070")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 203.2 150.114 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d297da41-e72d-4fa6-b566-91a5a6ef4a78")
+		(property "Reference" "#PWR046"
+			(at 203.2 156.464 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 203.2 155.194 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 203.2 150.114 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 203.2 150.114 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 203.2 150.114 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ffbf61ca-e94a-4c72-af2c-d31d9d7a39ef")
+		)
+		(instances
+			(project "boatElectronics"
+				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/dae846a3-5621-40b2-bbb5-71c56d87180c"
+					(reference "#PWR046")
 					(unit 1)
 				)
 			)
