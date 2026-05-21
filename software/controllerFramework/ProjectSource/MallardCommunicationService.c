@@ -24,6 +24,7 @@
 #include "ES_Configure.h"
 #include "ES_Framework.h"
 #include "MallardCommunicationService.h"
+#include "FuelServoService.h"
 #include "dbprintf.h"
 #include "PIC32_AD_Lib.h"
 #include <sys/attribs.h> // for interrupts
@@ -32,7 +33,7 @@
 #define DEBUG_PRINT_COMMS
 // #define SHOW_SENT_BYTES
 // #define SHOW_RECEIVED_BYTES
-#define SHOW_ANALOG_VALS
+// #define SHOW_ANALOG_VALS
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
@@ -548,6 +549,9 @@ static void InterpretMessage(void)
         ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
         ChargeVal = rxBuf[8]; // Update charge value from message
         ES_Event_t NewEvent;
+        NewEvent.EventType = ES_FUEL_VAL_RECEIVED;
+        NewEvent.EventParam = ChargeVal;
+        PostFuelServoService(NewEvent);
     }
 }
 

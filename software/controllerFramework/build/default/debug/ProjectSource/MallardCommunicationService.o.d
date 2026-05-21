@@ -8,7 +8,8 @@ build/default/debug/ProjectSource/MallardCommunicationService.o: \
  FrameworkHeaders/ES_General.h FrameworkHeaders/ES_Timers.h \
  ProjectHeaders/MallardCommunicationService.h \
  FrameworkHeaders/ES_Events.h FrameworkHeaders/ES_Types.h \
- FrameworkHeaders/dbprintf.h ProjectHeaders/PIC32_AD_Lib.h
+ ProjectHeaders/FuelServoService.h FrameworkHeaders/dbprintf.h \
+ ProjectHeaders/PIC32_AD_Lib.h
 FrameworkHeaders/ES_Configure.h:
 FrameworkHeaders/ES_Framework.h:
 FrameworkHeaders/ES_Types.h:
@@ -24,5 +25,6 @@ FrameworkHeaders/ES_Timers.h:
 ProjectHeaders/MallardCommunicationService.h:
 FrameworkHeaders/ES_Events.h:
 FrameworkHeaders/ES_Types.h:
+ProjectHeaders/FuelServoService.h:
 FrameworkHeaders/dbprintf.h:
 ProjectHeaders/PIC32_AD_Lib.h:

@@ -154,6 +154,20 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                 }
                 break;
 
+                case 'w':
+                {
+                    KB_Event1.EventType  = ES_FUEL_VAL_RECEIVED;
+                    KB_Event1.EventParam = 0;
+                }
+                break;
+
+                case 's':
+                {
+                    KB_Event1.EventType  = ES_FUEL_VAL_RECEIVED;
+                    KB_Event1.EventParam = 200;
+                }
+                break;
+
                 default:
                     // KB_Event1.EventType  = ES_MOTORS_OFF;
                     DB_printf("KeyboardService msg: %c\r\n", ThisEvent.EventParam);
