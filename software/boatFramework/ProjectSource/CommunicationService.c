@@ -31,7 +31,7 @@
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
 // #define SHOW_SENT_BYTES
-// #define SHOW_RECEIVED_BYTES
+#define SHOW_RECEIVED_BYTES
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
@@ -62,20 +62,20 @@
 #define CHECKSUM_TX_INDEX (FRAME_SIZE_TX - 1)
 
 // Message bytes
-#define START_BYTE 0x7E           // Byte 1
-#define LENGTH_MSB_BYTE 0x00      // Byte 2
-#define LENGTH_RX_LSB_BYTE 0x09   // Byte 3 (Received by Quackraft)
-#define LENGTH_TX_LSB_BYTE 0x06   // Byte 3 (Transmitted by Quackraft)
-#define API_ID_TX_BYTE 0x01       // Byte 4
-#define API_ID_RX_BYTE 0x81       // Byte 4
-#define FRAME_ID_BYTE 0x00        // Byte 5
-#define DEST_ADD_RX_MSB_BYTE 0x20 // Byte 6  (Mallard Module to Quackraft)
-#define DEST_ADD_TX_MSB_BYTE 0x21 // Byte 6  (Quackraft to Mallard Module)
+#define START_BYTE 0x7E                 // Byte 1
+#define LENGTH_MSB_BYTE 0x00            // Byte 2
+#define LENGTH_RX_LSB_BYTE 0x09         // Byte 3 (Received by Quackraft)
+#define LENGTH_TX_LSB_BYTE 0x06         // Byte 3 (Transmitted by Quackraft)
+#define API_ID_TX_BYTE 0x01             // Byte 4
+#define API_ID_RX_BYTE 0x81             // Byte 4
+#define FRAME_ID_BYTE 0x00              // Byte 5
+#define DEST_ADD_RX_MSB_BYTE 0x20       // Byte 6  (Mallard Module to Quackraft)
+#define DEST_ADD_TX_MSB_BYTE 0x21       // Byte 6  (Quackraft to Mallard Module)
 #define MY_CONTROLLER_ADD_LSB_BYTE 0x81 // Byte 7  (UNUSED, should match controller/mallard)
-#define OPT_BYTE 0x01             // Byte 8
-#define STATUS_DRIVING_BYTE 0x00  // Byte 9
-#define STATUS_CHARGING_BYTE 0x01 // Byte 9
-#define STATUS_PAIRING_BYTE 0x02  // Byte 9
+#define OPT_BYTE 0x01                   // Byte 8
+#define STATUS_DRIVING_BYTE 0x00        // Byte 9
+#define STATUS_CHARGING_BYTE 0x01       // Byte 9
+#define STATUS_PAIRING_BYTE 0x02        // Byte 9
 
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions

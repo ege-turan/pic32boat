@@ -8,6 +8,9 @@
 #ifndef DrivingService_H
 #define DrivingService_H
 
+#pragma once
+
+#include "ES_Events.h"
 #include "ES_Types.h"
 
 // Public Function Prototypes
@@ -17,4 +20,3 @@ bool PostDrivingService(ES_Event_t ThisEvent);
 ES_Event_t RunDrivingService(ES_Event_t ThisEvent);
 
 #endif /* DrivingService_H */
-

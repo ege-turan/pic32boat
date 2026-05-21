@@ -8,8 +8,11 @@
 #ifndef ServComms_H
 #define ServComms_H
 
-#include "ES_Types.h"
+#pragma once
+
 #include "ES_Events.h"
+#include "ES_Types.h"
+
 // Public Function Prototypes
 
 bool InitCommunicationService(uint8_t Priority);
@@ -17,4 +20,3 @@ bool PostCommunicationService(ES_Event_t ThisEvent);
 ES_Event_t RunCommunicationService(ES_Event_t ThisEvent);
 
 #endif /* ServComms_H */
-
