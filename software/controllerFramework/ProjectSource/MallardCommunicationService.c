@@ -335,7 +335,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
         case ES_REFUEL_INPUT:
         {
             DEBUG_LED_LAT = 1; // Turn on Status LED 3
-            // TODO: Implement refuel input handling
+            // TODO: Implement refuel input handling (maybe its own service for servo indicator)
 
         }
         break;

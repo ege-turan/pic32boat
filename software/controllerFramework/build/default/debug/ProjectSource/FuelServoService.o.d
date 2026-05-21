@@ -1,17 +1,17 @@
-build/default/production/ProjectSource/KeyboardService.o: \
- ProjectSource/KeyboardService.c ProjectHeaders/KeyboardService.h \
- FrameworkHeaders/ES_Events.h FrameworkHeaders/ES_Configure.h \
- FrameworkHeaders/ES_Types.h FrameworkHeaders/ES_Configure.h \
+build/default/debug/ProjectSource/FuelServoService.o: \
+ ProjectSource/FuelServoService.c ProjectHeaders/FuelServoService.h \
+ FrameworkHeaders/ES_Types.h FrameworkHeaders/ES_Events.h \
+ FrameworkHeaders/ES_Configure.h FrameworkHeaders/ES_Configure.h \
  FrameworkHeaders/ES_Framework.h FrameworkHeaders/ES_Types.h \
  FrameworkHeaders/ES_Port.h FrameworkHeaders/bitdefs.h \
  FrameworkHeaders/Bin_Const.h FrameworkHeaders/terminal.h \
  FrameworkHeaders/ES_Events.h FrameworkHeaders/ES_PostList.h \
  FrameworkHeaders/ES_General.h FrameworkHeaders/ES_Timers.h \
- ProjectHeaders/MallardCommunicationService.h FrameworkHeaders/dbprintf.h
-ProjectHeaders/KeyboardService.h:
+ FrameworkHeaders/dbprintf.h
+ProjectHeaders/FuelServoService.h:
+FrameworkHeaders/ES_Types.h:
 FrameworkHeaders/ES_Events.h:
 FrameworkHeaders/ES_Configure.h:
-FrameworkHeaders/ES_Types.h:
 FrameworkHeaders/ES_Configure.h:
 FrameworkHeaders/ES_Framework.h:
 FrameworkHeaders/ES_Types.h:
@@ -23,5 +23,4 @@ FrameworkHeaders/ES_Events.h:
 FrameworkHeaders/ES_PostList.h:
 FrameworkHeaders/ES_General.h:
 FrameworkHeaders/ES_Timers.h:
-ProjectHeaders/MallardCommunicationService.h:
 FrameworkHeaders/dbprintf.h:

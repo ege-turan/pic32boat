@@ -8,8 +8,9 @@ build/default/debug/ProjectSource/EventCheckers.o: \
  FrameworkHeaders/ES_Timers.h FrameworkHeaders/ES_Events.h \
  FrameworkHeaders/ES_PostList.h FrameworkHeaders/ES_ServiceHeaders.h \
  ProjectHeaders/MallardCommunicationService.h FrameworkHeaders/ES_Types.h \
- ProjectHeaders/KeyboardService.h FrameworkHeaders/ES_Port.h \
- ProjectHeaders/EventCheckers.h FrameworkHeaders/dbprintf.h
+ ProjectHeaders/KeyboardService.h ProjectHeaders/FuelServoService.h \
+ FrameworkHeaders/ES_Port.h ProjectHeaders/EventCheckers.h \
+ FrameworkHeaders/dbprintf.h
 FrameworkHeaders/ES_Configure.h:
 FrameworkHeaders/ES_Framework.h:
 FrameworkHeaders/ES_Types.h:
@@ -28,6 +29,7 @@ FrameworkHeaders/ES_ServiceHeaders.h:
 ProjectHeaders/MallardCommunicationService.h:
 FrameworkHeaders/ES_Types.h:
 ProjectHeaders/KeyboardService.h:
+ProjectHeaders/FuelServoService.h:
 FrameworkHeaders/ES_Port.h:
 ProjectHeaders/EventCheckers.h:
 FrameworkHeaders/dbprintf.h:
