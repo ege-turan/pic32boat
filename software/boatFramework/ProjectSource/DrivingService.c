@@ -198,8 +198,8 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
         {
             DB_printf("\rES_INIT received in DrivingService, priority: %d\r\n", MyPriority);
             // Initialize variables
-            ThrottleMidPoint         = (ThrottleResolution + 1) / 2;
-            DirectionMidPoint        = (DirectionResolution + 1) / 2;
+            ThrottleMidPoint         = (ThrottleResolution)  / 2;
+            DirectionMidPoint        = (DirectionResolution) / 2;
             CurrentThrottle          = ThrottleMidPoint;
             CurrentDirection         = DirectionMidPoint;
             CurrentDutyCyclePercent1 = 75;
@@ -239,7 +239,9 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
             CurrentThrottle  = Throttle;
             CurrentDirection = Direction;
             _SetDutyCycleFromThrottleAndDirection(CurrentThrottle, CurrentDirection);
-            DB_printf("\rDuty cycle 1: %d, Duty cycle 2: %d\r\n",
+            DB_printf("\rThrottle: %d, Direction: %d, Duty cycle 1: %d, Duty cycle 2: %d\r\n",
+                      CurrentThrottle,
+                      CurrentDirection,
                       CurrentDutyCyclePercent1,
                       CurrentDutyCyclePercent2);
             _DriveMotor(Motor1ChannelOC, CurrentDutyCyclePercent1);

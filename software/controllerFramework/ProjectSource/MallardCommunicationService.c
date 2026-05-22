@@ -34,6 +34,7 @@
 // #define SHOW_SENT_BYTES
 // #define SHOW_RECEIVED_BYTES
 // #define SHOW_ANALOG_VALS
+// #define SHOW_FUEL_INPUT_VALS
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
@@ -70,6 +71,8 @@
 #define JOY2_ADC_MASK BIT1HI          // AN1 (RA1)
 #define JOY2_ANSEL (ANSELAbits.ANSA1) // AN1
 #define JOY2_TRIS (TRISAbits.TRISA1)  // AN1
+
+#define JOY_DEAD_RANGE 5 // Deadband range around joystick midpoint (0-255) to prevent noise from causing unintended movement
 
 #define NUM_ANALOG_INPUTS 3
 
@@ -310,7 +313,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 pairedStatus  = false;
                 PAIRED_LED_LAT = 0; // Turn off paired LED
                 StatusVal     = STATUS_PAIRING_BYTE;
-                DB_printf("\rUnpairing timeout — back to pairing\r\n");
+                DB_printf("\rUnpairing timeout: back to pairing\r\n");
             }
         }
         break;
@@ -338,11 +341,21 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
 
         case ES_REFUEL_INPUT:
         {
-            StatusVal = STATUS_CHARGING_BYTE;
-            DEBUG_LED_LAT = 1; // Turn on Status LED 3
-            ChargingBytesPending += 5; // Add 5 charging bytes to be sent (each charging input equals 5 messages)
-            // TODO: Implement refuel input handling (maybe its own service for servo indicator)
-
+            #ifdef SHOW_FUEL_INPUT_VALS
+            DB_printf("\rES_REFUEL_INPUT received in MallardCommunicationService\r\n");
+            #endif
+            if (pairedStatus == true)
+            {
+                DEBUG_LED_LAT = 1; // Turn on Status LED 3
+                StatusVal = STATUS_CHARGING_BYTE;
+                
+                ChargingBytesPending += 5; // Add 5 charging bytes to be sent (each charging input equals 5 messages)
+                // TODO: Implement refuel input handling (maybe its own service for servo indicator)
+                #ifdef SHOW_FUEL_INPUT_VALS
+                DB_printf("\rES_REFUEL_INPUT received in MallardCommunicationService, ChargingBytesPending: %u\r\n",
+                        ChargingBytesPending);
+                #endif
+            }
         }
         break;
 
@@ -594,6 +607,10 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
         txBuf[10] = 0x00;
         txBuf[11] = 0x00;
         ChargingBytesPending --; // Decrement pending charging bytes, send 1 charging message per timer expiration
+        #ifdef SHOW_FUEL_INPUT_VALS
+        DB_printf("/rChagingBytesPending: %u\r\n", ChargingBytesPending);
+        #endif
+        DEBUG_LED_LAT = 0; // Turn off Status LED 3
     }
     else
     {
@@ -630,6 +647,18 @@ static void ReadADCValues(void)
     ADC_MultiRead(ADCResults);
     Joy1Val = (uint8_t)(ADCResults[0] >> 2); // fit the 10 bits to 8
     Joy2Val = (uint8_t)(ADCResults[1] >> 2); // fit the 10 bits to 8
+
+    if ((Joy1Val < (JoyMidPoint + JOY_DEAD_RANGE)) && 
+        (Joy1Val > (JoyMidPoint - JOY_DEAD_RANGE)))
+    {
+        Joy1Val = JoyMidPoint; // Remove deadband gap above midpoint
+    }
+    if ((Joy2Val < (JoyMidPoint + JOY_DEAD_RANGE)) && 
+        (Joy2Val > (JoyMidPoint - JOY_DEAD_RANGE)))
+    {
+        Joy2Val = JoyMidPoint; // Remove deadband gap above midpoint
+    }
+
     BoatPotVal = (uint8_t)(ADCResults[2] >> 2); // 8-bit, stored for pairing
     #ifdef SHOW_ANALOG_VALS
     DB_printf("\rADC Readings - Joy1: %d, Joy2: %d, BoatPot: %d\r\n", Joy1Val, Joy2Val, BoatPotVal);

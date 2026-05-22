@@ -194,20 +194,20 @@ bool Check4PairButton(void)
 bool Check4RefuelInput(void)
 {
     static bool initializedRefuelIn = false;
-    static bool lastInputState = true; // HIGH = unpressed (active LOW)
+    static bool lastInputState = false; // false = unpressed (active High)
     /* One-time hardware setup (called on first event-checker invocation)  */
     if (!initializedRefuelIn)
     {
         // Initialize refuel input hardware
         REFUEL_IN_ANSEL = 0; // RB12: digital input
         REFUEL_IN_TRIS  = 1; // RB12: input
-        initializedRefuelIn = true;
+        initializedRefuelIn = false;
     }
  
     bool currentInputState = (bool)REFUEL_IN_PORT;   /* 1=high, 0=low    */
  
     /* Detect falling edge: was HIGH last tick, is LOW this tick           */
-    if ((currentInputState == false) && (lastInputState == true))
+    if ((currentInputState == true) && (lastInputState == false))
     {
         lastInputState = currentInputState;
  

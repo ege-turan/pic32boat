@@ -32,7 +32,7 @@
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
 // #define SHOW_SENT_BYTES
-#define SHOW_RECEIVED_BYTES
+// #define SHOW_RECEIVED_BYTES
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
