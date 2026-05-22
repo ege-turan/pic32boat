@@ -101,7 +101,7 @@ static volatile uint8_t rxBuf[FRAME_SIZE_RX] = {0}; // Buffer to hold the most r
 static uint8_t txBuf[FRAME_SIZE_TX]          = {0}; // Buffer to hold the bytes to be transmitted
 
 static uint8_t pairedAddressLSB;
-static uint8_t Addresses[]          = {0x00, 0x81, 0x82, 0x83, 0x84, 0x85};
+static uint8_t Addresses[]          = {0x00, 0x81, 0x82, 0x83, 0x84, 0x86};
 static uint8_t ChargeVal            = 0xFF; // Default initial value per comms protocol
 static volatile uint8_t CheckSumVal = 0;
 
