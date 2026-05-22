@@ -23,6 +23,7 @@
 */
 #include "CommunicationService.h"
 #include "DrivingService.h"
+#include "PairedServoService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
 #include "dbprintf.h"
@@ -213,6 +214,9 @@ ES_Event_t RunCommunicationService(ES_Event_t ThisEvent)
                 DB_printf("\rUNPAIRING_TIMER expired in CommunicationService\r\n");
                 // Example: Send periodic status update to Quackraft
                 pairedStatus = false; // Simulate unpairing for testing
+                ES_Event_t NewEvent;
+                NewEvent.EventType  = ES_UNPAIRED;
+                PostPairedServoService(NewEvent);
             }
         }
         break;
@@ -405,6 +409,9 @@ static void InterpretMessage(void)
         pairedStatus = true;
         DB_printf("\rValid message received in CommunicationService, PAIRED! Address: 0x%x\r\n",
                   pairedAddressLSB);
+        ES_Event_t NewEvent;
+        NewEvent.EventType  = ES_PAIRED;
+        PostPairedServoService(NewEvent);
     }
     else if ((pairedStatus == true) && (rxBuf[4] == DEST_ADD_TX_MSB_BYTE) &&
              (rxBuf[5] == pairedAddressLSB))

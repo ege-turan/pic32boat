@@ -33,6 +33,7 @@
 /*----------------------------- Module Defines ----------------------------*/
 // #define VERBOSE_MODE
 
+#define DRIVING_MOTOR_TIMER _Timer2_
 // Define the tris bits (input/output)
 #define MOTOR_1_PWM_PIN_TRIS (TRISAbits.TRISA0)
 #define MOTOR_2_PWM_PIN_TRIS (TRISAbits.TRISA1)
@@ -292,7 +293,7 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
 void _InitMotorPWM()
 {
     // Initialize Timer 2 for PWM
-    PWM_Setup_ConfigureTimer(_Timer2_, PWM_PERIOD_TICKS + 1, PWM_PS_2);
+    PWM_Setup_ConfigureTimer(DRIVING_MOTOR_TIMER, PWM_PERIOD_TICKS + 1, PWM_PS_2);
 
     // Initialize OC1 for PWM1 output
     PWM_Setup_SetChannel(Motor1ChannelOC);

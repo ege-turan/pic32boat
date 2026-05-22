@@ -8,7 +8,8 @@ build/default/debug/ProjectSource/EventCheckers.o: \
  FrameworkHeaders/ES_Timers.h FrameworkHeaders/ES_Events.h \
  FrameworkHeaders/ES_PostList.h FrameworkHeaders/ES_ServiceHeaders.h \
  ProjectHeaders/DrivingService.h FrameworkHeaders/ES_Types.h \
- ProjectHeaders/CommunicationService.h FrameworkHeaders/ES_Port.h \
+ ProjectHeaders/CommunicationService.h \
+ ProjectHeaders/PairedServoService.h FrameworkHeaders/ES_Port.h \
  ProjectHeaders/EventCheckers.h
 FrameworkHeaders/ES_Configure.h:
 FrameworkHeaders/ES_Framework.h:
@@ -28,5 +29,6 @@ FrameworkHeaders/ES_ServiceHeaders.h:
 ProjectHeaders/DrivingService.h:
 FrameworkHeaders/ES_Types.h:
 ProjectHeaders/CommunicationService.h:
+ProjectHeaders/PairedServoService.h:
 FrameworkHeaders/ES_Port.h:
 ProjectHeaders/EventCheckers.h:
