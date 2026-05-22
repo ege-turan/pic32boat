@@ -154,6 +154,8 @@ static uint32_t ADCResults[NUM_ANALOG_INPUTS];       // ADC results array (Joy1,
 static uint8_t StatusVal, Joy1Val, Joy2Val, DigiVal; // Variables for data to be sent to boat
 static volatile uint8_t CheckSumVal = 0;
 
+static uint16_t ChargingBytesPending;
+
 /*------------------------------ Module Code ------------------------------*/
 /****************************************************************************
  Function
@@ -276,12 +278,13 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             DEBUG_LED_LAT   = 0;  // start with LED off
 
             // Initialize variables
-            desiredAddressLSB = MY_BOAT_ADDRESS_LSB;
-            StatusVal         = STATUS_PAIRING_BYTE; // Start in pairing status
-            JoyMidPoint       = JoyResolution / 2;
-            Joy1Val           = JoyMidPoint;
-            Joy2Val           = JoyMidPoint;
-            DigiVal           = 0x00;
+            desiredAddressLSB    = MY_BOAT_ADDRESS_LSB;
+            StatusVal            = STATUS_PAIRING_BYTE; // Start in pairing status
+            JoyMidPoint          = JoyResolution / 2;
+            Joy1Val              = JoyMidPoint;
+            Joy2Val              = JoyMidPoint;
+            DigiVal              = 0x00;
+            ChargingBytesPending = 0;
             DB_printf("\rMallardCommunicationService initialization complete\r\n");
 
             // // Uncomment the following for autopairing instead of manually
@@ -335,7 +338,9 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
 
         case ES_REFUEL_INPUT:
         {
+            StatusVal = STATUS_CHARGING_BYTE;
             DEBUG_LED_LAT = 1; // Turn on Status LED 3
+            ChargingBytesPending += 5; // Add 5 charging bytes to be sent (each charging input equals 5 messages)
             // TODO: Implement refuel input handling (maybe its own service for servo indicator)
 
         }
@@ -568,6 +573,14 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
     txBuf[7] = OPT_BYTE;
     txBuf[8] = status;
 
+    // Switch from charging to driving if there aren't pending charging bytes to send, so that we can send joystick commands again
+    if ((status == STATUS_CHARGING_BYTE)&&(ChargingBytesPending == 0))
+    {
+        status = STATUS_DRIVING_BYTE; // After sending all charging messages, switch back to driving status
+        txBuf[8] = status;
+    }
+
+    // Choosing type of message to send based on status
     if (status == STATUS_PAIRING_BYTE)
     {
         txBuf[9]  = DEST_ADD_RX_MSB_BYTE;
@@ -580,6 +593,7 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
         txBuf[9]  = 0x00;
         txBuf[10] = 0x00;
         txBuf[11] = 0x00;
+        ChargingBytesPending --; // Decrement pending charging bytes, send 1 charging message per timer expiration
     }
     else
     {

@@ -186,10 +186,10 @@ bool Check4PairButton(void)
 
 
 // RA3 or RB12 not sure which for refuel input
-/* ---- Refuel Input (RA3, active LOW) ---------------------------------- */
-// #define REFUEL_IN_ANSEL   (ANSELAbits.ANSA3)
-#define REFUEL_IN_TRIS    (TRISAbits.TRISA3)
-#define REFUEL_IN_PORT    (PORTAbits.RA3)
+/* ---- Refuel Input (RB12, active LOW) ---------------------------------- */
+#define REFUEL_IN_ANSEL   (ANSELBbits.ANSB12)
+#define REFUEL_IN_TRIS    (TRISBbits.TRISB12)
+#define REFUEL_IN_PORT    (PORTBbits.RB12)
 
 bool Check4RefuelInput(void)
 {
@@ -199,8 +199,8 @@ bool Check4RefuelInput(void)
     if (!initializedRefuelIn)
     {
         // Initialize refuel input hardware
-        // REFUEL_IN_ANSEL = 0; // RA3: digital input
-        REFUEL_IN_TRIS  = 1; // RA3: input
+        REFUEL_IN_ANSEL = 0; // RB12: digital input
+        REFUEL_IN_TRIS  = 1; // RB12: input
         initializedRefuelIn = true;
     }
  
