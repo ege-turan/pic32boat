@@ -45,7 +45,7 @@
 #define Motor1PWMPinName PWM_RPA0
 #define Motor2PWMPinName PWM_RPA1
 
-#define MaxStepDutyCyclePercent 2 // max change in duty cycle per update for ramping
+#define MaxStepDutyCyclePercent 20 // max change in duty cycle per update for ramping
 
 // TIMERS:
 // This is the period of the PWM in timer ticks - for Timer2
