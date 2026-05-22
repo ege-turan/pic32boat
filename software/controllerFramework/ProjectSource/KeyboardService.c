@@ -147,26 +147,26 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                     KB_Event1.EventType = ES_START_PAIRING;
                 }
                 break;
-                case '2':
-                {
-                    KB_Event1.EventType  = ES_CHANGE_ADDR;
-                    KB_Event1.EventParam = 0x02;
-                }
-                break;
+                // case '2':
+                // {
+                //     KB_Event1.EventType  = ES_CHANGE_ADDR;
+                //     KB_Event1.EventParam = 0x02;
+                // }
+                // break;
 
-                case 'w':
-                {
-                    KB_Event1.EventType  = ES_FUEL_VAL_RECEIVED;
-                    KB_Event1.EventParam = 0;
-                }
-                break;
+                // case 'w':
+                // {
+                //     KB_Event1.EventType  = ES_FUEL_VAL_RECEIVED;
+                //     KB_Event1.EventParam = 0;
+                // }
+                // break;
 
-                case 's':
-                {
-                    KB_Event1.EventType  = ES_FUEL_VAL_RECEIVED;
-                    KB_Event1.EventParam = 200;
-                }
-                break;
+                // case 's':
+                // {
+                //     KB_Event1.EventType  = ES_FUEL_VAL_RECEIVED;
+                //     KB_Event1.EventParam = 200;
+                // }
+                // break;
 
                 default:
                     // KB_Event1.EventType  = ES_MOTORS_OFF;
