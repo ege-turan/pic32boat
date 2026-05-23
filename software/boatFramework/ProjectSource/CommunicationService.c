@@ -33,6 +33,7 @@
 #define DEBUG_PRINT_COMMS
 // #define SHOW_SENT_BYTES
 // #define SHOW_RECEIVED_BYTES
+#define SHOW_CHARGE
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
@@ -81,6 +82,8 @@
 
 #define JOY_MIDPOINT 127 // Midpoint value for joystick inputs (0-255 range)
 #define MAX_CHARGE_VAL 200 // Maximum charge value for the boat
+#define DIGI_SHOOT_BYTE    0x01
+#define DIGI_NO_SHOOT_BYTE 0x00
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
    relevant to the behavior of this service
@@ -476,6 +479,10 @@ static void SendMsgToMallardModule(uint8_t charge)
     txBuf[8] = charge;
     ComputeCheckSum(DATA_FRAME_TX_LENGTH);
     txBuf[CHECKSUM_TX_INDEX] = CheckSumVal;
+
+    #ifdef SHOW_CHARGE
+    DB_printf("\r ChargeVal Sent: 0x%x", ChargeVal);
+    #endif
 
     // Transmit message byte by byte
     for (uint8_t i = 0; i < FRAME_SIZE_TX; i++)

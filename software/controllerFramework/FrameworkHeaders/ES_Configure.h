@@ -269,7 +269,8 @@ typedef enum
   ES_PAIRED,               /* signals successful pairing */
   ES_UNPAIRED,             /* signals unpairing */
   ES_REFUEL_INPUT,
-  ES_FUEL_VAL_RECEIVED
+  ES_FUEL_VAL_RECEIVED,
+  ES_SHOOT
 }ES_EventType_t;
 
 /****************************************************************************/
@@ -304,7 +305,7 @@ typedef enum
 
 /****************************************************************************/
 // This is the list of event checking functions
-#define EVENT_CHECK_LIST Check4Keystroke, Check4PairButton, Check4RefuelInput
+#define EVENT_CHECK_LIST Check4Keystroke, Check4PairButton, Check4RefuelInput, Check4ShootButton
 
 /****************************************************************************/
 // These are the definitions for the post functions to be executed when the

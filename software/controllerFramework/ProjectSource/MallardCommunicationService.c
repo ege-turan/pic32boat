@@ -35,6 +35,7 @@
 // #define SHOW_RECEIVED_BYTES
 // #define SHOW_ANALOG_VALS
 // #define SHOW_FUEL_INPUT_VALS
+#define SHOW_SHOOT_INPUT
 
 #define FOUR_SECONDS 4000 // in milliseconds
 #define SEND_UART_MS 200  // in milliseconds
@@ -122,6 +123,9 @@
 #define STATUS_CHARGING_BYTE 0x01 // Byte 9
 #define STATUS_PAIRING_BYTE 0x02  // Byte 9
 
+#define DIGI_SHOOT_BYTE    0x01
+#define DIGI_NO_SHOOT_BYTE 0x00
+
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
    relevant to the behavior of this service
@@ -158,6 +162,7 @@ static uint8_t StatusVal, Joy1Val, Joy2Val, DigiVal; // Variables for data to be
 static volatile uint8_t CheckSumVal = 0;
 
 static uint16_t ChargingBytesPending;
+static uint16_t ShootingBytesPending;
 
 /*------------------------------ Module Code ------------------------------*/
 /****************************************************************************
@@ -286,8 +291,9 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             JoyMidPoint          = JoyResolution / 2;
             Joy1Val              = JoyMidPoint;
             Joy2Val              = JoyMidPoint;
-            DigiVal              = 0x00;
+            DigiVal              = DIGI_NO_SHOOT_BYTE;
             ChargingBytesPending = 0;
+            ShootingBytesPending = 0;
             DB_printf("\rMallardCommunicationService initialization complete\r\n");
 
             // // Uncomment the following for autopairing instead of manually
@@ -304,6 +310,17 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 ReadADCValues();
                 // DB_printf("\rADC Readings - Joy1: %d, Joy2: %d\r\n", Joy1Val, Joy2Val);
                 // Send MSG to Quackraft
+                if (ShootingBytesPending > 0)
+                {
+                    DigiVal = DIGI_SHOOT_BYTE;
+                    ShootingBytesPending --;
+                } else
+                {
+                    DigiVal = DIGI_NO_SHOOT_BYTE;
+                }
+                #ifdef SHOW_SHOOT_INPUT
+                DB_printf("DigiVal: 0x%x", DigiVal);
+                #endif
                 SendMsgToQuackraft(StatusVal, Joy1Val, Joy2Val, DigiVal);
                 // Restart timer
                 ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
@@ -358,6 +375,18 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             }
         }
         break;
+
+        case ES_SHOOT:
+        {
+            #ifdef SHOW_SHOOT_INPUT
+            DB_printf("\rES_SHOOT received in MallardCommunicationService\r\n");
+            #endif
+
+            if (pairedStatus == true)
+            {
+                ShootingBytesPending += 5;
+            }
+        }
 
         case ES_CHANGE_ADDR: // triggered by event checker
         {
