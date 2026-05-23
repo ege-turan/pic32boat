@@ -97,8 +97,8 @@ static uint16_t CurrentDirection         = 0; // value from 0 to 255
 static uint16_t CurrentDutyCyclePercent1 = 0;
 static uint16_t CurrentDutyCyclePercent2 = 0;
 
-static uint16_t ThrottleResolution  = 255; // max value, 8 bits
-static uint16_t DirectionResolution = 255; // max value, 8 bits
+static uint16_t ThrottleMaxVal  = 255; // max value, 8 bits
+static uint16_t DirectionMaxVal = 255; // max value, 8 bits
 static uint16_t ThrottleMidPoint;
 static uint16_t DirectionMidPoint;
 
@@ -198,8 +198,8 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
         {
             DB_printf("\rES_INIT received in DrivingService, priority: %d\r\n", MyPriority);
             // Initialize variables
-            ThrottleMidPoint         = (ThrottleResolution)  / 2;
-            DirectionMidPoint        = (DirectionResolution) / 2;
+            ThrottleMidPoint         = (ThrottleMaxVal) / 2;
+            DirectionMidPoint        = (DirectionMaxVal) / 2;
             CurrentThrottle          = ThrottleMidPoint;
             CurrentDirection         = DirectionMidPoint;
             CurrentDutyCyclePercent1 = 75;
@@ -264,7 +264,7 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
                 {
                     CurrentThrottle -= 50;
                 }
-                if (CurrentThrottle > ThrottleResolution)
+                if (CurrentThrottle > ThrottleMaxVal)
                 {
                     toggle = 1;
                     ; // wrap around to 0 after reaching max
@@ -319,13 +319,13 @@ void _InitMotorPWM()
 void _SetDutyCycleFromThrottleAndDirection(uint32_t Throttle, uint32_t Direction)
 {
     // Map the throttle value (0 to max value) to a duty cycle percentage (50 to 100)
-    if (Throttle > ThrottleResolution)
+    if (Throttle > ThrottleMaxVal)
     {
-        Throttle = ThrottleResolution; // Cap throttle at max value
+        Throttle = ThrottleMaxVal; // Cap throttle at max value
     }
-    if (Direction > DirectionResolution)
+    if (Direction > DirectionMaxVal)
     {
-        Direction = DirectionResolution; // Cap direction at max value
+        Direction = DirectionMaxVal; // Cap direction at max value
     }
 
     const float BASE_DUTY = 75.0f; // neutral

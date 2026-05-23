@@ -36,6 +36,10 @@
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
 
+// Variables to keep track of the state of the cannon and the gate
+static bool gateFlag   = false; // true when gate down
+static bool cannonFlag = false; // true when cannon on
+
 /*------------------------------ Module Code ------------------------------*/
 /****************************************************************************
  Function
