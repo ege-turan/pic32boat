@@ -34,7 +34,7 @@
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 3
+#define NUM_SERVICES 4
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service.
@@ -84,11 +84,11 @@
 // These are the definitions for Service 3
 #if NUM_SERVICES > 3
     // the header file with the public function prototypes
-    #define SERV_3_HEADER "TestHarnessService3.h"
+    #define SERV_3_HEADER "BoatActionsService.h"
     // the name of the Init function
-    #define SERV_3_INIT InitTestHarnessService3
+    #define SERV_3_INIT InitBoatActionsService
     // the name of the run function
-    #define SERV_3_RUN RunTestHarnessService3
+    #define SERV_3_RUN RunBoatActionsService
     // How big should this services Queue be?
     #define SERV_3_QUEUE_SIZE 3
 #endif
@@ -268,8 +268,10 @@ typedef enum
     ES_DRIVE,    /* param contains throttle and direction information */
     ES_PAIRED,
     ES_UNPAIRED,
-    ES_CANNON, // event to trigger the water cannon
-    ES_GATE    // gate to trigger the gate action
+    ES_CANNON_START, // event to trigger the water cannon
+    ES_CANNON_STOP, // event to stop the water cannon
+    ES_GATE_OPEN,
+    ES_GATE_CLOSE    // gate to trigger the gate action
 } ES_EventType_t;
 
 /****************************************************************************/
@@ -325,7 +327,7 @@ typedef enum
 #define TIMER9_RESP_FUNC TIMER_UNUSED
 #define TIMER10_RESP_FUNC TIMER_UNUSED
 #define TIMER11_RESP_FUNC TIMER_UNUSED
-#define TIMER12_RESP_FUNC TIMER_UNUSED
+#define TIMER12_RESP_FUNC PostBoatActionsService
 #define TIMER13_RESP_FUNC PostCommunicationService
 #define TIMER14_RESP_FUNC PostCommunicationService
 #define TIMER15_RESP_FUNC PostDrivingService
@@ -340,5 +342,6 @@ typedef enum
 #define DRIVING_TIMER 15
 #define SEND_MSG_TIMER 14
 #define UNPAIRING_TIMER 13
+#define SHOOTER_TIMER 12
 
 #endif /* ES_CONFIGURE_H */

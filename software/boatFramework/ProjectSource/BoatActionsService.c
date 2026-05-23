@@ -24,8 +24,17 @@
 #include "BoatActionsService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
+#include "dbprintf.h"
+#include "PIC32_PWM_Lib.h"
 
 /*----------------------------- Module Defines ----------------------------*/
+#define GATE_PWM_CH 5
+#define GATE_PWM_PIN PWM_RPA2
+#define GATE_PWM_TIMER _Timer3_
+// #define GATE_PWM_SERVO_ANSEL (ANSELBbits.ANSA2) // RB2: digital output for servo PWM
+#define GATE_PWM_SERVO_CENTER 375 // 1.5 ms pulse width at 20 ms period
+#define GATE_PWM_SERVO_SIDE 250   // 1 ms
+#define GATE_PWM_SERVO_OTHER 500  // 2 ms
 
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
@@ -65,6 +74,9 @@ bool InitBoatActionsService(uint8_t Priority)
     MyPriority = Priority;
 
     // Initialise the pins
+    DB_printf("\rStarting BoatActionsService: ");
+    DB_printf("compiled at %s on %s", __TIME__, __DATE__);
+    DB_printf("\n\r");
 
     // post the initial transition event
     ThisEvent.EventType = ES_INIT;
@@ -127,11 +139,24 @@ ES_Event_t RunBoatActionsService(ES_Event_t ThisEvent)
         // This event is run once at the end of service initialisation
         case ES_INIT:
         {
-            DB_printf("\rES_INIT received in KeyboardService, priority: %d\r\n", MyPriority);
+            DB_printf("\rES_INIT received in BoatActionsService, priority: %d\r\n", MyPriority);
+            
+            // GATE_PWM_SERVO_ANSEL = 0; // RB2: digital output for servo PWM
+            // ----- Configure Timer3 for PWM at 50 Hz (20 ms period) -----
+            // PBCLK = 20 MHz, Prescaler = 64 -> Period ticks = 20e6 / (64 * 50) = 6250
+            PWM_Setup_ConfigureTimer(GATE_PWM_TIMER, 6250, PWM_PS_64);
+
+            // Map PWM channel for servo
+            PWM_Setup_SetChannel(GATE_PWM_CH);
+            PWM_Setup_AssignChannelToTimer(GATE_PWM_CH, GATE_PWM_TIMER);
+            PWM_Setup_MapChannelToOutputPin(GATE_PWM_CH, GATE_PWM_PIN);
+
+            // Initialize servo to center
+            PWM_Operate_SetPulseWidthOnChannel(GATE_PWM_SERVO_CENTER, GATE_PWM_CH);
         }
         break;
 
-        case ES_GATE:
+        case ES_GATE_OPEN:
         {
             // Toggle the gate to the state opposite what it currently is
 
@@ -141,13 +166,24 @@ ES_Event_t RunBoatActionsService(ES_Event_t ThisEvent)
         }
         break;
 
-        case ES_CANNON:
+        case ES_GATE_CLOSE:
+        {
+        }
+        break;
+
+        case ES_CANNON_START:
         {
             // Toggle the cannon to the state opposite what it currently is
 
             // Update the cannon status flag
             ;
         }
+        break;
+
+        case ES_CANNON_STOP:
+        {
+        }
+        break;
 
         default:
             break;

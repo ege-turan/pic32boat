@@ -22,6 +22,7 @@
    next lower level in the hierarchy that are sub-machines to this machine
 */
 #include "DrivingService.h"
+#include "BoatActionsService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
 
@@ -91,8 +92,7 @@ static uint16_t RampDutyCycle(float received_duty_cycle,
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
 
-static uint16_t CurrentThrottle =
-    0; // value from 0 to 255 (8 bits, 0 to 127 negative for reverse, 128 to 255 positive for forward) maybe implement deadband
+static uint16_t CurrentThrottle = 0; // value from 0 to 255 (8 bits, 0 to 127 negative for reverse, 128 to 255 positive for forward) maybe implement deadband
 static uint16_t CurrentDirection         = 0; // value from 0 to 255
 static uint16_t CurrentDutyCyclePercent1 = 0;
 static uint16_t CurrentDutyCyclePercent2 = 0;
@@ -232,6 +232,20 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
             // Extract throttle and direction from event parameter
             uint8_t Throttle  = ThisEvent.EventParam & 0xFF;        // lower byte
             uint8_t Direction = (ThisEvent.EventParam >> 8) & 0xFF; // upper byte
+
+            if (Throttle < ThrottleMidPoint) // close gate
+            {
+                ES_Event_t NewEvent;
+                NewEvent.EventType = ES_GATE_CLOSE;
+                PostBoatActionsService(NewEvent);
+            } else // open gate
+            {
+                ES_Event_t NewEvent;
+                NewEvent.EventType = ES_GATE_OPEN;
+                PostBoatActionsService(NewEvent);
+            }
+
+
             DB_printf(
                 "\rES_DRIVE event received in DrivingService, Throttle: %d, Direction: %d\r\n",
                 Throttle,

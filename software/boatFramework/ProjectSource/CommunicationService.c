@@ -23,9 +23,10 @@
 */
 #include "CommunicationService.h"
 #include "DrivingService.h"
+#include "BoatActionsService.h"
+#include "PairedServoService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
-#include "PairedServoService.h"
 #include "dbprintf.h"
 #include <sys/attribs.h> // for interrupts
 
@@ -443,16 +444,32 @@ static void InterpretMessage(void)
             // Extract throttle and direction from message and post to DrivingService
             uint8_t Throttle  = rxBuf[9];  // Assuming throttle is in byte 9
             uint8_t Direction = rxBuf[10]; // Assuming direction is in byte 10
+            uint8_t Digi      = rxBuf[11]; // Assuming digital input (e.g., shoot command) is in byte 11
 
             if (ChargeVal == 0)
             {
                 Throttle  = JOY_MIDPOINT; // If out of charge, set throttle to neutral
                 Direction = JOY_MIDPOINT; // If out of charge, set direction to neutral
-            }
-
-            if (((Throttle != JOY_MIDPOINT) || (Direction != JOY_MIDPOINT)) && (ChargeVal > 0))
+            } else
             {
-                ChargeVal--; // Decrement charge value by 1 for each drive message received (each drive input equals 1 fuel)
+                if (((Throttle != JOY_MIDPOINT) || (Direction != JOY_MIDPOINT)) && (ChargeVal > 0))
+                {
+                    ChargeVal--; // Decrement charge value by 1 for each drive message received (each drive input equals 1 fuel)
+                }
+
+                if ((Digi == DIGI_SHOOT_BYTE) && (ChargeVal > 0))
+                {
+                    ChargeVal --; // Decrement charge value by 1 for shoot command
+                    ES_Event_t ShootEvent;
+                    ShootEvent.EventType = ES_CANNON_START;
+                    PostBoatActionsService(ShootEvent);
+                }
+                if (Digi == DIGI_NO_SHOOT_BYTE)
+                {
+                    ES_Event_t NoShootEvent;
+                    NoShootEvent.EventType = ES_CANNON_STOP;
+                    PostBoatActionsService(NoShootEvent);
+                }
             }
 
             uint16_t DriveParam = (Direction << 8) | Throttle; // Combine into single parameter
@@ -460,6 +477,8 @@ static void InterpretMessage(void)
             NewEvent.EventType  = ES_DRIVE;
             NewEvent.EventParam = DriveParam;
             PostDrivingService(NewEvent);
+
+
             // TODO: Check if rxBuf[11] has info to actuate something else
         }
     }
