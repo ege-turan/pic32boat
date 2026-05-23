@@ -167,6 +167,14 @@ ES_Event_t RunFuelServoService(ES_Event_t ThisEvent)
         case ES_FUEL_VAL_RECEIVED:
         {
             CurrentFuelVal = ThisEvent.EventParam;
+            if (CurrentFuelVal > MAX_FUEL_VAL)
+            {
+                CurrentFuelVal = MAX_FUEL_VAL;
+            }
+            else if (CurrentFuelVal < MIN_FUEL_VAL)
+            {
+                CurrentFuelVal = MIN_FUEL_VAL;
+            }
             // Map fuel value (0-100) to pulse width range
             uint16_t newPW = SERVO_MIN_PW + ((CurrentFuelVal * (SERVO_MAX_PW - SERVO_MIN_PW)) / (MAX_FUEL_VAL - MIN_FUEL_VAL));
             PWMOperate_SetPulseWidthOnChannel(newPW, SERVO_CHANNEL);  

@@ -411,6 +411,7 @@ static void InterpretMessage(void)
         pairedAddressLSB = rxBuf
             [10]; // Source address LSB of requesting pairing Note: rxBuf[5] and rxBuf[10] should be the same
         pairedStatus = true;
+        InitializeFuel = true; // Set flag to initialize fuel value on next charging message
         DB_printf("\rValid message received in CommunicationService, PAIRED! Address: 0x%x\r\n",
                   pairedAddressLSB);
         ES_Event_t NewEvent;
@@ -421,6 +422,11 @@ static void InterpretMessage(void)
              (rxBuf[5] == pairedAddressLSB))
     {
         ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
+        if (InitializeFuel)
+        {
+            ChargeVal = 200; // Initialize fuel value on first message after pairing
+            InitializeFuel = false; // Clear flag after initialization
+        }
         if (rxBuf[8] == STATUS_CHARGING_BYTE)
         {
             ChargeVal += 8; // Increment charge value by 8 for each charging message received (each charging input equals 8 fuel)
@@ -435,7 +441,13 @@ static void InterpretMessage(void)
             uint8_t Throttle    = rxBuf[9];                    // Assuming throttle is in byte 9
             uint8_t Direction   = rxBuf[10];                   // Assuming direction is in byte 10
 
-            if ((Throttle != JOY_MIDPOINT) || (Direction != JOY_MIDPOINT))
+            if (ChargeVal == 0)
+            {
+                Throttle = JOY_MIDPOINT; // If out of charge, set throttle to neutral
+                Direction = JOY_MIDPOINT; // If out of charge, set direction to neutral
+            }
+
+            if (((Throttle != JOY_MIDPOINT) || (Direction != JOY_MIDPOINT)) && (ChargeVal > 0))
             {
                 ChargeVal --; // Decrement charge value by 1 for each drive message received (each drive input equals 1 fuel)
             }
