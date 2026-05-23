@@ -1,6 +1,6 @@
 /****************************************************************************
  Module
-   TemplateService.c
+   BoatActionsService.c
 
  Revision
    1.0.1
@@ -36,6 +36,10 @@
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
 
+// Variables to keep track of the state of the cannon and the gate
+static bool gateFlag   = false; // true when gate down
+static bool cannonFlag = false; // true when cannon on
+
 /*------------------------------ Module Code ------------------------------*/
 /****************************************************************************
  Function
@@ -55,10 +59,9 @@ static uint8_t MyPriority;
  Author
      Ege Turan
 ****************************************************************************/
-bool InitTemplateService(uint8_t Priority)
+bool InitBoatActionsService(uint8_t Priority)
 {
     ES_Event_t ThisEvent;
-
     MyPriority = Priority;
 
     // Initialise the pins
@@ -92,7 +95,7 @@ bool InitTemplateService(uint8_t Priority)
  Author
      Ege Turan
 ****************************************************************************/
-bool PostTemplateService(ES_Event_t ThisEvent)
+bool PostBoatActionsService(ES_Event_t ThisEvent)
 {
     return ES_PostToService(MyPriority, ThisEvent);
 }
@@ -112,12 +115,43 @@ bool PostTemplateService(ES_Event_t ThisEvent)
  Notes
 
  Author
-   Ege Turan
+   Nick Agathangelou
 ****************************************************************************/
-ES_Event_t RunTemplateService(ES_Event_t ThisEvent)
+ES_Event_t RunBoatActionsService(ES_Event_t ThisEvent)
 {
     ES_Event_t ReturnEvent;
     ReturnEvent.EventType = ES_NO_EVENT; // assume no errors
+
+    switch (ThisEvent.EventType)
+    {
+        // This event is run once at the end of service initialisation
+        case ES_INIT:
+        {
+            DB_printf("\rES_INIT received in KeyboardService, priority: %d\r\n", MyPriority);
+        }
+        break;
+
+        case ES_GATE:
+        {
+            // Toggle the gate to the state opposite what it currently is
+
+            // Update the gate status flag
+
+            ;
+        }
+        break;
+
+        case ES_CANNON:
+        {
+            // Toggle the cannon to the state opposite what it currently is
+
+            // Update the cannon status flag
+            ;
+        }
+
+        default:
+            break;
+    }
 
     return ReturnEvent;
 }

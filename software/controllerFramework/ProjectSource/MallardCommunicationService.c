@@ -21,13 +21,14 @@
 /* include header files for this state machine as well as any machines at the
    next lower level in the hierarchy that are sub-machines to this machine
 */
+#include "MallardCommunicationService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
-#include "MallardCommunicationService.h"
 #include "FuelServoService.h"
-#include "dbprintf.h"
 #include "PIC32_AD_Lib.h"
+#include "dbprintf.h"
 #include <sys/attribs.h> // for interrupts
+
 
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
@@ -37,32 +38,31 @@
 // #define SHOW_FUEL_INPUT_VALS
 #define SHOW_SHOOT_INPUT
 
-#define FOUR_SECONDS 4000 // in milliseconds
-#define SEND_UART_MS 200  // in milliseconds
-#define AUTOPAIRING_MS 2000// in milliseconds
+#define FOUR_SECONDS 4000   // in milliseconds
+#define SEND_UART_MS 200    // in milliseconds
+#define AUTOPAIRING_MS 2000 // in milliseconds
 
 // Potentiometer Info
-#define BOAT_ADC_MASK BIT4HI          // AN4 (RB2)
+#define BOAT_ADC_MASK BIT4HI              // AN4 (RB2)
 #define BOAT_ADC_ANSEL (ANSELBbits.ANSB2) // AN4
 #define BOAT_ADC_TRIS (TRISBbits.TRISB2)  // AN4
 
 // Pair Button (RB15, active LOW)
-#define PAIR_BTN_TRIS  (TRISBbits.TRISB15)
-#define PAIR_BTN_PORT  (PORTBbits.RB15)
+#define PAIR_BTN_TRIS (TRISBbits.TRISB15)
+#define PAIR_BTN_PORT (PORTBbits.RB15)
 
 // Status LEDs
 // #define PWR_ON_LED_ANSEL (ANSELBbits.ANSB4) // Status LED 1 (RB4)
-#define PWR_ON_LED_TRIS  (TRISBbits.TRISB4) // Status LED 1 (RB4)
-#define PWR_ON_LED_LAT   (LATBbits.LATB4)   // write to LAT
+#define PWR_ON_LED_TRIS (TRISBbits.TRISB4) // Status LED 1 (RB4)
+#define PWR_ON_LED_LAT (LATBbits.LATB4)    // write to LAT
 
 // #define PAIRED_LED_ANSEL (ANSELAbits.ANSA4) // Paired LED 2 (RA4)
-#define PAIRED_LED_TRIS  (TRISAbits.TRISA4) // Paired LED 2 (RA4)
-#define PAIRED_LED_LAT   (LATAbits.LATA4)   // write to LAT
+#define PAIRED_LED_TRIS (TRISAbits.TRISA4) // Paired LED 2 (RA4)
+#define PAIRED_LED_LAT (LATAbits.LATA4)    // write to LAT
 
 // #define DEBUG_LED_ANSEL (ANSELBbits.ANSB5) // Debug LED 3 (RB5)
-#define DEBUG_LED_TRIS  (TRISBbits.TRISB5) // Debug LED 3 (RB5)
-#define DEBUG_LED_LAT   (LATBbits.LATB5)   // write to LAT
-
+#define DEBUG_LED_TRIS (TRISBbits.TRISB5) // Debug LED 3 (RB5)
+#define DEBUG_LED_LAT (LATBbits.LATB5)    // write to LAT
 
 // Joystick Info
 #define JOY1_ADC_MASK BIT0HI          // AN0 (RA0)
@@ -73,7 +73,8 @@
 #define JOY2_ANSEL (ANSELAbits.ANSA1) // AN1
 #define JOY2_TRIS (TRISAbits.TRISA1)  // AN1
 
-#define JOY_DEAD_RANGE 5 // Deadband range around joystick midpoint (0-255) to prevent noise from causing unintended movement
+#define JOY_DEAD_RANGE                                                                             \
+    5 // Deadband range around joystick midpoint (0-255) to prevent noise from causing unintended movement
 
 #define NUM_ANALOG_INPUTS 3
 
@@ -102,26 +103,26 @@
 #define CHECKSUM_TX_INDEX (FRAME_SIZE_TX - 1)
 
 #define MY_BOAT_ADDRESS_LSB 0x81
-#define BOAT2_ADDRESS_LSB   0x82
-#define BOAT3_ADDRESS_LSB   0x83
-#define BOAT4_ADDRESS_LSB   0x84
-#define BOAT5_ADDRESS_LSB   0x86  // Because the Xbee of team 5 was broken, their Xbee was replaced
+#define BOAT2_ADDRESS_LSB 0x82
+#define BOAT3_ADDRESS_LSB 0x83
+#define BOAT4_ADDRESS_LSB 0x84
+#define BOAT5_ADDRESS_LSB 0x86 // Because the Xbee of team 5 was broken, their Xbee was replaced
 
 // Message bytes
-#define START_BYTE 0x7E           // Byte 1
-#define LENGTH_MSB_BYTE 0x00      // Byte 2
-#define LENGTH_RX_LSB_BYTE 0x06   // Byte 3 (Received by Mallard Module)
-#define LENGTH_TX_LSB_BYTE 0x09   // Byte 3 (Transmitted by Mallard Module)
-#define API_ID_TX_BYTE 0x01       // Byte 4
-#define API_ID_RX_BYTE 0x81       // Byte 4
-#define FRAME_ID_BYTE 0x00        // Byte 5
-#define DEST_ADD_RX_MSB_BYTE 0x21 // Byte 6  (Quackraft to Mallard Module)
-#define DEST_ADD_TX_MSB_BYTE 0x20 // Byte 6  (Mallard Module to Quackraft)
+#define START_BYTE 0x7E                 // Byte 1
+#define LENGTH_MSB_BYTE 0x00            // Byte 2
+#define LENGTH_RX_LSB_BYTE 0x06         // Byte 3 (Received by Mallard Module)
+#define LENGTH_TX_LSB_BYTE 0x09         // Byte 3 (Transmitted by Mallard Module)
+#define API_ID_TX_BYTE 0x01             // Byte 4
+#define API_ID_RX_BYTE 0x81             // Byte 4
+#define FRAME_ID_BYTE 0x00              // Byte 5
+#define DEST_ADD_RX_MSB_BYTE 0x21       // Byte 6  (Quackraft to Mallard Module)
+#define DEST_ADD_TX_MSB_BYTE 0x20       // Byte 6  (Mallard Module to Quackraft)
 #define MY_CONTROLLER_ADD_LSB_BYTE 0x81 // Byte 7  (Team 1 controller address)
-#define OPT_BYTE 0x01             // Byte 8
-#define STATUS_DRIVING_BYTE 0x00  // Byte 9
-#define STATUS_CHARGING_BYTE 0x01 // Byte 9
-#define STATUS_PAIRING_BYTE 0x02  // Byte 9
+#define OPT_BYTE 0x01                   // Byte 8
+#define STATUS_DRIVING_BYTE 0x00        // Byte 9
+#define STATUS_CHARGING_BYTE 0x01       // Byte 9
+#define STATUS_PAIRING_BYTE 0x02        // Byte 9
 
 #define DIGI_SHOOT_BYTE    0x01
 #define DIGI_NO_SHOOT_BYTE 0x00
@@ -155,7 +156,7 @@ static uint8_t ChargeVal      = 0xFF; // Default initial value per comms protoco
 static uint16_t JoyResolution = 255;  // max value, 8 bits
 static uint16_t JoyMidPoint;
 
-static uint8_t BoatPotVal = 0;  // raw 8-bit pot reading, updated each ADC scan
+static uint8_t BoatPotVal = 0; // raw 8-bit pot reading, updated each ADC scan
 
 static uint32_t ADCResults[NUM_ANALOG_INPUTS];       // ADC results array (Joy1, Joy2, more?)
 static uint8_t StatusVal, Joy1Val, Joy2Val, DigiVal; // Variables for data to be sent to boat
@@ -263,27 +264,27 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             // Initialize hardware for communication here
             InitUART();
             // Initialize ADC
-            JOY1_ANSEL = 1; // Set as analog
-            JOY1_TRIS  = 1; // Set as input
-            JOY2_ANSEL = 1; // Set as analog
-            JOY2_TRIS  = 1; // Set as input
+            JOY1_ANSEL     = 1; // Set as analog
+            JOY1_TRIS      = 1; // Set as input
+            JOY2_ANSEL     = 1; // Set as analog
+            JOY2_TRIS      = 1; // Set as input
             BOAT_ADC_ANSEL = 1; // RB2: analog input (AN4, boat selector pot)
-            BOAT_ADC_TRIS = 1;  // RB2: input
+            BOAT_ADC_TRIS  = 1; // RB2: input
 
             // Configure AN0 and AN1 (joystick) and AN44 (boat selector)for auto scan
             ADC_ConfigAutoScan(JOY1_ADC_MASK | JOY2_ADC_MASK | BOAT_ADC_MASK);
 
             // Initialize other hardware pins
-            PAIR_BTN_TRIS = 1;    // pair button: digital input with pull-up
+            PAIR_BTN_TRIS = 1; // pair button: digital input with pull-up
             // PWR_ON_LED_ANSEL = 0; // status LED 1: digital
-            PWR_ON_LED_TRIS  = 0; // status LED 1: output
-            PWR_ON_LED_LAT   = 1; // start with LED ON
+            PWR_ON_LED_TRIS = 0; // status LED 1: output
+            PWR_ON_LED_LAT  = 1; // start with LED ON
             // PAIRED_LED_ANSEL = 0; // paired LED 2: digital
-            PAIRED_LED_TRIS  = 0; // paired LED 2: output
-            PAIRED_LED_LAT   = 0; // start with LED off
+            PAIRED_LED_TRIS = 0; // paired LED 2: output
+            PAIRED_LED_LAT  = 0; // start with LED off
             // DEBUG_LED_ANSEL = 0;  // debug LED 3: digital
-            DEBUG_LED_TRIS  = 0;  // debug LED 3: output
-            DEBUG_LED_LAT   = 0;  // start with LED off
+            DEBUG_LED_TRIS = 0; // debug LED 3: output
+            DEBUG_LED_LAT  = 0; // start with LED off
 
             // Initialize variables
             desiredAddressLSB    = MY_BOAT_ADDRESS_LSB;
@@ -327,9 +328,9 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             }
             if (ThisEvent.EventParam == UNPAIRING_TIMER)
             {
-                pairedStatus  = false;
+                pairedStatus   = false;
                 PAIRED_LED_LAT = 0; // Turn off paired LED
-                StatusVal     = STATUS_PAIRING_BYTE;
+                StatusVal      = STATUS_PAIRING_BYTE;
                 DB_printf("\rUnpairing timeout: back to pairing\r\n");
             }
         }
@@ -341,15 +342,22 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
             // Read pot right now to get the freshest value, then map to address index.
             // 8-bit range 0-255 split into 5 equal bands of 51 counts each.
             uint8_t addrIndex;
-            if      (BoatPotVal < 51)  addrIndex = 1;
-            else if (BoatPotVal < 102) addrIndex = 2;
-            else if (BoatPotVal < 153) addrIndex = 3;
-            else if (BoatPotVal < 204) addrIndex = 4;
-            else                       addrIndex = 5;
+            if (BoatPotVal < 51)
+                addrIndex = 1;
+            else if (BoatPotVal < 102)
+                addrIndex = 2;
+            else if (BoatPotVal < 153)
+                addrIndex = 3;
+            else if (BoatPotVal < 204)
+                addrIndex = 4;
+            else
+                addrIndex = 5;
 
             desiredAddressLSB = Addresses[addrIndex];
             DB_printf("\rES_START_PAIRING: pot=%u -> boat index %u -> addr 0x%x\r\n",
-                    BoatPotVal, addrIndex, desiredAddressLSB);
+                      BoatPotVal,
+                      addrIndex,
+                      desiredAddressLSB);
 
             StatusVal = STATUS_PAIRING_BYTE;
             ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
@@ -358,20 +366,22 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
 
         case ES_REFUEL_INPUT:
         {
-            #ifdef SHOW_FUEL_INPUT_VALS
+#ifdef SHOW_FUEL_INPUT_VALS
             DB_printf("\rES_REFUEL_INPUT received in MallardCommunicationService\r\n");
-            #endif
+#endif
             if (pairedStatus == true)
             {
                 DEBUG_LED_LAT = 1; // Turn on Status LED 3
-                StatusVal = STATUS_CHARGING_BYTE;
-                
-                ChargingBytesPending += 5; // Add 5 charging bytes to be sent (each charging input equals 5 messages)
-                // TODO: Implement refuel input handling (maybe its own service for servo indicator)
-                #ifdef SHOW_FUEL_INPUT_VALS
-                DB_printf("\rES_REFUEL_INPUT received in MallardCommunicationService, ChargingBytesPending: %u\r\n",
-                        ChargingBytesPending);
-                #endif
+                StatusVal     = STATUS_CHARGING_BYTE;
+
+                ChargingBytesPending +=
+                    5; // Add 5 charging bytes to be sent (each charging input equals 5 messages)
+// TODO: Implement refuel input handling (maybe its own service for servo indicator)
+#ifdef SHOW_FUEL_INPUT_VALS
+                DB_printf("\rES_REFUEL_INPUT received in MallardCommunicationService, "
+                          "ChargingBytesPending: %u\r\n",
+                          ChargingBytesPending);
+#endif
             }
         }
         break;
@@ -581,13 +591,13 @@ static void InterpretMessage(void)
         pairedStatus = true; // Update paired status on valid message receipt
         // Reset the timer on paired message
         ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
-                                
+
         PAIRED_LED_LAT = 1; // Turn on paired LED
-        StatusVal    = STATUS_DRIVING_BYTE;
+        StatusVal      = STATUS_DRIVING_BYTE;
         ES_Event_t NewEvent;
         NewEvent.EventType = ES_PAIRED;
         ES_PostAll(NewEvent);
-        DB_printf("\rValid message received in MallardCommunicationService, PAIRED!\r\n");        
+        DB_printf("\rValid message received in MallardCommunicationService, PAIRED!\r\n");
     }
     else if ((pairedStatus == true) && (rxBuf[4] == DEST_ADD_TX_MSB_BYTE) &&
              (rxBuf[5] == desiredAddressLSB))
@@ -596,7 +606,7 @@ static void InterpretMessage(void)
         ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
         ChargeVal = rxBuf[8]; // Update charge value from message
         ES_Event_t NewEvent;
-        NewEvent.EventType = ES_FUEL_VAL_RECEIVED;
+        NewEvent.EventType  = ES_FUEL_VAL_RECEIVED;
         NewEvent.EventParam = ChargeVal;
         PostFuelServoService(NewEvent);
     }
@@ -616,9 +626,10 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
     txBuf[8] = status;
 
     // Switch from charging to driving if there aren't pending charging bytes to send, so that we can send joystick commands again
-    if ((status == STATUS_CHARGING_BYTE)&&(ChargingBytesPending == 0))
+    if ((status == STATUS_CHARGING_BYTE) && (ChargingBytesPending == 0))
     {
-        status = STATUS_DRIVING_BYTE; // After sending all charging messages, switch back to driving status
+        status =
+            STATUS_DRIVING_BYTE; // After sending all charging messages, switch back to driving status
         txBuf[8] = status;
     }
 
@@ -635,10 +646,10 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
         txBuf[9]  = 0x00;
         txBuf[10] = 0x00;
         txBuf[11] = 0x00;
-        ChargingBytesPending --; // Decrement pending charging bytes, send 1 charging message per timer expiration
-        #ifdef SHOW_FUEL_INPUT_VALS
+        ChargingBytesPending--; // Decrement pending charging bytes, send 1 charging message per timer expiration
+#ifdef SHOW_FUEL_INPUT_VALS
         DB_printf("/rChagingBytesPending: %u\r\n", ChargingBytesPending);
-        #endif
+#endif
         DEBUG_LED_LAT = 0; // Turn off Status LED 3
     }
     else
@@ -677,21 +688,19 @@ static void ReadADCValues(void)
     Joy1Val = (uint8_t)(ADCResults[0] >> 2); // fit the 10 bits to 8
     Joy2Val = (uint8_t)(ADCResults[1] >> 2); // fit the 10 bits to 8
 
-    if ((Joy1Val < (JoyMidPoint + JOY_DEAD_RANGE)) && 
-        (Joy1Val > (JoyMidPoint - JOY_DEAD_RANGE)))
+    if ((Joy1Val < (JoyMidPoint + JOY_DEAD_RANGE)) && (Joy1Val > (JoyMidPoint - JOY_DEAD_RANGE)))
     {
         Joy1Val = JoyMidPoint; // Remove deadband gap above midpoint
     }
-    if ((Joy2Val < (JoyMidPoint + JOY_DEAD_RANGE)) && 
-        (Joy2Val > (JoyMidPoint - JOY_DEAD_RANGE)))
+    if ((Joy2Val < (JoyMidPoint + JOY_DEAD_RANGE)) && (Joy2Val > (JoyMidPoint - JOY_DEAD_RANGE)))
     {
         Joy2Val = JoyMidPoint; // Remove deadband gap above midpoint
     }
 
     BoatPotVal = (uint8_t)(ADCResults[2] >> 2); // 8-bit, stored for pairing
-    #ifdef SHOW_ANALOG_VALS
+#ifdef SHOW_ANALOG_VALS
     DB_printf("\rADC Readings - Joy1: %d, Joy2: %d, BoatPot: %d\r\n", Joy1Val, Joy2Val, BoatPotVal);
-    #endif
+#endif
 }
 
 /*------------------------------- Footnotes -------------------------------*/

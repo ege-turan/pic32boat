@@ -23,9 +23,9 @@
 */
 #include "CommunicationService.h"
 #include "DrivingService.h"
-#include "PairedServoService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
+#include "PairedServoService.h"
 #include "dbprintf.h"
 #include <sys/attribs.h> // for interrupts
 
@@ -79,8 +79,7 @@
 #define STATUS_CHARGING_BYTE 0x01       // Byte 9
 #define STATUS_PAIRING_BYTE 0x02        // Byte 9
 
-
-#define JOY_MIDPOINT 127 // Midpoint value for joystick inputs (0-255 range)
+#define JOY_MIDPOINT 127   // Midpoint value for joystick inputs (0-255 range)
 #define MAX_CHARGE_VAL 200 // Maximum charge value for the boat
 #define DIGI_SHOOT_BYTE    0x01
 #define DIGI_NO_SHOOT_BYTE 0x00
@@ -101,7 +100,7 @@ static uint8_t MyPriority;
 static bool newMessageStarted  = false; // new start byte received flag
 static bool newMessageComplete = false; // complete valid message received flag
 static bool pairedStatus       = false;
-static bool InitializeFuel = false;
+static bool InitializeFuel     = false;
 
 static volatile uint8_t receivedByte; // Variable to hold the most recent byte received from UART
 static volatile uint8_t rxBuf[FRAME_SIZE_RX] = {0}; // Buffer to hold the most recent received bytes
@@ -222,7 +221,7 @@ ES_Event_t RunCommunicationService(ES_Event_t ThisEvent)
                 // Example: Send periodic status update to Quackraft
                 pairedStatus = false; // Simulate unpairing for testing
                 ES_Event_t NewEvent;
-                NewEvent.EventType  = ES_UNPAIRED;
+                NewEvent.EventType = ES_UNPAIRED;
                 PostPairedServoService(NewEvent);
             }
         }
@@ -411,14 +410,14 @@ static void InterpretMessage(void)
     if ((pairedStatus == false) && (rxBuf[8] == STATUS_PAIRING_BYTE) &&
         (rxBuf[9] == DEST_ADD_TX_MSB_BYTE))
     {
-        pairedAddressLSB = rxBuf
-            [10]; // Source address LSB of requesting pairing Note: rxBuf[5] and rxBuf[10] should be the same
-        pairedStatus = true;
-        InitializeFuel = true; // Set flag to initialize fuel value on next charging message
+        // Source address LSB of requesting pairing Note: rxBuf[5] and rxBuf[10] should be the same
+        pairedAddressLSB = rxBuf[10];
+        pairedStatus     = true;
+        InitializeFuel   = true; // Set flag to initialize fuel value on next charging message
         DB_printf("\rValid message received in CommunicationService, PAIRED! Address: 0x%x\r\n",
                   pairedAddressLSB);
         ES_Event_t NewEvent;
-        NewEvent.EventType  = ES_PAIRED;
+        NewEvent.EventType = ES_PAIRED;
         PostPairedServoService(NewEvent);
     }
     else if ((pairedStatus == true) && (rxBuf[4] == DEST_ADD_TX_MSB_BYTE) &&
@@ -427,12 +426,13 @@ static void InterpretMessage(void)
         ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
         if (InitializeFuel)
         {
-            ChargeVal = 200; // Initialize fuel value on first message after pairing
+            ChargeVal      = 200;   // Initialize fuel value on first message after pairing
             InitializeFuel = false; // Clear flag after initialization
         }
         if (rxBuf[8] == STATUS_CHARGING_BYTE)
         {
-            ChargeVal += 8; // Increment charge value by 8 for each charging message received (each charging input equals 8 fuel)
+            // Increment charge value by 8 for each charging message received (each charging input equals 8 fuel)
+            ChargeVal += 8;
             ES_Event_t NewEvent;
             NewEvent.EventType  = ES_CHARGING;
             NewEvent.EventParam = receivedByte;
@@ -441,18 +441,18 @@ static void InterpretMessage(void)
         else if (rxBuf[8] == STATUS_DRIVING_BYTE)
         {
             // Extract throttle and direction from message and post to DrivingService
-            uint8_t Throttle    = rxBuf[9];                    // Assuming throttle is in byte 9
-            uint8_t Direction   = rxBuf[10];                   // Assuming direction is in byte 10
+            uint8_t Throttle  = rxBuf[9];  // Assuming throttle is in byte 9
+            uint8_t Direction = rxBuf[10]; // Assuming direction is in byte 10
 
             if (ChargeVal == 0)
             {
-                Throttle = JOY_MIDPOINT; // If out of charge, set throttle to neutral
+                Throttle  = JOY_MIDPOINT; // If out of charge, set throttle to neutral
                 Direction = JOY_MIDPOINT; // If out of charge, set direction to neutral
             }
 
             if (((Throttle != JOY_MIDPOINT) || (Direction != JOY_MIDPOINT)) && (ChargeVal > 0))
             {
-                ChargeVal --; // Decrement charge value by 1 for each drive message received (each drive input equals 1 fuel)
+                ChargeVal--; // Decrement charge value by 1 for each drive message received (each drive input equals 1 fuel)
             }
 
             uint16_t DriveParam = (Direction << 8) | Throttle; // Combine into single parameter

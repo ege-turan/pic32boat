@@ -25,7 +25,6 @@
 #include "KeyboardService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
-#include "MallardCommunicationService.h"
 #include "dbprintf.h"
 
 /*----------------------------- Module Defines ----------------------------*/
@@ -38,8 +37,6 @@
 /*---------------------------- Module Variables ---------------------------*/
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
-
-static ES_Event_t KB_Event1;
 
 /*------------------------------ Module Code ------------------------------*/
 /****************************************************************************
@@ -119,7 +116,7 @@ bool PostKeyboardService(ES_Event_t ThisEvent)
  Notes
 
  Author
-   Ege Turan
+   Nick Agathangelou
 ****************************************************************************/
 ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
 {
@@ -132,7 +129,6 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
         case ES_INIT:
         {
             DB_printf("\rES_INIT received in KeyboardService, priority: %d\r\n", MyPriority);
-            KB_Event1.EventType = ES_NO_EVENT; // Initialize event to no event
         }
         break;
 
@@ -140,65 +136,98 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
         {
             switch (ThisEvent.EventParam)
             {
-                    // // Left thruster forward
-                    // case '1':
-                    // {
-                    //     KB_Event1.EventType = ;
-                    // }
-                    // break;
+                // Left arrow pressed, full left turn.
+                case 'a':
+                {
+                    uint8_t BoatDirection = 0;   // Max power to turn left
+                    uint8_t BoatThrottle  = 127; // No throttle forward or backwards
 
-                    // // Left thruster backward
-                    // case '2':
-                    // {
-                    //     KB_Event1.EventType = ;
-                    // }
-                    // break;
+                    // combine into parsable drive parameter
+                    uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
 
-                    // // Right thruster forward
-                    // case '3':
-                    // {
-                    //     KB_Event1.EventType = ;
-                    // }
-                    // break;
+                    ReturnEvent.EventType  = ES_DRIVE;
+                    ReturnEvent.EventParam = DriveParam;
+                }
+                break;
 
-                    // // Right thruster backward
-                    // case '4':
-                    // {
-                    //     KB_Event1.EventType = ;
-                    // }
-                    // break;
+                // Right arrow pressed, full right turn.
+                case 'd':
+                {
+                    uint8_t BoatDirection = 255; // Max power to turn right
+                    uint8_t BoatThrottle  = 127; // No throttle forward or backwards
 
-                    // // Water cannon on
-                    // case '':
-                    // {
-                    //     KB_Event1.EventType = ;
-                    // }
-                    // break;
+                    // combine into parsable drive parameter
+                    uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
 
-                    // // Gate servo
-                    // case '':
-                    // {
-                    //     KB_Event1.EventType = ;
-                    // }
-                    // break;
+                    ReturnEvent.EventType  = ES_DRIVE;
+                    ReturnEvent.EventParam = DriveParam;
+                }
+                break;
 
-                    // // Pairing servo
-                    // case '':
-                    // {
-                    //     KB_Event1.EventType = ;
-                    // }
-                    // break;
+                // Full steam ahead
+                case 'w':
+                {
+                    uint8_t BoatDirection = 127; // No direction throttle
+                    uint8_t BoatThrottle  = 255; // Max Power forward
+
+                    // combine into parsable drive parameter
+                    uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
+
+                    ReturnEvent.EventType  = ES_DRIVE;
+                    ReturnEvent.EventParam = DriveParam;
+                }
+                break;
+
+                // Full reverse
+                case 's':
+                {
+                    uint8_t BoatDirection = 127; // No direction throttle
+                    uint8_t BoatThrottle  = 0;   // Max Power backwards
+
+                    // combine into parsable drive parameter
+                    uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
+
+                    ReturnEvent.EventType  = ES_DRIVE;
+                    ReturnEvent.EventParam = DriveParam;
+                }
+                break;
+
+                // Stop the motors
+                case 'p':
+                {
+                    uint8_t BoatDirection = 127; // No direction throttle
+                    uint8_t BoatThrottle  = 127; // No throttle forwards/backwards
+
+                    // combine into parsable drive parameter
+                    uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
+
+                    ReturnEvent.EventType  = ES_DRIVE;
+                    ReturnEvent.EventParam = DriveParam;
+                }
+                break;
+
+                // Toggle water cannon
+                case 'c':
+                {
+                    ReturnEvent.EventType  = ES_CANNON;
+                    ReturnEvent.EventParam = 0; // unused
+                }
+                break;
+
+                // Toggle gate
+                case 'g':
+                {
+                    ReturnEvent.EventType  = ES_GATE;
+                    ReturnEvent.EventParam = 0; // unused
+                }
+                break;
 
                 default:
                     // KB_Event1.EventType  = ES_MOTORS_OFF;
                     DB_printf("KeyboardService msg: %c\r\n", ThisEvent.EventParam);
-                    KB_Event1.EventType = ES_NO_EVENT; // Initialize event to no event
                     break;
             }
-            ES_PostAll(KB_Event1);
-            DB_printf("PostedEvent: %u, with param 0x%x\r\n",
-                      (unsigned int)KB_Event1.EventType,
-                      (unsigned int)KB_Event1.EventParam);
+            ES_PostAll(ReturnEvent);
         }
         break;
 

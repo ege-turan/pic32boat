@@ -267,7 +267,9 @@ typedef enum
     ES_CHARGING, /* signals a change in charging status */
     ES_DRIVE,    /* param contains throttle and direction information */
     ES_PAIRED,
-    ES_UNPAIRED
+    ES_UNPAIRED,
+    ES_CANNON, // event to trigger the water cannon
+    ES_GATE    // gate to trigger the gate action
 } ES_EventType_t;
 
 /****************************************************************************/
