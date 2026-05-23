@@ -78,6 +78,9 @@
 #define STATUS_CHARGING_BYTE 0x01       // Byte 9
 #define STATUS_PAIRING_BYTE 0x02        // Byte 9
 
+
+#define JOY_MIDPOINT 127 // Midpoint value for joystick inputs (0-255 range)
+#define MAX_CHARGE_VAL 200 // Maximum charge value for the boat
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
    relevant to the behavior of this service
@@ -95,6 +98,7 @@ static uint8_t MyPriority;
 static bool newMessageStarted  = false; // new start byte received flag
 static bool newMessageComplete = false; // complete valid message received flag
 static bool pairedStatus       = false;
+static bool InitializeFuel = false;
 
 static volatile uint8_t receivedByte; // Variable to hold the most recent byte received from UART
 static volatile uint8_t rxBuf[FRAME_SIZE_RX] = {0}; // Buffer to hold the most recent received bytes
@@ -419,6 +423,7 @@ static void InterpretMessage(void)
         ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
         if (rxBuf[8] == STATUS_CHARGING_BYTE)
         {
+            ChargeVal += 8; // Increment charge value by 8 for each charging message received (each charging input equals 8 fuel)
             ES_Event_t NewEvent;
             NewEvent.EventType  = ES_CHARGING;
             NewEvent.EventParam = receivedByte;
@@ -429,6 +434,12 @@ static void InterpretMessage(void)
             // Extract throttle and direction from message and post to DrivingService
             uint8_t Throttle    = rxBuf[9];                    // Assuming throttle is in byte 9
             uint8_t Direction   = rxBuf[10];                   // Assuming direction is in byte 10
+
+            if ((Throttle != JOY_MIDPOINT) || (Direction != JOY_MIDPOINT))
+            {
+                ChargeVal --; // Decrement charge value by 1 for each drive message received (each drive input equals 1 fuel)
+            }
+
             uint16_t DriveParam = (Direction << 8) | Throttle; // Combine into single parameter
             ES_Event_t NewEvent;
             NewEvent.EventType  = ES_DRIVE;
