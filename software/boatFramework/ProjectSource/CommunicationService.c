@@ -434,6 +434,7 @@ static void InterpretMessage(void)
         {
             // Increment charge value by 8 for each charging message received (each charging input equals 8 fuel)
             ChargeVal += 8;
+            if (ChargeVal > 200) ChargeVal = 200;   // clamp chargeval to 200
             ES_Event_t NewEvent;
             NewEvent.EventType  = ES_CHARGING;
             NewEvent.EventParam = receivedByte;
