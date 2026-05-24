@@ -176,7 +176,7 @@ ES_Event_t RunFuelServoService(ES_Event_t ThisEvent)
                 CurrentFuelVal = MIN_FUEL_VAL;
             }
             // Map fuel value (0-100) to pulse width range
-            uint16_t newPW = SERVO_MIN_PW + ((CurrentFuelVal * (SERVO_MAX_PW - SERVO_MIN_PW)) / (MAX_FUEL_VAL - MIN_FUEL_VAL));
+            uint16_t newPW = SERVO_MAX_PW - ((CurrentFuelVal * (SERVO_MAX_PW - SERVO_MIN_PW)) / (MAX_FUEL_VAL - MIN_FUEL_VAL));
             PWMOperate_SetPulseWidthOnChannel(newPW, SERVO_CHANNEL);  
             
             #ifdef SHOW_FUEL_RECEIVED
