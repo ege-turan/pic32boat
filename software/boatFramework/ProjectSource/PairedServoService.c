@@ -31,9 +31,9 @@
 // #define VERBOSE
 
 #define PAIRED_PWM_CH 4
-#define PAIRED_PWM_PIN PWM_RPA2
+#define PAIRED_PWM_PIN PWM_RPB2
 #define PAIRED_PWM_TIMER _Timer3_
-
+#define PAIRED_PWM_SERVO_ANSEL (ANSELBbits.ANSB2) // RB2: digital output for servo PWM
 #define PWM_SERVO_CENTER 375 // 1.5 ms pulse width at 20 ms period
 #define PWM_SERVO_SIDE 250   // 1 ms
 #define PWM_SERVO_OTHER 500  // 2 ms
@@ -141,6 +141,8 @@ ES_Event_t RunPairedServoService(ES_Event_t ThisEvent)
         case ES_INIT:
         {
             DB_printf("\rES_INIT received in PairedServoService, priority: %d\r\n", MyPriority);
+            
+            PAIRED_PWM_SERVO_ANSEL = 0; // RB2: digital output for servo PWM
             // ----- Configure Timer3 for PWM at 50 Hz (20 ms period) -----
             // PBCLK = 20 MHz, Prescaler = 64 -> Period ticks = 20e6 / (64 * 50) = 6250
             PWM_Setup_ConfigureTimer(PAIRED_PWM_TIMER, 6250, PWM_PS_64);

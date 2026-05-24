@@ -5,8 +5,8 @@
 
  ****************************************************************************/
 
-#ifndef ServTemplate_H
-#define ServTemplate_H
+#ifndef ServBoatActions_H
+#define ServBoatActions_H
 
 #pragma once
 
@@ -15,8 +15,8 @@
 
 // Public Function Prototypes
 
-bool InitTemplateService(uint8_t Priority);
-bool PostTemplateService(ES_Event_t ThisEvent);
-ES_Event_t RunTemplateService(ES_Event_t ThisEvent);
+bool InitBoatActionsService(uint8_t Priority);
+bool PostBoatActionsService(ES_Event_t ThisEvent);
+ES_Event_t RunBoatActionsService(ES_Event_t ThisEvent);
 
-#endif /* ServTemplate_H */
+#endif /* ServBoatActions_H */

@@ -20,8 +20,9 @@ build/default/debug/FrameworkSource/ES_Framework.o: \
  FrameworkHeaders/ES_ServiceHeaders.h FrameworkHeaders/ES_Configure.h \
  ProjectHeaders/DrivingService.h FrameworkHeaders/ES_Events.h \
  FrameworkHeaders/ES_Types.h ProjectHeaders/CommunicationService.h \
- ProjectHeaders/PairedServoService.h ProjectHeaders/EventCheckWrapper.h \
- ProjectHeaders/EventCheckers.h FrameworkHeaders/ES_Port.h
+ ProjectHeaders/PairedServoService.h ProjectHeaders/BoatActionsService.h \
+ ProjectHeaders/EventCheckWrapper.h ProjectHeaders/EventCheckers.h \
+ FrameworkHeaders/ES_Port.h
 FrameworkSource/../FrameworkHeaders/ES_Configure.h:
 FrameworkSource/../FrameworkHeaders/ES_Framework.h:
 FrameworkSource/../FrameworkHeaders/ES_Types.h:
@@ -46,6 +47,7 @@ FrameworkHeaders/ES_Events.h:
 FrameworkHeaders/ES_Types.h:
 ProjectHeaders/CommunicationService.h:
 ProjectHeaders/PairedServoService.h:
+ProjectHeaders/BoatActionsService.h:
 ProjectHeaders/EventCheckWrapper.h:
 ProjectHeaders/EventCheckers.h:
 FrameworkHeaders/ES_Port.h:

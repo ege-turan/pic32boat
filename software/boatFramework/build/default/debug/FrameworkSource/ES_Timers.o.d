@@ -15,7 +15,7 @@ build/default/debug/FrameworkSource/ES_Timers.o: \
  FrameworkSource/../FrameworkHeaders/ES_ServiceHeaders.h \
  ProjectHeaders/DrivingService.h FrameworkHeaders/ES_Events.h \
  FrameworkHeaders/ES_Types.h ProjectHeaders/CommunicationService.h \
- ProjectHeaders/PairedServoService.h \
+ ProjectHeaders/PairedServoService.h ProjectHeaders/BoatActionsService.h \
  FrameworkSource/../FrameworkHeaders/ES_General.h \
  FrameworkSource/../FrameworkHeaders/ES_Events.h \
  FrameworkSource/../FrameworkHeaders/ES_PostList.h \
@@ -40,6 +40,7 @@ FrameworkHeaders/ES_Events.h:
 FrameworkHeaders/ES_Types.h:
 ProjectHeaders/CommunicationService.h:
 ProjectHeaders/PairedServoService.h:
+ProjectHeaders/BoatActionsService.h:
 FrameworkSource/../FrameworkHeaders/ES_General.h:
 FrameworkSource/../FrameworkHeaders/ES_Events.h:
 FrameworkSource/../FrameworkHeaders/ES_PostList.h:

@@ -22,6 +22,7 @@
    next lower level in the hierarchy that are sub-machines to this machine
 */
 #include "DrivingService.h"
+#include "BoatActionsService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
 
@@ -91,14 +92,13 @@ static uint16_t RampDutyCycle(float received_duty_cycle,
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
 
-static uint16_t CurrentThrottle =
-    0; // value from 0 to 255 (8 bits, 0 to 127 negative for reverse, 128 to 255 positive for forward) maybe implement deadband
+static uint16_t CurrentThrottle = 0; // value from 0 to 255 (8 bits, 0 to 127 negative for reverse, 128 to 255 positive for forward) maybe implement deadband
 static uint16_t CurrentDirection         = 0; // value from 0 to 255
 static uint16_t CurrentDutyCyclePercent1 = 0;
 static uint16_t CurrentDutyCyclePercent2 = 0;
 
-static uint16_t ThrottleResolution  = 255; // max value, 8 bits
-static uint16_t DirectionResolution = 255; // max value, 8 bits
+static uint16_t ThrottleMaxVal  = 255; // max value, 8 bits
+static uint16_t DirectionMaxVal = 255; // max value, 8 bits
 static uint16_t ThrottleMidPoint;
 static uint16_t DirectionMidPoint;
 
@@ -198,8 +198,8 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
         {
             DB_printf("\rES_INIT received in DrivingService, priority: %d\r\n", MyPriority);
             // Initialize variables
-            ThrottleMidPoint         = (ThrottleResolution + 1) / 2;
-            DirectionMidPoint        = (DirectionResolution + 1) / 2;
+            ThrottleMidPoint         = (ThrottleMaxVal) / 2;
+            DirectionMidPoint        = (DirectionMaxVal) / 2;
             CurrentThrottle          = ThrottleMidPoint;
             CurrentDirection         = DirectionMidPoint;
             CurrentDutyCyclePercent1 = 75;
@@ -232,6 +232,20 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
             // Extract throttle and direction from event parameter
             uint8_t Throttle  = ThisEvent.EventParam & 0xFF;        // lower byte
             uint8_t Direction = (ThisEvent.EventParam >> 8) & 0xFF; // upper byte
+
+            if (Throttle < ThrottleMidPoint) // close gate
+            {
+                ES_Event_t NewEvent;
+                NewEvent.EventType = ES_GATE_CLOSE;
+                PostBoatActionsService(NewEvent);
+            } else // open gate
+            {
+                ES_Event_t NewEvent;
+                NewEvent.EventType = ES_GATE_OPEN;
+                PostBoatActionsService(NewEvent);
+            }
+
+
             DB_printf(
                 "\rES_DRIVE event received in DrivingService, Throttle: %d, Direction: %d\r\n",
                 Throttle,
@@ -239,7 +253,9 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
             CurrentThrottle  = Throttle;
             CurrentDirection = Direction;
             _SetDutyCycleFromThrottleAndDirection(CurrentThrottle, CurrentDirection);
-            DB_printf("\rDuty cycle 1: %d, Duty cycle 2: %d\r\n",
+            DB_printf("\rThrottle: %d, Direction: %d, Duty cycle 1: %d, Duty cycle 2: %d\r\n",
+                      CurrentThrottle,
+                      CurrentDirection,
                       CurrentDutyCyclePercent1,
                       CurrentDutyCyclePercent2);
             _DriveMotor(Motor1ChannelOC, CurrentDutyCyclePercent1);
@@ -262,7 +278,7 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
                 {
                     CurrentThrottle -= 50;
                 }
-                if (CurrentThrottle > ThrottleResolution)
+                if (CurrentThrottle > ThrottleMaxVal)
                 {
                     toggle = 1;
                     ; // wrap around to 0 after reaching max
@@ -317,13 +333,13 @@ void _InitMotorPWM()
 void _SetDutyCycleFromThrottleAndDirection(uint32_t Throttle, uint32_t Direction)
 {
     // Map the throttle value (0 to max value) to a duty cycle percentage (50 to 100)
-    if (Throttle > ThrottleResolution)
+    if (Throttle > ThrottleMaxVal)
     {
-        Throttle = ThrottleResolution; // Cap throttle at max value
+        Throttle = ThrottleMaxVal; // Cap throttle at max value
     }
-    if (Direction > DirectionResolution)
+    if (Direction > DirectionMaxVal)
     {
-        Direction = DirectionResolution; // Cap direction at max value
+        Direction = DirectionMaxVal; // Cap direction at max value
     }
 
     const float BASE_DUTY = 75.0f; // neutral
