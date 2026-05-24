@@ -38,9 +38,9 @@
 #define CANNON_OFF 0
 
 // #define GATE_PWM_SERVO_ANSEL (ANSELBbits.ANSA2) // RB2: digital output for servo PWM
-#define GATE_PWM_SERVO_OPEN 375  // 1.5 ms pulse width at 20 ms period
+#define GATE_PWM_SERVO_OPEN 500  // 1.5 ms pulse width at 20 ms period
 #define GATE_PWM_SERVO_CLOSE 250 // 1 ms
-#define GATE_PWM_SERVO_OTHER 500 // 2 ms unused
+#define GATE_PWM_SERVO_OTHER 375 // 2 ms unused
 
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions

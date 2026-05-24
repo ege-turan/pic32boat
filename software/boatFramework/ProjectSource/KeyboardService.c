@@ -139,16 +139,19 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
 
         case ES_NEW_KEY:
         {
-            DB_printf("\rES_NEW_KEY received: %d\r\n", ES_NEW_KEY);
+#ifdef VERBOSE_KEYBOARD
+            DB_printf("\n");
+#endif
             switch (ThisEvent.EventParam)
             {
                 // Full Left Turn.
-                case 'a':
+                case 'd':
                 {
-                    DB_printf("Full Left Turn");
-
-                    uint8_t BoatDirection = 0;   // Max power to turn left
-                    uint8_t BoatThrottle  = 127; // No throttle forward or backwards
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'd' pressed: full right turn.\r\n");
+#endif
+                    uint8_t BoatDirection = 127; // Max power to turn right
+                    uint8_t BoatThrottle  = 255; // No throttle forward or backwards
 
                     // // combine into parsable drive parameter
                     uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
@@ -159,10 +162,30 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                 break;
 
                 // full right turn.
-                case 'd':
+                case 'a':
                 {
-                    uint8_t BoatDirection = 255; // Max power to turn right
-                    uint8_t BoatThrottle  = 127; // No throttle forward or backwards
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'a' pressed: full left turn.\r\n");
+#endif
+                    uint8_t BoatDirection = 127; // Max power to turn left
+                    uint8_t BoatThrottle  = 0;   // No throttle forward or backwards
+
+                    // combine into parsable drive parameter
+                    uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
+
+                    KBEvent.EventType  = ES_DRIVE;
+                    KBEvent.EventParam = DriveParam;
+                }
+                break;
+
+                // Full reverse ahead
+                case 's':
+                {
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 's' pressed: full reverse.\r\n");
+#endif
+                    uint8_t BoatDirection = 0;   // No direction throttle
+                    uint8_t BoatThrottle  = 127; // Max power backwards
 
                     // combine into parsable drive parameter
                     uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
@@ -175,22 +198,11 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                 // Full steam ahead
                 case 'w':
                 {
-                    uint8_t BoatDirection = 127; // No direction throttle
-                    uint8_t BoatThrottle  = 255; // Max Power forward
-
-                    // combine into parsable drive parameter
-                    uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
-
-                    KBEvent.EventType  = ES_DRIVE;
-                    KBEvent.EventParam = DriveParam;
-                }
-                break;
-
-                // Full reverse
-                case 's':
-                {
-                    uint8_t BoatDirection = 127; // No direction throttle
-                    uint8_t BoatThrottle  = 0;   // Max Power backwards
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'w' pressed: full steam ahead.\r\n");
+#endif
+                    uint8_t BoatDirection = 255; // No direction throttle
+                    uint8_t BoatThrottle  = 127; // Max power forwards
 
                     // combine into parsable drive parameter
                     uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
@@ -203,6 +215,9 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                 // Stop the motors
                 case 'p':
                 {
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'p' pressed: stop thrusters.\r\n");
+#endif
                     uint8_t BoatDirection = 127; // No direction throttle
                     uint8_t BoatThrottle  = 127; // No throttle forwards/backwards
 
@@ -217,8 +232,11 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                 // Toggle water cannon
                 case 'c':
                 {
-                    // Read the state of the pin set last and set it to the opposite state.
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'c' pressed: toggle cannon on/off.\r\n");
+#endif
 
+                    // Read the state of the pin set last and set it to the opposite state.
                     uint8_t cannonLastSet = CANNON_LAT;
 
                     // If cannon is currently on, turn it off and if is is currently off, turn it on
@@ -241,19 +259,48 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                 break;
 
                 // Open the gate
-                case 'g':
+                case 'g': // tested
                 {
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'g' pressed: open the gate.\r\n");
+#endif
                     KBEvent.EventType  = ES_GATE_OPEN;
                     KBEvent.EventParam = 0; // unused
                 }
                 break;
 
                 // Close the gate
-                case 'h':
+                case 'h': // tested
                 {
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'h' pressed: close the gate.\r\n");
+#endif
                     KBEvent.EventType  = ES_GATE_CLOSE;
                     KBEvent.EventParam = 0;
                 }
+                break;
+
+                // Open the gate
+                case 'j': // tested
+                {
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'j' pressed: servo paired.\r\n");
+#endif
+                    KBEvent.EventType  = ES_PAIRED;
+                    KBEvent.EventParam = 0; // unused
+                }
+                break;
+
+                // Close the gate
+                case 'k': // tested
+                {
+#ifdef VERBOSE_KEYBOARD
+                    DB_printf("\rKey 'k' pressed: servo unpaired.\r\n");
+#endif
+                    KBEvent.EventType  = ES_UNPAIRED;
+                    KBEvent.EventParam = 0;
+                }
+                break;
 
                 default:
                     // KB_Event1.EventType  = ES_MOTORS_OFF;

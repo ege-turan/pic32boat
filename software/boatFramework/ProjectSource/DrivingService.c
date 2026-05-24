@@ -92,7 +92,8 @@ static uint16_t RampDutyCycle(float received_duty_cycle,
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
 
-static uint16_t CurrentThrottle = 0; // value from 0 to 255 (8 bits, 0 to 127 negative for reverse, 128 to 255 positive for forward) maybe implement deadband
+static uint16_t CurrentThrottle =
+    0; // value from 0 to 255 (8 bits, 0 to 127 negative for reverse, 128 to 255 positive for forward) maybe implement deadband
 static uint16_t CurrentDirection         = 0; // value from 0 to 255
 static uint16_t CurrentDutyCyclePercent1 = 0;
 static uint16_t CurrentDutyCyclePercent2 = 0;
@@ -238,26 +239,24 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
                 ES_Event_t NewEvent;
                 NewEvent.EventType = ES_GATE_CLOSE;
                 PostBoatActionsService(NewEvent);
-            } else // open gate
+            }
+            else // open gate
             {
                 ES_Event_t NewEvent;
                 NewEvent.EventType = ES_GATE_OPEN;
                 PostBoatActionsService(NewEvent);
             }
 
-
-            DB_printf(
-                "\rES_DRIVE event received in DrivingService, Throttle: %d, Direction: %d\r\n",
-                Throttle,
-                Direction);
+            DB_printf("\rES_DRIVE event received in DrivingService.\r\n");
             CurrentThrottle  = Throttle;
             CurrentDirection = Direction;
+
             _SetDutyCycleFromThrottleAndDirection(CurrentThrottle, CurrentDirection);
-            DB_printf("\rThrottle: %d, Direction: %d, Duty cycle 1: %d, Duty cycle 2: %d\r\n",
-                      CurrentThrottle,
-                      CurrentDirection,
+            DB_printf("\rThrottle: %d, Direction: %d,\r\n", CurrentThrottle, CurrentDirection);
+            DB_printf("\rDuty cycle 1: %d, Duty cycle 2: %d\r\n",
                       CurrentDutyCyclePercent1,
                       CurrentDutyCyclePercent2);
+
             _DriveMotor(Motor1ChannelOC, CurrentDutyCyclePercent1);
             _DriveMotor(Motor2ChannelOC, CurrentDutyCyclePercent2);
         }
@@ -280,8 +279,8 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
                 }
                 if (CurrentThrottle > ThrottleMaxVal)
                 {
+                    // wrap around to 0 after reaching max
                     toggle = 1;
-                    ; // wrap around to 0 after reaching max
                 }
                 if (CurrentThrottle < 55)
                 {
@@ -358,13 +357,12 @@ void _SetDutyCycleFromThrottleAndDirection(uint32_t Throttle, uint32_t Direction
     float motor2 = BASE_DUTY + throttleOffset + directionOffset;
 
     // Clamp outputs
-    motor1 = ClampFloat(motor1, 50.0f, 99.0f);
-    motor2 = ClampFloat(motor2, 50.0f, 99.0f);
+    CurrentDutyCyclePercent1 = ClampFloat(motor1, 51.0f, 99.0f);
+    CurrentDutyCyclePercent2 = ClampFloat(motor2, 51.0f, 99.0f);
 
-    CurrentDutyCyclePercent1 =
-        RampDutyCycle(motor1, CurrentDutyCyclePercent1, MaxStepDutyCyclePercent);
-    CurrentDutyCyclePercent2 =
-        RampDutyCycle(motor2, CurrentDutyCyclePercent2, MaxStepDutyCyclePercent);
+    // Legacy code used for ramping
+    // CurrentDutyCyclePercent1 = RampDutyCycle(motor1, CurrentDutyCyclePercent1, MaxStepDutyCyclePercent);
+    // CurrentDutyCyclePercent2 = RampDutyCycle(motor2, CurrentDutyCyclePercent2, MaxStepDutyCyclePercent);
 }
 
 static float ClampFloat(float value, float min, float max)
