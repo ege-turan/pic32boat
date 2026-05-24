@@ -45,3 +45,6 @@ disassembly/
 *.bak
 *.bck
 *-backups/
+
+# Ignore KiCad history submodule
+electronics/.history/
