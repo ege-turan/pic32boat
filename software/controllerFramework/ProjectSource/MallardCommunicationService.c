@@ -29,7 +29,6 @@
 #include "dbprintf.h"
 #include <sys/attribs.h> // for interrupts
 
-
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
 // #define SHOW_SENT_BYTES
@@ -124,7 +123,7 @@
 #define STATUS_CHARGING_BYTE 0x01       // Byte 9
 #define STATUS_PAIRING_BYTE 0x02        // Byte 9
 
-#define DIGI_SHOOT_BYTE    0x01
+#define DIGI_SHOOT_BYTE 0x01
 #define DIGI_NO_SHOOT_BYTE 0x00
 
 /*---------------------------- Module Functions ---------------------------*/
@@ -314,14 +313,15 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 if (ShootingBytesPending > 0)
                 {
                     DigiVal = DIGI_SHOOT_BYTE;
-                    ShootingBytesPending --;
-                } else
+                    ShootingBytesPending--;
+                }
+                else
                 {
                     DigiVal = DIGI_NO_SHOOT_BYTE;
                 }
-                #ifdef SHOW_SHOOT_INPUT
+#ifdef SHOW_SHOOT_INPUT
                 DB_printf("DigiVal: 0x%x", DigiVal);
-                #endif
+#endif
                 SendMsgToQuackraft(StatusVal, Joy1Val, Joy2Val, DigiVal);
                 // Restart timer
                 ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
@@ -388,9 +388,9 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
 
         case ES_SHOOT:
         {
-            #ifdef SHOW_SHOOT_INPUT
+#ifdef SHOW_SHOOT_INPUT
             DB_printf("\rES_SHOOT received in MallardCommunicationService\r\n");
-            #endif
+#endif
 
             if (pairedStatus == true)
             {

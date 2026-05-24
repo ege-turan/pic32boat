@@ -29,6 +29,9 @@
 
 /*----------------------------- Module Defines ----------------------------*/
 #define VERBOSE_KEYBOARD
+#define CANNON_LAT (LATAbits.LATA4)
+#define CANNON_ON 1
+#define CANNON_OFF 0
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
    relevant to the behavior of this service
@@ -209,18 +212,43 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                 // Toggle water cannon
                 case 'c':
                 {
-                    ReturnEvent.EventType  = ES_CANNON;
+                    // Read the state of the pin set last and set it to the opposite state.
+
+                    uint8_t cannonLastSet = CANNON_LAT;
+
+                    // If cannon is currently on, turn it off and if is is currently off, turn it on
+                    // from the keypress. Doing it this way shouldn't interfere with comms service.
+                    if (CANNON_ON == cannonLastSet)
+                    {
+                        ReturnEvent.EventType = ES_CANNON_STOP;
+                    }
+                    else if (CANNON_OFF == cannonLastSet)
+                    {
+                        ReturnEvent.EventType = ES_CANNON_START;
+                    }
+                    else
+                    {
+                        DB_printf("Something went wrong with the cannon.");
+                    }
+
                     ReturnEvent.EventParam = 0; // unused
                 }
                 break;
 
-                // Toggle gate
+                // Open the gate
                 case 'g':
                 {
-                    ReturnEvent.EventType  = ES_GATE;
+                    ReturnEvent.EventType  = ES_GATE_OPEN;
                     ReturnEvent.EventParam = 0; // unused
                 }
                 break;
+
+                // Close the gate
+                case 'h':
+                {
+                    ReturnEvent.EventType  = ES_GATE_CLOSE;
+                    ReturnEvent.EventParam = 0;
+                }
 
                 default:
                     // KB_Event1.EventType  = ES_MOTORS_OFF;

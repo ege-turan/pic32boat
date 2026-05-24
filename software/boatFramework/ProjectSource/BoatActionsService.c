@@ -24,17 +24,23 @@
 #include "BoatActionsService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
-#include "dbprintf.h"
 #include "PIC32_PWM_Lib.h"
+#include "dbprintf.h"
 
 /*----------------------------- Module Defines ----------------------------*/
 #define GATE_PWM_CH 5
 #define GATE_PWM_PIN PWM_RPA2
 #define GATE_PWM_TIMER _Timer3_
+
+#define CANNON_TRIS (TRISAbits.TRISA4)
+#define CANNON_LAT (LATAbits.LATA4)
+#define CANNON_ON 1
+#define CANNON_OFF 0
+
 // #define GATE_PWM_SERVO_ANSEL (ANSELBbits.ANSA2) // RB2: digital output for servo PWM
-#define GATE_PWM_SERVO_CENTER 375 // 1.5 ms pulse width at 20 ms period
-#define GATE_PWM_SERVO_SIDE 250   // 1 ms
-#define GATE_PWM_SERVO_OTHER 500  // 2 ms
+#define GATE_PWM_SERVO_OPEN 375  // 1.5 ms pulse width at 20 ms period
+#define GATE_PWM_SERVO_CLOSE 250 // 1 ms
+#define GATE_PWM_SERVO_OTHER 500 // 2 ms unused
 
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
@@ -44,10 +50,6 @@
 /*---------------------------- Module Variables ---------------------------*/
 // with the introduction of Gen2, we need a module level Priority variable
 static uint8_t MyPriority;
-
-// Variables to keep track of the state of the cannon and the gate
-static bool gateFlag   = false; // true when gate down
-static bool cannonFlag = false; // true when cannon on
 
 /*------------------------------ Module Code ------------------------------*/
 /****************************************************************************
@@ -73,10 +75,11 @@ bool InitBoatActionsService(uint8_t Priority)
     ES_Event_t ThisEvent;
     MyPriority = Priority;
 
-    // Initialise the pins
     DB_printf("\rStarting BoatActionsService: ");
     DB_printf("compiled at %s on %s", __TIME__, __DATE__);
     DB_printf("\n\r");
+
+    // Initialise water cannon pins
 
     // post the initial transition event
     ThisEvent.EventType = ES_INIT;
@@ -140,48 +143,55 @@ ES_Event_t RunBoatActionsService(ES_Event_t ThisEvent)
         case ES_INIT:
         {
             DB_printf("\rES_INIT received in BoatActionsService, priority: %d\r\n", MyPriority);
-            
+
             // GATE_PWM_SERVO_ANSEL = 0; // RB2: digital output for servo PWM
             // ----- Configure Timer3 for PWM at 50 Hz (20 ms period) -----
             // PBCLK = 20 MHz, Prescaler = 64 -> Period ticks = 20e6 / (64 * 50) = 6250
             PWM_Setup_ConfigureTimer(GATE_PWM_TIMER, 6250, PWM_PS_64);
 
-            // Map PWM channel for servo
+            // Map PWM channel for gate servo
             PWM_Setup_SetChannel(GATE_PWM_CH);
             PWM_Setup_AssignChannelToTimer(GATE_PWM_CH, GATE_PWM_TIMER);
             PWM_Setup_MapChannelToOutputPin(GATE_PWM_CH, GATE_PWM_PIN);
 
-            // Initialize servo to center
-            PWM_Operate_SetPulseWidthOnChannel(GATE_PWM_SERVO_CENTER, GATE_PWM_CH);
+            // Initialize gate servo to center
+            PWM_Operate_SetPulseWidthOnChannel(GATE_PWM_SERVO_OPEN, GATE_PWM_CH);
+
+            // Initialise the pins for the water cannon (pin is digital only)
+            CANNON_TRIS = 1; // Set as output
+
+            // Start with the cannon off
+            CANNON_LAT = 0;
         }
         break;
 
         case ES_GATE_OPEN:
         {
-            // Toggle the gate to the state opposite what it currently is
-
-            // Update the gate status flag
-
-            ;
+            // Set the pwm to make the gate open
+            DB_printf("\rGate Opened, servo val: %d\r\n", GATE_PWM_SERVO_OPEN);
+            PWM_Operate_SetPulseWidthOnChannel(GATE_PWM_SERVO_OPEN, GATE_PWM_CH);
         }
         break;
 
         case ES_GATE_CLOSE:
         {
+            // Set the pwm to make the gate closed
+            DB_printf("\rGate Closed, servo val: %d\r\n", GATE_PWM_SERVO_CLOSE);
+            PWM_Operate_SetPulseWidthOnChannel(GATE_PWM_SERVO_CLOSE, GATE_PWM_CH);
         }
         break;
 
         case ES_CANNON_START:
         {
-            // Toggle the cannon to the state opposite what it currently is
-
-            // Update the cannon status flag
-            ;
+            DB_printf("\rCannon On!");
+            CANNON_LAT = CANNON_ON;
         }
         break;
 
         case ES_CANNON_STOP:
         {
+            DB_printf("\rCannon Off!");
+            CANNON_LAT = CANNON_OFF;
         }
         break;
 
