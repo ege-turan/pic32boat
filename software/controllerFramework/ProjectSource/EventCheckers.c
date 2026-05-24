@@ -229,7 +229,7 @@ bool Check4RefuelInput(void)
 #define SHOOT_BTN_TRIS    (TRISBbits.TRISB13)
 #define SHOOT_BTN_PORT    (PORTBbits.RB13)
 #define SHOOT_BTN_CNPU    (CNPUBbits.CNPUB13)  /* Internal pull-up        */
-#define SHOOT_BTN_PRESSED (PAIR_BTN_PORT == 0) /* Active LOW              */
+#define SHOOT_BTN_PRESSED (SHOOT_BTN_PORT == 0) /* Active LOW              */
 
 bool Check4ShootButton(void)
 {
@@ -244,7 +244,7 @@ bool Check4ShootButton(void)
         initializedShootBtn = true;
     }
  
-    bool currentButtonState = (bool)PAIR_BTN_PORT;   /* 1=high, 0=low    */
+    bool currentButtonState = (bool)SHOOT_BTN_PORT;   /* 1=high, 0=low    */
  
     /* Detect falling edge: was HIGH last tick, is LOW this tick           */
     if ((currentButtonState == false) && (lastButtonState == true))
