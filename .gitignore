@@ -36,3 +36,12 @@ disassembly/
 # Your original specific paths (keeping for safety)
 /boatFramework/build/
 /boatFramework/dist/*
+
+# KiCad lock files
+*.lck
+~*.kicad_*
+
+# KiCad backup files  
+*.bak
+*.bck
+*-backups/
