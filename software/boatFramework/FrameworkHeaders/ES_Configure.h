@@ -34,7 +34,7 @@
 /****************************************************************************/
 // This macro determines that nuber of services that are *actually* used in
 // a particular application. It will vary in value from 1 to MAX_NUM_SERVICES
-#define NUM_SERVICES 4
+#define NUM_SERVICES 5
 
 /****************************************************************************/
 // These are the definitions for Service 0, the lowest priority service.
@@ -97,13 +97,13 @@
 // These are the definitions for Service 4
 #if NUM_SERVICES > 4
     // the header file with the public function prototypes
-    #define SERV_4_HEADER "TestHarnessService4.h"
+    #define SERV_4_HEADER "KeyboardService.h"
     // the name of the Init function
-    #define SERV_4_INIT InitTestHarnessService4
+    #define SERV_4_INIT InitKeyboardService
     // the name of the run function
-    #define SERV_4_RUN RunTestHarnessService4
+    #define SERV_4_RUN RunKeyboardService
     // How big should this services Queue be?
-    #define SERV_4_QUEUE_SIZE 3
+    #define SERV_4_QUEUE_SIZE 5
 #endif
 
 /****************************************************************************/
@@ -269,9 +269,9 @@ typedef enum
     ES_PAIRED,
     ES_UNPAIRED,
     ES_CANNON_START, // event to trigger the water cannon
-    ES_CANNON_STOP, // event to stop the water cannon
+    ES_CANNON_STOP,  // event to stop the water cannon
     ES_GATE_OPEN,
-    ES_GATE_CLOSE    // gate to trigger the gate action
+    ES_GATE_CLOSE // gate to trigger the gate action
 } ES_EventType_t;
 
 /****************************************************************************/

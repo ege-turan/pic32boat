@@ -126,6 +126,8 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
     ES_Event_t ReturnEvent;
     ReturnEvent.EventType = ES_NO_EVENT; // assume no errors
 
+    ES_Event_t KBEvent;
+
     switch (ThisEvent.EventType)
     {
         // This event is run once at the end of service initialisation
@@ -137,23 +139,26 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
 
         case ES_NEW_KEY:
         {
+            DB_printf("\rES_NEW_KEY received: %d\r\n", ES_NEW_KEY);
             switch (ThisEvent.EventParam)
             {
-                // Left arrow pressed, full left turn.
+                // Full Left Turn.
                 case 'a':
                 {
+                    DB_printf("Full Left Turn");
+
                     uint8_t BoatDirection = 0;   // Max power to turn left
                     uint8_t BoatThrottle  = 127; // No throttle forward or backwards
 
-                    // combine into parsable drive parameter
+                    // // combine into parsable drive parameter
                     uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
 
-                    ReturnEvent.EventType  = ES_DRIVE;
-                    ReturnEvent.EventParam = DriveParam;
+                    KBEvent.EventType  = ES_DRIVE;
+                    KBEvent.EventParam = DriveParam;
                 }
                 break;
 
-                // Right arrow pressed, full right turn.
+                // full right turn.
                 case 'd':
                 {
                     uint8_t BoatDirection = 255; // Max power to turn right
@@ -162,8 +167,8 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                     // combine into parsable drive parameter
                     uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
 
-                    ReturnEvent.EventType  = ES_DRIVE;
-                    ReturnEvent.EventParam = DriveParam;
+                    KBEvent.EventType  = ES_DRIVE;
+                    KBEvent.EventParam = DriveParam;
                 }
                 break;
 
@@ -176,8 +181,8 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                     // combine into parsable drive parameter
                     uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
 
-                    ReturnEvent.EventType  = ES_DRIVE;
-                    ReturnEvent.EventParam = DriveParam;
+                    KBEvent.EventType  = ES_DRIVE;
+                    KBEvent.EventParam = DriveParam;
                 }
                 break;
 
@@ -190,8 +195,8 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                     // combine into parsable drive parameter
                     uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
 
-                    ReturnEvent.EventType  = ES_DRIVE;
-                    ReturnEvent.EventParam = DriveParam;
+                    KBEvent.EventType  = ES_DRIVE;
+                    KBEvent.EventParam = DriveParam;
                 }
                 break;
 
@@ -204,8 +209,8 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                     // combine into parsable drive parameter
                     uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
 
-                    ReturnEvent.EventType  = ES_DRIVE;
-                    ReturnEvent.EventParam = DriveParam;
+                    KBEvent.EventType  = ES_DRIVE;
+                    KBEvent.EventParam = DriveParam;
                 }
                 break;
 
@@ -220,34 +225,34 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                     // from the keypress. Doing it this way shouldn't interfere with comms service.
                     if (CANNON_ON == cannonLastSet)
                     {
-                        ReturnEvent.EventType = ES_CANNON_STOP;
+                        KBEvent.EventType = ES_CANNON_STOP;
                     }
                     else if (CANNON_OFF == cannonLastSet)
                     {
-                        ReturnEvent.EventType = ES_CANNON_START;
+                        KBEvent.EventType = ES_CANNON_START;
                     }
                     else
                     {
                         DB_printf("Something went wrong with the cannon.");
                     }
 
-                    ReturnEvent.EventParam = 0; // unused
+                    KBEvent.EventParam = 0; // unused
                 }
                 break;
 
                 // Open the gate
                 case 'g':
                 {
-                    ReturnEvent.EventType  = ES_GATE_OPEN;
-                    ReturnEvent.EventParam = 0; // unused
+                    KBEvent.EventType  = ES_GATE_OPEN;
+                    KBEvent.EventParam = 0; // unused
                 }
                 break;
 
                 // Close the gate
                 case 'h':
                 {
-                    ReturnEvent.EventType  = ES_GATE_CLOSE;
-                    ReturnEvent.EventParam = 0;
+                    KBEvent.EventType  = ES_GATE_CLOSE;
+                    KBEvent.EventParam = 0;
                 }
 
                 default:
@@ -255,7 +260,7 @@ ES_Event_t RunKeyboardService(ES_Event_t ThisEvent)
                     DB_printf("KeyboardService msg: %c\r\n", ThisEvent.EventParam);
                     break;
             }
-            ES_PostAll(ReturnEvent);
+            ES_PostAll(KBEvent);
         }
         break;
 

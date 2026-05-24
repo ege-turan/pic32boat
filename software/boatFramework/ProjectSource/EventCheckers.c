@@ -41,6 +41,8 @@
 // actual functionsdefinition
 #include "EventCheckers.h"
 
+#include "dbprintf.h"
+
 // This is the event checking function sample. It is not intended to be
 // included in the module. It is only here as a sample to guide you in writing
 // your own event checkers
@@ -115,6 +117,7 @@ bool Check4Keystroke(void)
         ThisEvent.EventType  = ES_NEW_KEY;
         ThisEvent.EventParam = GetNewKey();
         ES_PostAll(ThisEvent);
+
         return true;
     }
     return false;
