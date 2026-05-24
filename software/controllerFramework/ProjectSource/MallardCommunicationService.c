@@ -322,6 +322,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
 #ifdef SHOW_SHOOT_INPUT
                 DB_printf("DigiVal: 0x%x", DigiVal);
 #endif
+                if (StatusVal == STATUS_PAIRING_BYTE) PAIRED_LED_LAT = PAIRED_LED_LAT ^ 1;  // pairing LED flashing
                 SendMsgToQuackraft(StatusVal, Joy1Val, Joy2Val, DigiVal);
                 // Restart timer
                 ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
@@ -338,6 +339,8 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
 
         case ES_START_PAIRING:
         {
+            PAIRED_LED_LAT = 0; // Turn off paired LED (repressed start pairing, so start as unpaired)
+
             ReadADCValues();
             // Read pot right now to get the freshest value, then map to address index.
             // 8-bit range 0-255 split into 5 equal bands of 51 counts each.
