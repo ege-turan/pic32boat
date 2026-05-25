@@ -183,14 +183,14 @@ ES_Event_t RunBoatActionsService(ES_Event_t ThisEvent)
 
         case ES_CANNON_START:
         {
-            DB_printf("\rCannon Start");
+            DB_printf("\rCannon Start\r\n");
             CANNON_LAT = CANNON_ON;
         }
         break;
 
         case ES_CANNON_STOP:
         {
-            DB_printf("\rCannon Stop");
+            DB_printf("\rCannon Stop\r\n");
             CANNON_LAT = CANNON_OFF;
         }
         break;
