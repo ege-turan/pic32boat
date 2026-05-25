@@ -231,6 +231,8 @@ bool PostMallardCommunicationService(ES_Event_t ThisEvent)
     return ES_PostToService(MyPriority, ThisEvent);
 }
 
+#define SHOOT_BTN_PORT    (PORTBbits.RB13) // for holding down to shoot
+
 /****************************************************************************
  Function
     RunMallardCommunicationService
@@ -310,15 +312,28 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 ReadADCValues();
                 // DB_printf("\rADC Readings - Joy1: %d, Joy2: %d\r\n", Joy1Val, Joy2Val);
                 // Send MSG to Quackraft
-                if (ShootingBytesPending > 0)
-                {
-                    DigiVal = DIGI_SHOOT_BYTE;
-                    ShootingBytesPending--;
-                }
-                else
+
+                // Option 1: ShootingBytesPending
+                // if (ShootingBytesPending > 0)
+                // {
+                //     DigiVal = DIGI_SHOOT_BYTE;
+                //     ShootingBytesPending--;
+                // }
+                // else
+                // {
+                //     DigiVal = DIGI_NO_SHOOT_BYTE;
+                // }
+
+                // Option 2: Shoot while holding down
+                if (SHOOT_BTN_PORT)
                 {
                     DigiVal = DIGI_NO_SHOOT_BYTE;
                 }
+                else
+                {
+                    DigiVal = DIGI_SHOOT_BYTE;
+                }
+                
 #ifdef SHOW_SHOOT_INPUT
                 DB_printf("DigiVal: 0x%x", DigiVal);
 #endif
