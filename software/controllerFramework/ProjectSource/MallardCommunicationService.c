@@ -400,6 +400,7 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 ShootingBytesPending += 5;
             }
         }
+        break;
 
         case ES_CHANGE_ADDR: // triggered by event checker
         {
