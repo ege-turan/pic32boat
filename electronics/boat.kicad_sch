@@ -4795,7 +4795,7 @@
 		(uuid "fd4d86f4-ed2f-455b-bb0d-585573c47fa9")
 	)
 	(image
-		(at 236.22 144.78)
+		(at 246.38 144.78)
 		(scale 0.568723)
 		(uuid "0f6b7c54-1644-4895-bcc7-221776c2f512")
 		(data "/9j/4QBsRXhpZgAASUkqAAgAAAADADEBAgAHAAAAMgAAABICAwACAAAAAQABAGmHBAABAAAAOgAA"
@@ -7713,7 +7713,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "IRLZ34N"
+		(property "Value" "IRLB3036/IRLZ34N"
 			(at 207.01 144.7799 0)
 			(effects
 				(font
