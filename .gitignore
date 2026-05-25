@@ -48,3 +48,13 @@ disassembly/
 
 # Ignore KiCad history submodule
 electronics/.history/
+
+# NetBeans generated files
+software/controllerFramework/.generated_files/
+software/boatFramework/.generated_files/
+
+# NetBeans project files (if you want to ignore local config changes)
+software/controllerFramework/nbproject/private/
+software/boatFramework/nbproject/private/
+**/nbproject/Makefile-local-*.mk
+**/nbproject/Makefile-genesis.properties
