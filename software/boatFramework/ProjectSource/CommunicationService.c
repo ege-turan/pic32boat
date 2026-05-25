@@ -83,8 +83,8 @@
 
 #define JOY_MIDPOINT 127   // Midpoint value for joystick inputs (0-255 range)
 #define MAX_CHARGE_VAL 200 // Maximum charge value for the boat
-#define DIGI_SHOOT_BYTE 0x01
-#define DIGI_NO_SHOOT_BYTE 0x00
+#define DIGI_SHOOT_BYTE 0x1
+#define DIGI_NO_SHOOT_BYTE 0x0
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
    relevant to the behavior of this service
