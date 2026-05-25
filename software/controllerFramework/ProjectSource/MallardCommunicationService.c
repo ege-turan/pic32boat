@@ -606,6 +606,7 @@ static void InterpretMessage(void)
              (rxBuf[5] == desiredAddressLSB))
     {
         // Reset the timer on paired message
+        PAIRED_LED_LAT = 1; // Turn on paired LED
         ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
         ChargeVal = rxBuf[8]; // Update charge value from message
         ES_Event_t NewEvent;
