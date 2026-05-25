@@ -20,6 +20,8 @@ production/
 *.s
 *.su
 *.a
+*.mk
+*.xml
 
 # MPLAB X IDE - Private/generated files
 nbproject/private/

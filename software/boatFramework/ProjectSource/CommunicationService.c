@@ -22,13 +22,14 @@
    next lower level in the hierarchy that are sub-machines to this machine
 */
 #include "CommunicationService.h"
-#include "DrivingService.h"
 #include "BoatActionsService.h"
-#include "PairedServoService.h"
+#include "DrivingService.h"
 #include "ES_Configure.h"
 #include "ES_Framework.h"
+#include "PairedServoService.h"
 #include "dbprintf.h"
 #include <sys/attribs.h> // for interrupts
+
 
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
@@ -82,7 +83,7 @@
 
 #define JOY_MIDPOINT 127   // Midpoint value for joystick inputs (0-255 range)
 #define MAX_CHARGE_VAL 200 // Maximum charge value for the boat
-#define DIGI_SHOOT_BYTE    0x01
+#define DIGI_SHOOT_BYTE 0x01
 #define DIGI_NO_SHOOT_BYTE 0x00
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
@@ -434,7 +435,8 @@ static void InterpretMessage(void)
         {
             // Increment charge value by 8 for each charging message received (each charging input equals 8 fuel)
             ChargeVal += 8;
-            if (ChargeVal > 200) ChargeVal = 200;   // clamp chargeval to 200
+            if (ChargeVal > 200)
+                ChargeVal = 200; // clamp chargeval to 200
             ES_Event_t NewEvent;
             NewEvent.EventType  = ES_CHARGING;
             NewEvent.EventParam = receivedByte;
@@ -445,13 +447,14 @@ static void InterpretMessage(void)
             // Extract throttle and direction from message and post to DrivingService
             uint8_t Throttle  = rxBuf[9];  // Assuming throttle is in byte 9
             uint8_t Direction = rxBuf[10]; // Assuming direction is in byte 10
-            uint8_t Digi      = rxBuf[11]; // Assuming digital input (e.g., shoot command) is in byte 11
+            uint8_t Digi = rxBuf[11]; // Assuming digital input (e.g., shoot command) is in byte 11
 
             if (ChargeVal == 0)
             {
                 Throttle  = JOY_MIDPOINT; // If out of charge, set throttle to neutral
                 Direction = JOY_MIDPOINT; // If out of charge, set direction to neutral
-            } else
+            }
+            else
             {
                 if (((Throttle != JOY_MIDPOINT) || (Direction != JOY_MIDPOINT)) && (ChargeVal > 0))
                 {
@@ -460,7 +463,7 @@ static void InterpretMessage(void)
 
                 if ((Digi == DIGI_SHOOT_BYTE) && (ChargeVal > 0))
                 {
-                    ChargeVal --; // Decrement charge value by 1 for shoot command
+                    ChargeVal--; // Decrement charge value by 1 for shoot command
                     ES_Event_t ShootEvent;
                     ShootEvent.EventType = ES_CANNON_START;
                     PostBoatActionsService(ShootEvent);
@@ -478,7 +481,6 @@ static void InterpretMessage(void)
             NewEvent.EventType  = ES_DRIVE;
             NewEvent.EventParam = DriveParam;
             PostDrivingService(NewEvent);
-
 
             // TODO: Check if rxBuf[11] has info to actuate something else
         }
@@ -500,9 +502,9 @@ static void SendMsgToMallardModule(uint8_t charge)
     ComputeCheckSum(DATA_FRAME_TX_LENGTH);
     txBuf[CHECKSUM_TX_INDEX] = CheckSumVal;
 
-    #ifdef SHOW_CHARGE
+#ifdef SHOW_CHARGE
     DB_printf("\r ChargeVal Sent: 0x%x", ChargeVal);
-    #endif
+#endif
 
     // Transmit message byte by byte
     for (uint8_t i = 0; i < FRAME_SIZE_TX; i++)
