@@ -158,7 +158,7 @@ ES_Event_t RunBoatActionsService(ES_Event_t ThisEvent)
             PWM_Operate_SetPulseWidthOnChannel(GATE_PWM_SERVO_OPEN, GATE_PWM_CH);
 
             // Initialise the pins for the water cannon (pin is digital only)
-            CANNON_TRIS = 1; // Set as output
+            CANNON_TRIS = 0; // Set as output
 
             // Start with the cannon off
             CANNON_LAT = 0;
@@ -183,14 +183,14 @@ ES_Event_t RunBoatActionsService(ES_Event_t ThisEvent)
 
         case ES_CANNON_START:
         {
-            DB_printf("\rCannon On!");
+            DB_printf("\rCannon Start");
             CANNON_LAT = CANNON_ON;
         }
         break;
 
         case ES_CANNON_STOP:
         {
-            DB_printf("\rCannon Off!");
+            DB_printf("\rCannon Stop");
             CANNON_LAT = CANNON_OFF;
         }
         break;
