@@ -5245,7 +5245,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "147cbceb-8f5d-47a5-8592-94278f58368c")
-		(property "Reference" "SW?"
+		(property "Reference" "SW5"
 			(at 252.73 168.9099 90)
 			(effects
 				(font
@@ -5305,7 +5305,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "SW?")
+					(reference "SW5")
 					(unit 1)
 				)
 			)
@@ -5394,7 +5394,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "288fee4d-2b18-4791-b206-d19e5c948993")
-		(property "Reference" "SW?"
+		(property "Reference" "SW3"
 			(at 184.15 124.46 0)
 			(effects
 				(font
@@ -5455,7 +5455,7 @@
 			)
 			(project ""
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "SW?")
+					(reference "SW3")
 					(unit 1)
 				)
 			)
@@ -5471,7 +5471,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2b61cb24-81fe-4fc7-9013-87af41836d33")
-		(property "Reference" "U?"
+		(property "Reference" "U4"
 			(at 233.2833 39.37 0)
 			(effects
 				(font
@@ -5636,7 +5636,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "U?")
+					(reference "U4")
 					(unit 1)
 				)
 			)
@@ -5800,7 +5800,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2d170534-4a84-4ad1-bc49-a6be21f8ffb9")
-		(property "Reference" "PRG?"
+		(property "Reference" "PRG1"
 			(at 152.4 53.3399 0)
 			(effects
 				(font
@@ -5878,7 +5878,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "PRG?")
+					(reference "PRG1")
 					(unit 1)
 				)
 			)
@@ -6041,7 +6041,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "4634ce7f-4d2f-49af-8a9d-e4bb5386a9f7")
-		(property "Reference" "C?"
+		(property "Reference" "C3"
 			(at 74.422 104.902 90)
 			(effects
 				(font
@@ -6099,7 +6099,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "C?")
+					(reference "C3")
 					(unit 1)
 				)
 			)
@@ -6259,7 +6259,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "517dadd0-2de5-44e7-8f36-e4d77b512b2f")
-		(property "Reference" "J?"
+		(property "Reference" "J4"
 			(at 110.49 72.3899 0)
 			(effects
 				(font
@@ -6319,7 +6319,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "J?")
+					(reference "J4")
 					(unit 1)
 				)
 			)
@@ -6482,7 +6482,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "599c642b-d175-4c67-aec4-bacae2279c8a")
-		(property "Reference" "C?"
+		(property "Reference" "C1"
 			(at 45.212 50.546 0)
 			(effects
 				(font
@@ -6542,7 +6542,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "C?")
+					(reference "C1")
 					(unit 1)
 				)
 			)
@@ -6702,7 +6702,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "778561ca-ec5d-4141-b5e9-c09de4e1050e")
-		(property "Reference" "AE?"
+		(property "Reference" "AE2"
 			(at 267.97 66.0399 90)
 			(effects
 				(font
@@ -6759,7 +6759,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "AE?")
+					(reference "AE2")
 					(unit 1)
 				)
 			)
@@ -6991,7 +6991,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "88556ca5-ed8e-4a0f-bc2a-25691e236e50")
-		(property "Reference" "R?"
+		(property "Reference" "R3"
 			(at 166.37 128.2699 0)
 			(effects
 				(font
@@ -7051,7 +7051,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "R?")
+					(reference "R3")
 					(unit 1)
 				)
 			)
@@ -7067,7 +7067,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8bcf70ee-a2fe-410f-aeb9-f64e1b90de9c")
-		(property "Reference" "M?"
+		(property "Reference" "M2"
 			(at 82.55 126.5668 0)
 			(effects
 				(font
@@ -7130,7 +7130,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "M?")
+					(reference "M2")
 					(unit 1)
 				)
 			)
@@ -7225,7 +7225,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8edf7311-d704-4b8f-a513-f6bd5d77ecd6")
-		(property "Reference" "R?"
+		(property "Reference" "R1"
 			(at 96.52 34.544 90)
 			(effects
 				(font
@@ -7283,7 +7283,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "R?")
+					(reference "R1")
 					(unit 1)
 				)
 			)
@@ -7299,7 +7299,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "9067f1f9-e7b9-4d19-a72c-9bda063efd97")
-		(property "Reference" "U?"
+		(property "Reference" "U3"
 			(at 73.025 40.64 0)
 			(effects
 				(font
@@ -7435,7 +7435,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "U?")
+					(reference "U3")
 					(unit 1)
 				)
 			)
@@ -7451,7 +7451,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "90a328bf-787f-4088-8e4e-e103f1fedcb9")
-		(property "Reference" "R?"
+		(property "Reference" "R6"
 			(at 238.76 162.5599 0)
 			(effects
 				(font
@@ -7511,7 +7511,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "R?")
+					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -7527,7 +7527,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "9437ea9d-ec79-490a-b120-1b2ca25c50ad")
-		(property "Reference" "SW?"
+		(property "Reference" "SW6"
 			(at 252.73 198.1199 90)
 			(effects
 				(font
@@ -7587,7 +7587,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "SW?")
+					(reference "SW6")
 					(unit 1)
 				)
 			)
@@ -7966,7 +7966,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "ab4c006e-869d-4f51-9304-dfe8c641e202")
-		(property "Reference" "C?"
+		(property "Reference" "C10"
 			(at 240.03 170.1799 0)
 			(effects
 				(font
@@ -8026,7 +8026,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "C?")
+					(reference "C10")
 					(unit 1)
 				)
 			)
@@ -8042,7 +8042,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b28c2a47-8e31-43aa-96f8-42c6903e6d23")
-		(property "Reference" "R?"
+		(property "Reference" "R2"
 			(at 102.87 35.8139 0)
 			(effects
 				(font
@@ -8102,7 +8102,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "R?")
+					(reference "R2")
 					(unit 1)
 				)
 			)
@@ -8334,7 +8334,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c262b6e2-9759-4751-9f3c-daf2571a86c8")
-		(property "Reference" "C?"
+		(property "Reference" "C9"
 			(at 167.64 135.8899 0)
 			(effects
 				(font
@@ -8394,7 +8394,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "C?")
+					(reference "C9")
 					(unit 1)
 				)
 			)
@@ -8410,7 +8410,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "c7de43fd-c657-492f-b856-964fbec0c99d")
-		(property "Reference" "C?"
+		(property "Reference" "C4"
 			(at 104.14 43.4339 0)
 			(effects
 				(font
@@ -8470,7 +8470,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "C?")
+					(reference "C4")
 					(unit 1)
 				)
 			)
@@ -8558,7 +8558,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "cd46a173-8421-4663-8bc1-67b43a2b7f80")
-		(property "Reference" "R?"
+		(property "Reference" "R8"
 			(at 238.76 191.7699 0)
 			(effects
 				(font
@@ -8618,7 +8618,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "R?")
+					(reference "R8")
 					(unit 1)
 				)
 			)
@@ -9003,7 +9003,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "dfa7cf35-d5ad-4f14-a569-74b683237a13")
-		(property "Reference" "C?"
+		(property "Reference" "C12"
 			(at 240.03 199.3899 0)
 			(effects
 				(font
@@ -9063,7 +9063,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "C?")
+					(reference "C12")
 					(unit 1)
 				)
 			)
@@ -9223,7 +9223,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "f314aa03-d4a0-4ddf-a6ee-ec61553e604b")
-		(property "Reference" "C?"
+		(property "Reference" "C2"
 			(at 46.736 87.376 0)
 			(effects
 				(font
@@ -9283,7 +9283,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "C?")
+					(reference "C2")
 					(unit 1)
 				)
 			)
@@ -9529,7 +9529,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "fe648db9-ffb2-40cf-b160-6c87d8bb4062")
-		(property "Reference" "SW?"
+		(property "Reference" "SW2"
 			(at 116.84 42.1639 90)
 			(effects
 				(font
@@ -9589,7 +9589,7 @@
 			)
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "SW?")
+					(reference "SW2")
 					(unit 1)
 				)
 			)
