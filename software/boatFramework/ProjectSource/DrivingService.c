@@ -247,15 +247,20 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
                 PostBoatActionsService(NewEvent);
             }
 
+#ifdef VERBOSE_MODE
             DB_printf("\rES_DRIVE event received in DrivingService.\r\n");
+#endif
             CurrentThrottle  = Throttle;
             CurrentDirection = Direction;
 
             _SetDutyCycleFromThrottleAndDirection(CurrentThrottle, CurrentDirection);
+
+#ifdef VERBOSE_MODE
             DB_printf("\rThrottle: %d, Direction: %d,\r\n", CurrentThrottle, CurrentDirection);
             DB_printf("\rDuty cycle 1: %d, Duty cycle 2: %d\r\n",
                       CurrentDutyCyclePercent1,
                       CurrentDutyCyclePercent2);
+#endif
 
             _DriveMotor(Motor1ChannelOC, CurrentDutyCyclePercent1);
             _DriveMotor(Motor2ChannelOC, CurrentDutyCyclePercent2);
