@@ -30,7 +30,6 @@
 #include "dbprintf.h"
 #include <sys/attribs.h> // for interrupts
 
-
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
 // #define SHOW_SENT_BYTES

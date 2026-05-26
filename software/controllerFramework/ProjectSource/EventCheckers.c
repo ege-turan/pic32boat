@@ -124,12 +124,11 @@ bool Check4Keystroke(void)
 /* ------------------------ CONTROLLER / MALLARD ------------------------ */
 
 /* ---- Pair button (RB15, active LOW) ---------------------------------- */
-#define PAIR_BTN_ANSEL   (ANSELBbits.ANSB15) // RB15: digital input
-#define PAIR_BTN_TRIS    (TRISBbits.TRISB15)
-#define PAIR_BTN_PORT    (PORTBbits.RB15)
-#define PAIR_BTN_CNPU    (CNPUBbits.CNPUB15)  /* Internal pull-up        */
-#define PAIR_BTN_PRESSED (PAIR_BTN_PORT == 0)  /* Active LOW              */
- 
+#define PAIR_BTN_ANSEL (ANSELBbits.ANSB15) // RB15: digital input
+#define PAIR_BTN_TRIS (TRISBbits.TRISB15)
+#define PAIR_BTN_PORT (PORTBbits.RB15)
+#define PAIR_BTN_CNPU (CNPUBbits.CNPUB15)     /* Internal pull-up        */
+#define PAIR_BTN_PRESSED (PAIR_BTN_PORT == 0) /* Active LOW              */
 
 /****************************************************************************
  Function   
@@ -154,112 +153,120 @@ bool Check4Keystroke(void)
 bool Check4PairButton(void)
 {
     static bool initializedPairBtn = false;
-    static bool lastButtonState = true; // HIGH = unpressed (active LOW)
+    static bool lastButtonState    = true; // HIGH = unpressed (active LOW)
     /* One-time hardware setup (called on first event-checker invocation)  */
     if (!initializedPairBtn)
     {
-        PAIR_BTN_ANSEL = 0; // RB15: digital input
-        PAIR_BTN_TRIS = 1;    /* RB15: digital input                      */
-        PAIR_BTN_CNPU = 1;    /* Enable internal pull-up on RB15          */
+        PAIR_BTN_ANSEL     = 0; // RB15: digital input
+        PAIR_BTN_TRIS      = 1; /* RB15: digital input                      */
+        PAIR_BTN_CNPU      = 1; /* Enable internal pull-up on RB15          */
         initializedPairBtn = true;
     }
- 
-    bool currentButtonState = (bool)PAIR_BTN_PORT;   /* 1=high, 0=low    */
- 
+
+    bool currentButtonState = (bool)PAIR_BTN_PORT; /* 1=high, 0=low    */
+
     /* Detect falling edge: was HIGH last tick, is LOW this tick           */
     if ((currentButtonState == false) && (lastButtonState == true))
     {
         DB_printf("\rPair button pressed! Current state is: %d\r\n", currentButtonState);
         lastButtonState = currentButtonState;
- 
+
         ES_Event_t pairEvent;
         pairEvent.EventType  = ES_START_PAIRING;
         pairEvent.EventParam = 0;
         PostMallardCommunicationService(pairEvent);
- 
+
         return true;
     }
- 
+
     lastButtonState = currentButtonState;
     return false;
 }
 
-
 // RA3 or RB12 not sure which for refuel input
 /* ---- Refuel Input (RB12, active LOW) ---------------------------------- */
-#define REFUEL_IN_ANSEL   (ANSELBbits.ANSB12)
-#define REFUEL_IN_TRIS    (TRISBbits.TRISB12)
-#define REFUEL_IN_PORT    (PORTBbits.RB12)
+#define REFUEL_IN_ANSEL (ANSELBbits.ANSB12)
+#define REFUEL_IN_TRIS (TRISBbits.TRISB12)
+#define REFUEL_IN_PORT (PORTBbits.RB12)
+#define REFUEL_BTN_CNPU (CNPUBbits.CNPUB12) /* Internal pull-up        */
 
 bool Check4RefuelInput(void)
 {
+    static uint8_t debounce = 0;
+
+    if (debounce < 100)
+    {
+        debounce++;
+        return false;
+    }
+
     static bool initializedRefuelIn = false;
-    static bool lastInputState = false; // false = unpressed (active High)
+    static bool lastInputState      = true; // true = unpressed (active low)
     /* One-time hardware setup (called on first event-checker invocation)  */
     if (!initializedRefuelIn)
     {
         // Initialize refuel input hardware
-        REFUEL_IN_ANSEL = 0; // RB12: digital input
-        REFUEL_IN_TRIS  = 1; // RB12: input
+        REFUEL_IN_ANSEL     = 0; // RB12: digital input
+        REFUEL_IN_TRIS      = 1; // RB12: input
+        REFUEL_BTN_CNPU     = 1; // Set internal pullup high
         initializedRefuelIn = false;
     }
- 
-    bool currentInputState = (bool)REFUEL_IN_PORT;   /* 1=high, 0=low    */
- 
+
+    bool currentInputState = (bool)REFUEL_IN_PORT; /* 1=high, 0=low    */
+
     /* Detect falling edge: was HIGH last tick, is LOW this tick           */
-    if ((currentInputState == true) && (lastInputState == false))
+    if ((currentInputState == false) && (lastInputState == true))
     {
         lastInputState = currentInputState;
- 
+
         ES_Event_t refuelEvent;
         refuelEvent.EventType  = ES_REFUEL_INPUT;
         refuelEvent.EventParam = 0;
         ES_PostAll(refuelEvent);
- 
+
         return true;
     }
- 
+
     lastInputState = currentInputState;
     return false;
 }
 
-
 /* ---- Shoot button (RB13, active LOW) ---------------------------------- */
-#define SHOOT_BTN_ANSEL   (ANSELBbits.ANSB13)  // RB13: digital input
-#define SHOOT_BTN_TRIS    (TRISBbits.TRISB13)
-#define SHOOT_BTN_PORT    (PORTBbits.RB13)
-#define SHOOT_BTN_CNPU    (CNPUBbits.CNPUB13)  /* Internal pull-up        */
+#define SHOOT_BTN_ANSEL (ANSELBbits.ANSB13) // RB13: digital input
+#define SHOOT_BTN_TRIS (TRISBbits.TRISB13)
+#define SHOOT_BTN_PORT (PORTBbits.RB13)
+#define SHOOT_BTN_CNPU (CNPUBbits.CNPUB13)      /* Internal pull-up        */
 #define SHOOT_BTN_PRESSED (SHOOT_BTN_PORT == 0) /* Active LOW              */
 
 bool Check4ShootButton(void)
 {
     static bool initializedShootBtn = false;
-    static bool lastButtonState = true; // HIGH = unpressed (active LOW)
+    static bool lastButtonState     = true; // HIGH = unpressed (active LOW)
     /* One-time hardware setup (called on first event-checker invocation)  */
     if (!initializedShootBtn)
     {
-        SHOOT_BTN_ANSEL = 0;    // RB13: digital input
-        SHOOT_BTN_TRIS  = 1;    /* RB13: digital input                      */
-        SHOOT_BTN_CNPU  = 1;    /* Enable internal pull-up on RB13          */
+        SHOOT_BTN_ANSEL     = 0; // RB13: digital input
+        SHOOT_BTN_TRIS      = 1; /* RB13: digital input                      */
+        SHOOT_BTN_CNPU      = 1; /* Enable internal pull-up on RB13          */
         initializedShootBtn = true;
     }
- 
-    bool currentButtonState = (bool)SHOOT_BTN_PORT;   /* 1=high, 0=low    */
- 
+
+    bool currentButtonState = (bool)SHOOT_BTN_PORT; /* 1=high, 0=low    */
+
     /* Detect falling edge: was HIGH last tick, is LOW this tick           */
     if ((currentButtonState == false) && (lastButtonState == true))
     {
         DB_printf("\rShoot button pressed! Current state is: %d\r\n", currentButtonState);
         lastButtonState = currentButtonState;
- 
+
         ES_Event_t shootEvent;
         shootEvent.EventType  = ES_SHOOT;
         shootEvent.EventParam = 0;
         PostMallardCommunicationService(shootEvent);
- 
+
         return true;
     }
- 
+
     lastButtonState = currentButtonState;
     return false;
 }

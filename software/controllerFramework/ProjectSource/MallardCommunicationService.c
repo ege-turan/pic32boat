@@ -35,7 +35,7 @@
 // #define SHOW_RECEIVED_BYTES
 // #define SHOW_ANALOG_VALS
 // #define SHOW_FUEL_INPUT_VALS
-#define SHOW_SHOOT_INPUT
+// #define SHOW_SHOOT_INPUT
 
 #define FOUR_SECONDS 4000   // in milliseconds
 #define SEND_UART_MS 200    // in milliseconds
@@ -150,7 +150,7 @@ static volatile uint8_t rxBuf[FRAME_SIZE_RX] = {0}; // Buffer to hold the most r
 static uint8_t txBuf[FRAME_SIZE_TX]          = {0}; // Buffer to hold the bytes to be transmitted
 
 static uint8_t desiredAddressLSB;
-static uint8_t Addresses[]    = {0x00, 0x81, 0x82, 0x83, 0x84, 0x85};
+static uint8_t Addresses[]    = {0x00, 0x81, 0x82, 0x87, 0x84, 0x86};
 static uint8_t ChargeVal      = 0xFF; // Default initial value per comms protocol
 static uint16_t JoyResolution = 255;  // max value, 8 bits
 static uint16_t JoyMidPoint;
@@ -231,7 +231,7 @@ bool PostMallardCommunicationService(ES_Event_t ThisEvent)
     return ES_PostToService(MyPriority, ThisEvent);
 }
 
-#define SHOOT_BTN_PORT    (PORTBbits.RB13) // for holding down to shoot
+#define SHOOT_BTN_PORT (PORTBbits.RB13) // for holding down to shoot
 
 /****************************************************************************
  Function
@@ -333,11 +333,12 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 {
                     DigiVal = DIGI_SHOOT_BYTE;
                 }
-                
+
 #ifdef SHOW_SHOOT_INPUT
                 DB_printf("DigiVal: 0x%x", DigiVal);
 #endif
-                if (StatusVal == STATUS_PAIRING_BYTE) PAIRED_LED_LAT = PAIRED_LED_LAT ^ 1;  // pairing LED flashing
+                if (StatusVal == STATUS_PAIRING_BYTE)
+                    PAIRED_LED_LAT = PAIRED_LED_LAT ^ 1; // pairing LED flashing
                 SendMsgToQuackraft(StatusVal, Joy1Val, Joy2Val, DigiVal);
                 // Restart timer
                 ES_Timer_InitTimer(SEND_MSG_TIMER, SEND_UART_MS);
@@ -354,7 +355,8 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
 
         case ES_START_PAIRING:
         {
-            PAIRED_LED_LAT = 0; // Turn off paired LED (repressed start pairing, so start as unpaired)
+            PAIRED_LED_LAT =
+                0; // Turn off paired LED (repressed start pairing, so start as unpaired)
 
             ReadADCValues();
             // Read pot right now to get the freshest value, then map to address index.
@@ -392,8 +394,12 @@ ES_Event_t RunMallardCommunicationService(ES_Event_t ThisEvent)
                 DEBUG_LED_LAT = 1; // Turn on Status LED 3
                 StatusVal     = STATUS_CHARGING_BYTE;
 
-                ChargingBytesPending +=
-                    5; // Add 5 charging bytes to be sent (each charging input equals 5 messages)
+                // If not pull add 5 charging bytes (each charging input equals 5 messages)
+                if (20 >= ChargingBytesPending)
+                {
+                    ChargingBytesPending += 5;
+                }
+
 // TODO: Implement refuel input handling (maybe its own service for servo indicator)
 #ifdef SHOW_FUEL_INPUT_VALS
                 DB_printf("\rES_REFUEL_INPUT received in MallardCommunicationService, "
@@ -648,8 +654,8 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
     // Switch from charging to driving if there aren't pending charging bytes to send, so that we can send joystick commands again
     if ((status == STATUS_CHARGING_BYTE) && (ChargingBytesPending == 0))
     {
-        status =
-            STATUS_DRIVING_BYTE; // After sending all charging messages, switch back to driving status
+        // After sending all charging messages, switch back to driving status
+        status   = STATUS_DRIVING_BYTE;
         txBuf[8] = status;
     }
 
