@@ -452,6 +452,11 @@ static void InterpretMessage(void)
             {
                 Throttle  = JOY_MIDPOINT; // If out of charge, set throttle to neutral
                 Direction = JOY_MIDPOINT; // If out of charge, set direction to neutral
+
+                // Stop the cannon
+                ES_Event_t NoShootEvent;
+                NoShootEvent.EventType = ES_CANNON_STOP;
+                PostBoatActionsService(NoShootEvent);
             }
             else
             {
