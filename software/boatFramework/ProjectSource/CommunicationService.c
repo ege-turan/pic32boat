@@ -224,6 +224,7 @@ ES_Event_t RunCommunicationService(ES_Event_t ThisEvent)
                 ES_Event_t NewEvent;
                 NewEvent.EventType = ES_UNPAIRED;
                 PostPairedServoService(NewEvent);
+                PostDrivingService(NewEvent);
             }
         }
         break;

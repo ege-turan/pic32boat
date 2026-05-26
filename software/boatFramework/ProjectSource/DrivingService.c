@@ -300,6 +300,25 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
         }
         break;
 
+        case ES_UNPAIRED:
+        {
+            // Stop the cannon
+            ES_Event_t NewEvent;
+            NewEvent.EventType = ES_CANNON_STOP;
+            PostBoatActionsService(NewEvent);
+
+            // Stop the motors
+            uint8_t BoatDirection = 127; // No direction throttle
+            uint8_t BoatThrottle  = 127; // No throttle forwards/backwards
+
+            // combine into parsable drive parameter
+            uint16_t DriveParam = (BoatDirection << 8) | BoatThrottle;
+
+            NewEvent.EventType  = ES_DRIVE;
+            NewEvent.EventParam = DriveParam;
+            PostDrivingService(NewEvent)
+        }
+
         default:
             break;
     }

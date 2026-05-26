@@ -31,7 +31,7 @@
 
 /*----------------------------- Module Defines ----------------------------*/
 #define DEBUG_PRINT_COMMS
-// #define SHOW_SENT_BYTES
+#define SHOW_SENT_BYTES
 // #define SHOW_RECEIVED_BYTES
 // #define SHOW_ANALOG_VALS
 // #define SHOW_FUEL_INPUT_VALS
