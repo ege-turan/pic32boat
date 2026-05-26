@@ -316,7 +316,7 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
 
             NewEvent.EventType  = ES_DRIVE;
             NewEvent.EventParam = DriveParam;
-            PostDrivingService(NewEvent)
+            PostDrivingService(NewEvent);
         }
 
         default:
