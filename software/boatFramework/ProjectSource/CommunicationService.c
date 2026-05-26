@@ -82,7 +82,7 @@
 
 #define JOY_MIDPOINT 127   // Midpoint value for joystick inputs (0-255 range)
 #define MAX_CHARGE_VAL 200 // Maximum charge value for the boat
-#define DIGI_SHOOT_BYTE 0x1
+#define DIGI_SHOOT_BYTE 0x2
 #define DIGI_NO_SHOOT_BYTE 0x0
 /*---------------------------- Module Functions ---------------------------*/
 /* prototypes for private functions for this service.They should be functions
@@ -409,13 +409,16 @@ static bool ValidReceivedMessage(void)
 
 static void InterpretMessage(void)
 {
-    if ((pairedStatus == false) && (rxBuf[8] == STATUS_PAIRING_BYTE) &&
+    if ((pairedStatus == false) && 
+        (rxBuf[8] == STATUS_PAIRING_BYTE) &&
         (rxBuf[9] == DEST_ADD_TX_MSB_BYTE))
     {
         // Source address LSB of requesting pairing Note: rxBuf[5] and rxBuf[10] should be the same
         pairedAddressLSB = rxBuf[10];
         pairedStatus     = true;
+        ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
         InitializeFuel   = true; // Set flag to initialize fuel value on next charging message
+        ChargeVal = 0xFF;        // Reset charge value on pairing
         DB_printf("\rValid message received in CommunicationService, PAIRED! Address: 0x%x\r\n",
                   pairedAddressLSB);
         ES_Event_t NewEvent;
@@ -425,14 +428,9 @@ static void InterpretMessage(void)
     else if ((pairedStatus == true) && (rxBuf[4] == DEST_ADD_TX_MSB_BYTE) &&
              (rxBuf[5] == pairedAddressLSB))
     {
-        ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
-        if (InitializeFuel)
-        {
-            ChargeVal      = 200;   // Initialize fuel value on first message after pairing
-            InitializeFuel = false; // Clear flag after initialization
-        }
         if (rxBuf[8] == STATUS_CHARGING_BYTE)
         {
+            ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
             // Increment charge value by 8 for each charging message received (each charging input equals 8 fuel)
             ChargeVal += 8;
             if (ChargeVal > 200)
@@ -444,6 +442,12 @@ static void InterpretMessage(void)
         }
         else if (rxBuf[8] == STATUS_DRIVING_BYTE)
         {
+            if (InitializeFuel)
+            {
+                ChargeVal      = 200;   // Initialize fuel value on first message after pairing
+                InitializeFuel = false; // Clear flag after initialization
+            }
+            ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
             // Extract throttle and direction from message and post to DrivingService
             uint8_t Throttle  = rxBuf[9];  // Assuming throttle is in byte 9
             uint8_t Direction = rxBuf[10]; // Assuming direction is in byte 10

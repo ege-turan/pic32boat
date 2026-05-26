@@ -152,6 +152,7 @@ ES_Event_t RunPairedServoService(ES_Event_t ThisEvent)
 
             // Initialize servo to center
             PWM_Operate_SetPulseWidthOnChannel(PWM_SERVO_CENTER, PAIRED_PWM_CH);
+            PWM_Operate_SetPulseWidthOnChannel(PWM_SERVO_FLAG_DOWN, PAIRED_PWM_CH);
         }
         break;
 

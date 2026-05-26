@@ -123,7 +123,7 @@
 #define STATUS_CHARGING_BYTE 0x01       // Byte 9
 #define STATUS_PAIRING_BYTE 0x02        // Byte 9
 
-#define DIGI_SHOOT_BYTE 0x01
+#define DIGI_SHOOT_BYTE 0x02
 #define DIGI_NO_SHOOT_BYTE 0x00
 
 /*---------------------------- Module Functions ---------------------------*/
@@ -611,7 +611,7 @@ static bool ValidReceivedMessage(void)
 static void InterpretMessage(void)
 {
     if ((pairedStatus == false) && (rxBuf[4] == DEST_ADD_TX_MSB_BYTE) &&
-        (rxBuf[5] == desiredAddressLSB))
+        (rxBuf[5] == desiredAddressLSB) && (rxBuf[8] == 0xFF))
     {
         pairedStatus = true; // Update paired status on valid message receipt
         // Reset the timer on paired message
