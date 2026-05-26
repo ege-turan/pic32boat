@@ -231,10 +231,10 @@ ES_Event_t RunDrivingService(ES_Event_t ThisEvent)
         case ES_DRIVE:
         {
             // Extract throttle and direction from event parameter
-            uint8_t Throttle  = ThisEvent.EventParam & 0xFF;        // lower byte
-            uint8_t Direction = (ThisEvent.EventParam >> 8) & 0xFF; // upper byte
+            uint8_t Direction  = ThisEvent.EventParam & 0xFF;        // lower byte
+            uint8_t Throttle = (ThisEvent.EventParam >> 8) & 0xFF; // upper byte
 
-            if (Throttle < ThrottleMidPoint) // close gate
+            if (Direction < DirectionMidPoint) // close gate
             {
                 ES_Event_t NewEvent;
                 NewEvent.EventType = ES_GATE_CLOSE;

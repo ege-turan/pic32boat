@@ -711,8 +711,8 @@ static void SendMsgToQuackraft(uint8_t status, uint8_t joy1, uint8_t joy2, uint8
 static void ReadADCValues(void)
 {
     ADC_MultiRead(ADCResults);
-    Joy1Val = (uint8_t)(ADCResults[0] >> 2); // fit the 10 bits to 8
-    Joy2Val = (uint8_t)(ADCResults[1] >> 2); // fit the 10 bits to 8
+    Joy1Val = (uint8_t)(ADCResults[1] >> 2); // fit the 10 bits to 8
+    Joy2Val = (uint8_t)(ADCResults[0] >> 2); // fit the 10 bits to 8
 
     if ((Joy1Val < (JoyMidPoint + JOY_DEAD_RANGE)) && (Joy1Val > (JoyMidPoint - JOY_DEAD_RANGE)))
     {

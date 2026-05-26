@@ -449,14 +449,14 @@ static void InterpretMessage(void)
             }
             ES_Timer_InitTimer(UNPAIRING_TIMER, FOUR_SECONDS);
             // Extract throttle and direction from message and post to DrivingService
-            uint8_t Throttle  = rxBuf[9];  // Assuming throttle is in byte 9
-            uint8_t Direction = rxBuf[10]; // Assuming direction is in byte 10
+            uint8_t Joy1Val  = rxBuf[9];  // Assuming throttle is in byte 9
+            uint8_t Joy2Val = rxBuf[10]; // Assuming direction is in byte 10
             uint8_t Digi = rxBuf[11]; // Assuming digital input (e.g., shoot command) is in byte 11
 
             if (ChargeVal == 0)
             {
-                Throttle  = JOY_MIDPOINT; // If out of charge, set throttle to neutral
-                Direction = JOY_MIDPOINT; // If out of charge, set direction to neutral
+                Joy1Val  = JOY_MIDPOINT; // If out of charge, set throttle to neutral
+                Joy2Val = JOY_MIDPOINT; // If out of charge, set direction to neutral
 
                 // Stop the cannon
                 ES_Event_t NoShootEvent;
@@ -465,7 +465,7 @@ static void InterpretMessage(void)
             }
             else
             {
-                if (((Throttle != JOY_MIDPOINT) || (Direction != JOY_MIDPOINT)) && (ChargeVal > 0))
+                if (((Joy1Val != JOY_MIDPOINT) || (Joy2Val != JOY_MIDPOINT)) && (ChargeVal > 0))
                 {
                     ChargeVal--; // Decrement charge value by 1 for each drive message received (each drive input equals 1 fuel)
                 }
@@ -485,7 +485,7 @@ static void InterpretMessage(void)
                 }
             }
 
-            uint16_t DriveParam = (Direction << 8) | Throttle; // Combine into single parameter
+            uint16_t DriveParam = (Joy2Val << 8) | Joy1Val; // Combine into single parameter
             ES_Event_t NewEvent;
             NewEvent.EventType  = ES_DRIVE;
             NewEvent.EventParam = DriveParam;
