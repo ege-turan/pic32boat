@@ -103,7 +103,7 @@
 
 #define MY_BOAT_ADDRESS_LSB 0x81
 #define BOAT2_ADDRESS_LSB 0x82
-#define BOAT3_ADDRESS_LSB 0x83
+#define BOAT3_ADDRESS_LSB 0x87 // Because the Xbee of team 3 was broken, their Xbee was replaced
 #define BOAT4_ADDRESS_LSB 0x84
 #define BOAT5_ADDRESS_LSB 0x86 // Because the Xbee of team 5 was broken, their Xbee was replaced
 
