@@ -3548,12 +3548,6 @@
 		(uuid "c4005d53-11bb-48b5-a18f-b7c72421e5f1")
 	)
 	(junction
-		(at 236.22 196.85)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c607af0d-9af4-4e14-a97c-32fdfaee536d")
-	)
-	(junction
 		(at 163.83 133.35)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3570,12 +3564,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "e3225243-01ca-4cff-b98a-679b24a9fafc")
-	)
-	(junction
-		(at 248.92 204.47)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e3f0f0bc-8407-4efe-9eff-88b36f83755f")
 	)
 	(junction
 		(at 92.71 40.894)
@@ -4089,16 +4077,6 @@
 	)
 	(wire
 		(pts
-			(xy 248.92 194.31) (xy 245.11 194.31)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a3f431a6-ccac-4f11-87f9-8a94bc221668")
-	)
-	(wire
-		(pts
 			(xy 226.06 96.52) (xy 228.6 96.52)
 		)
 		(stroke
@@ -4116,26 +4094,6 @@
 			(type default)
 		)
 		(uuid "ab5fdab0-92d6-48ed-b8f3-7f8d0a7a94be")
-	)
-	(wire
-		(pts
-			(xy 245.11 196.85) (xy 236.22 196.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "abe526df-bb35-42d7-b989-c26d5ceb260b")
-	)
-	(wire
-		(pts
-			(xy 228.6 196.85) (xy 236.22 196.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ac65612f-80d2-4c68-8b20-29582038aab6")
 	)
 	(wire
 		(pts
@@ -4176,16 +4134,6 @@
 			(type default)
 		)
 		(uuid "b54e57e4-a007-457d-bacb-76e6e97510c7")
-	)
-	(wire
-		(pts
-			(xy 245.11 194.31) (xy 245.11 196.85)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b70e48c4-6027-4adc-9e4f-99fb2e35a4d3")
 	)
 	(wire
 		(pts
@@ -4356,16 +4304,6 @@
 			(type default)
 		)
 		(uuid "f738e64d-425c-4cf2-8964-cfae8adc0a5b")
-	)
-	(wire
-		(pts
-			(xy 236.22 204.47) (xy 248.92 204.47)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fdb030e0-2aa2-46f9-a080-b22995c2a744")
 	)
 	(wire
 		(pts
@@ -4769,28 +4707,6 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GateButton"
-		(shape input)
-		(at 228.6 196.85 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "a87d3e3d-0bc0-461b-8357-9e251ac604bf")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 215.2131 196.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
 				(hide yes)
 			)
 		)
@@ -5254,7 +5170,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Start"
+		(property "Value" "Spray"
 			(at 252.73 171.4499 90)
 			(effects
 				(font
@@ -5713,78 +5629,6 @@
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
 					(reference "SW7")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 248.92 204.47 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "2cf9d754-6236-4b4c-9024-f71016654d37")
-		(property "Reference" "#PWR044"
-			(at 248.92 210.82 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 248.92 209.55 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 248.92 204.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 248.92 204.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 248.92 204.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fcadf01f-95ed-4887-84c9-369aaf314d1f")
-		)
-		(instances
-			(project "controller"
-				(path "/bc73ab5b-b6d8-4a71-b65a-920a6677fd6b"
-					(reference "#PWR?")
-					(unit 1)
-				)
-			)
-			(project "boatElectronics"
-				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "#PWR044")
 					(unit 1)
 				)
 			)
@@ -7518,82 +7362,6 @@
 		)
 	)
 	(symbol
-		(lib_id "ME218_BaseLib:SW-PB")
-		(at 248.92 199.39 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "9437ea9d-ec79-490a-b120-1b2ca25c50ad")
-		(property "Reference" "SW6"
-			(at 252.73 198.1199 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Start"
-			(at 252.73 200.6599 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 254 199.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 254 199.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 248.92 199.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "7a1116de-2602-4a5e-aa43-65fc5319c042")
-		)
-		(pin "1"
-			(uuid "3ecc4c3e-853d-4f8d-a5e1-9677febd9055")
-		)
-		(instances
-			(project "controller"
-				(path "/bc73ab5b-b6d8-4a71-b65a-920a6677fd6b"
-					(reference "SW?")
-					(unit 1)
-				)
-			)
-			(project "boatElectronics"
-				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "SW6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 129.54 64.77 0)
 		(mirror y)
@@ -8477,154 +8245,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 236.22 189.23 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "c9efbf88-c010-40ed-af2c-8ca40b455032")
-		(property "Reference" "#PWR043"
-			(at 236.22 193.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 236.22 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 236.22 189.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 236.22 189.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"+3V3\""
-			(at 236.22 189.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "208d4a55-baf5-490c-86a9-f2c7eed4ca62")
-		)
-		(instances
-			(project "controller"
-				(path "/bc73ab5b-b6d8-4a71-b65a-920a6677fd6b"
-					(reference "#PWR?")
-					(unit 1)
-				)
-			)
-			(project "boatElectronics"
-				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "#PWR043")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "ME218_BaseLib:Res2")
-		(at 236.22 193.04 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "cd46a173-8421-4663-8bc1-67b43a2b7f80")
-		(property "Reference" "R8"
-			(at 238.76 191.7699 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "10K"
-			(at 238.76 194.3099 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 237.998 193.04 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 236.22 193.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 236.22 193.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "2313d977-2386-4c62-a370-d9e7a8cf1b3e")
-		)
-		(pin "1"
-			(uuid "c5eec3e3-ecfd-4e82-a1f0-3cc02aed715e")
-		)
-		(instances
-			(project "controller"
-				(path "/bc73ab5b-b6d8-4a71-b65a-920a6677fd6b"
-					(reference "R?")
-					(unit 1)
-				)
-			)
-			(project "boatElectronics"
-				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "R8")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "ME218_BaseLib:Res2")
 		(at 163.83 165.1 180)
 		(unit 1)
@@ -8988,82 +8608,6 @@
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
 					(reference "#PWR038")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "ME218_BaseLib:Cap")
-		(at 236.22 200.66 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "dfa7cf35-d5ad-4f14-a569-74b683237a13")
-		(property "Reference" "C12"
-			(at 240.03 199.3899 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "0.1uF"
-			(at 240.03 201.9299 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" ""
-			(at 237.1852 204.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 236.22 200.66 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 236.22 200.66 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "334085cf-6ede-44af-8452-c0c4bb7f70e8")
-		)
-		(pin "1"
-			(uuid "c9eda699-941f-4b0b-a4ef-5f296f35b193")
-		)
-		(instances
-			(project "controller"
-				(path "/bc73ab5b-b6d8-4a71-b65a-920a6677fd6b"
-					(reference "C?")
-					(unit 1)
-				)
-			)
-			(project "boatElectronics"
-				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "C12")
 					(unit 1)
 				)
 			)
