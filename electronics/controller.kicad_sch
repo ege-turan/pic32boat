@@ -7123,7 +7123,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "94f6d0a7-a11f-4c75-ab18-768c81928b02")
-		(property "Reference" "U?"
+		(property "Reference" "U6"
 			(at 193.04 168.9099 0)
 			(effects
 				(font
@@ -7186,7 +7186,7 @@
 		(instances
 			(project "boatElectronics"
 				(path "/bd24c4db-4e36-4117-bd4f-5228ef241da9/ebf9c9fd-19f1-445b-9c7b-2cb236965a45"
-					(reference "U?")
+					(reference "U6")
 					(unit 1)
 				)
 			)
